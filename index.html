@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prom Dogs - Premium Pedigree Puppies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #003366;
+            --accent-blue: #0066cc;
+            --dark-bg: #080808;
+            --light-text: #ffffff;
+            --section-bg: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Enhanced Header Styles */
+        header {
+            background-color: var(--dark-bg);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgb(0, 0, 0);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--accent-blue);
+            transform: scale(1.02);
+        }
+
+        .logo:hover img {
+            transform: rotate(-10deg);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-item {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            min-width: 200px;
+            padding: 0.5rem 0;
+            z-index: 1000;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            color: var(--dark-bg);
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Scrolled Navbar Style */
+        .scrolled-nav {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 0.5rem 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .scrolled-nav .logo img {
+            height: 40px;
+        }
+
+        @media (max-width: 1024px) {
+            .menu-toggle {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--dark-bg);
+                flex-direction: column;
+                padding: 1rem 2rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-item {
+                padding: 0.75rem 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            .dropdown-menu {
+                position: static;
+                background: rgba(0,0,0,0.1);
+                box-shadow: none;
+                margin-left: 1rem;
+            }
+            .dropdown-item {
+                color: rgba(255,255,255,0.9);
+                padding: 0.5rem 0;
+            }
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0, 51, 102, 0.9), rgba(0, 51, 102, 0.9)),
+                        url('https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb') center/cover;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
+            margin-top: 76px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+
+        .hero-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            background: var(--accent-blue);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255,255,255,0.3),
+                transparent
+            );
+            transition: all 0.6s ease;
+        }
+
+        .cta-button:hover::after {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            padding: 4rem 5%;
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+
+        .stat-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Featured Puppies */
+        .featured-puppies {
+            padding: 4rem 5%;
+            background: var(--section-bg);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 3rem;
+        }
+
+        .puppy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .puppy-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .puppy-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .puppy-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .puppy-image {
+            height: 300px;
+            object-fit: cover;
+            width: 100%;
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+
+        .puppy-image:hover {
+            transform: scale(1.05);
+        }
+
+        .puppy-details {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .puppy-breed {
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .puppy-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-bg);
+            margin: 1rem 0;
+        }
+
+        /* Health Guarantee */
+        .health-guarantee {
+            padding: 4rem 5%;
+            background: white;
+            text-align: center;
+        }
+
+        .guarantee-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .guarantee-item {
+            padding: 2rem;
+            border-radius: 8px;
+            background: var(--section-bg);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+
+        .guarantee-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .guarantee-item i {
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        url('https://images.unsplash.com/photo-1587300003388-59208cc962cb') center/cover;
+            padding: 6rem 5%;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Enhanced Footer */
+        footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 4rem 5%;
+            position: relative;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            color: var(--accent-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-images {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .footer-image {
+            width: 100%;
+            height: 80px;
+            object-fit: contain;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .footer-image:hover {
+            filter: grayscale(0);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .guarantee-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            .footer-images {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="mainHeader">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/image/prom dogs.jpg" alt="Prom Dogs Logo">
+                Prom Dogs
+            </a>
+            <button class="menu-toggle">☰</button>
+            <ul class="nav-links">
+                <li><a href="./index.html" class="nav-item">Home</a></li>
+                <li><a href="/about.html" class="nav-item">About</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-item">Breeds ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-item">Pomeranian</a></li>
+                        <li><a href="#" class="dropdown-item">Teacup Poodle</a></li>
+                        <li><a href="#" class="dropdown-item">Yorkshire Terrier</a></li>
+                        <li><a href="#" class="dropdown-item">Chihuahua</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" class="nav-item">Book A Puppy</a></li>
+                <li><a href="#" class="nav-item">Stud Dogs</a></li>
+                <li><a href="#" class="nav-item">Rehoming</a></li>
+                <li><a href="#" class="nav-item">Blog</a></li>
+                <li><a href="#" class="nav-item">Portraits</a></li>
+                <li><a href="#" class="nav-item">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Premium Pedigree Puppies in Surrey</h1>
+                <p class="hero-subtitle">Family-Raised Puppies with Championship Bloodlines</p>
+                <a href="#available-puppies" class="cta-button">View Available Puppies</a>
+            </div>
+        </section>
+
+        <!-- Trust Statistics -->
+        <section class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">12+</div>
+                <div class="stat-label">Years Breeding Excellence</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Health Guarantee</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">4.9★</div>
+                <div class="stat-label">Customer Rating</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">UKKC</div>
+                <div class="stat-label">Registered Breeder</div>
+            </div>
+        </section>
+
+        <!-- Featured Puppies -->
+        <section class="featured-puppies">
+            <h2 class="section-title">Available Puppies</h2>
+            <div class="puppy-grid">
+                <div class="puppy-card">
+                    <img src="/image/dog 1.jpg" alt="Pomeranian Puppy" class="puppy-image">
+                    <div class="puppy-details">
+                        <h3 class="puppy-breed">Pomeranian</h3>
+                        <p class="puppy-age">12 Weeks Old</p>
+                        <p class="puppy-price">£2,500</p>
+                        <a href="#reserve" class="cta-button">Reserve Now</a>
+                    </div>
+                </div>
+                 <div class="puppy-card">
+                    <img src="/image/dog 2.jpg" alt="Pomeranian Puppy" class="puppy-image">
+                    <div class="puppy-details">
+                        <h3 class="puppy-breed">Pomeranian</h3>
+                        <p class="puppy-age">12 Weeks Old</p>
+                        <p class="puppy-price">£2,500</p>
+                        <a href="#reserve" class="cta-button">Reserve Now</a>
+                    </div>
+                </div>
+                 <div class="puppy-card">
+                    <img src="/image/dog 3.jpg" alt="Pomeranian Puppy" class="puppy-image">
+                    <div class="puppy-details">
+                        <h3 class="puppy-breed">Pomeranian</h3>
+                        <p class="puppy-age">12 Weeks Old</p>
+                        <p class="puppy-price">£2,500</p>
+                        <a href="#reserve" class="cta-button">Reserve Now</a>
+                    </div>
+                </div>
+                <!-- Add more puppy cards -->
+            </div>
+             <div class="puppy-grid">
+                <div class="puppy-card">
+                    <img src="/image/dog 1.jpg" alt="Pomeranian Puppy" class="puppy-image">
+                    <div class="puppy-details">
+                        <h3 class="puppy-breed">Pomeranian</h3>
+                        <p class="puppy-age">12 Weeks Old</p>
+                        <p class="puppy-price">£2,500</p>
+                        <a href="#reserve" class="cta-button">Reserve Now</a>
+                    </div>
+                </div>
+                 <div class="puppy-card">
+                    <img src="/image/dog 2.jpg" alt="Pomeranian Puppy" class="puppy-image">
+                    <div class="puppy-details">
+                        <h3 class="puppy-breed">Pomeranian</h3>
+                        <p class="puppy-age">12 Weeks Old</p>
+                        <p class="puppy-price">£2,500</p>
+                        <a href="#reserve" class="cta-button">Reserve Now</a>
+                    </div>
+                </div>
+                 <div class="puppy-card">
+                    <img src="/image/dog 3.jpg" alt="Pomeranian Puppy" class="puppy-image">
+                    <div class="puppy-details">
+                        <h3 class="puppy-breed">Pomeranian</h3>
+                        <p class="puppy-age">12 Weeks Old</p>
+                        <p class="puppy-price">£2,500</p>
+                        <a href="#reserve" class="cta-button">Reserve Now</a>
+                    </div>
+                </div>
+                <!-- Add more puppy cards -->
+            </div>
+        </section>
+
+        <!-- Health Guarantee -->
+        <section class="health-guarantee">
+            <h2 class="section-title">Our Health Promise</h2>
+            <div class="guarantee-grid">
+                <div class="guarantee-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Full Vaccination</h3>
+                    <p>Complete vaccination protocol before rehoming</p>
+                </div>
+                <div class="guarantee-item">
+                    <i class="fas fa-dna"></i>
+                    <h3>DNA Tested</h3>
+                    <p>Genetic health screening for all breeding dogs</p>
+                </div>
+                <div class="guarantee-item">
+                    <i class="fas fa-heartbeat"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Lifetime breeder support included</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2 class="cta-title">Ready to Meet Your New Best Friend?</h2>
+            <p class="cta-text">Schedule a Private Viewing at Our Surrey Kennels</p>
+            <div class="cta-buttons">
+                <a href="#visit" class="cta-button">Book Appointment</a>
+                <a href="#virtual" class="cta-button">Virtual Tour</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p>+44 79048 49556</p>
+                    <p>contact@promdogs.co.uk</p>
+                    <p>Richmond Close, Amersham, Buckinghamshire, HP6 6UY
+Guide Price £TBC</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#health">Health Guarantee</a>
+                    <a href="#faq">FAQ</a>
+                    <a href="#reviews">Reviews</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Certifications</h3>
+                    <div class="footer-images">
+                        <img src="/image/dog 4.jpg" class="footer-image" alt="UK Kennel Club Certification">
+                        <img src="/image/dog 5.jpg" class="footer-image" alt="Veterinary Approved">
+                        <img src="/image/dog 6.jpg" class="footer-image" alt="5 Star Rating">
+                        <img src="/image/dog 7.jpg" class="footer-image" alt="Ethical Breeder">
+                        <img src="/image/dog 8.jpg" class="footer-image" alt="DNA Tested">
+                        <img src="/image/dog 9.jpg" class="footer-image" alt="Breeding Award">
+                    </div>
+                </div>
+            </div>
+            <div class="legal-section">
+                <p>© <span id="currentYear"></span> Prom Dogs. All rights reserved.</p>
+                <div class="legal-links">
+                    <a href="#privacy">Privacy Policy</a> | 
+                    <a href="#terms">Terms of Service</a> | 
+                    <a href="#cookies">Cookie Settings</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Mobile Menu Toggle
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Scroll Effects
+        window.addEventListener('scroll', () => {
+            // Navbar Scroll Effect
+            const header = document.getElementById('mainHeader');
+            window.scrollY > 100 ? 
+                header.classList.add('scrolled-nav') : 
+                header.classList.remove('scrolled-nav');
+
+            // Scroll Reveal Animations
+            const animateOnScroll = (elements, className) => {
+                elements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    if (elementTop < window.innerHeight - 100) {
+                        element.classList.add(className);
+                    }
+                });
+            };
+
+            animateOnScroll(document.querySelectorAll('.hero-content'), 'visible');
+            animateOnScroll(document.querySelectorAll('.stat-item'), 'visible');
+            animateOnScroll(document.querySelectorAll('.puppy-card'), 'visible');
+            animateOnScroll(document.querySelectorAll('.guarantee-item'), 'visible');
+        });
+
+        // Image Lightbox
+        document.querySelectorAll('.puppy-image').forEach(image => {
+            image.addEventListener('click', () => {
+                const lightbox = document.createElement('div');
+                lightbox.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background: rgba(0,0,0,0.9);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 2000;
+                    cursor: zoom-out;
+                `;
+                lightbox.innerHTML = `
+                    <img src="${image.src}" 
+                         style="max-width: 90%; max-height: 90%; border-radius: 8px; cursor: default;" 
+                         alt="Enlarged view of ${image.alt}">
+                `;
+                lightbox.addEventListener('click', () => lightbox.remove());
+                document.body.appendChild(lightbox);
+            });
+        });
+
+        // Dynamic Copyright Year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initial Hero Animation
+        window.addEventListener('load', () => {
+            document.querySelector('.hero-content').classList.add('visible');
+        });
+    </script>
+</body>
+</html>
