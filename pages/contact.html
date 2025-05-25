@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book a Puppy - AngelPomps</title>
+    <title>Contact Us | AngelPoms</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary-blue: #003366;
             --accent-blue: #0066cc;
-            --dark-bg: #1a1a1a;
+            --dark-bg: #080808;
             --light-text: #ffffff;
             --section-bg: #f8f9fa;
         }
@@ -25,8 +25,8 @@
         body {
             background-color: var(--section-bg);
         }
-                /* Enhanced Header Styles */
-        header {
+                /* Header Styles */
+       header {
             background-color: var(--dark-bg);
             padding: 1rem 2rem;
             position: fixed;
@@ -56,7 +56,7 @@
         }
 
         .logo img {
-            height: 90px;
+            height: 50px;
             width: auto;
             margin-right: 10px;
             transition: all 0.3s ease;
@@ -189,150 +189,156 @@
             }
         }
 
-        /* Hero Section */
-        .booking-hero {
-            background: linear-gradient(rgba(0, 51, 102, 0.9), rgba(0, 51, 102, 0.9)),
-                        url('https://images.unsplash.com/photo-1583337130417-3346d1d7a6c4') center/cover;
-            height: 60vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
+        .contact-header {
+            background-color: var(--primary-blue);
             color: var(--light-text);
-            padding: 2rem;
+            padding: 4rem 2rem;
+            text-align: center;
         }
 
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero-title {
+        .contact-title {
             font-size: 2.5rem;
             margin-bottom: 1rem;
         }
 
-        /* Puppy Grid */
-        .puppy-grid-section {
-            padding: 4rem 2rem;
+        .contact-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
         }
 
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
+        .contact-form {
+            background: var(--light-text);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
             color: var(--primary-blue);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        textarea.form-input {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--accent-blue);
+            color: var(--light-text);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--primary-blue);
+        }
+
+        .contact-info {
+            background: var(--light-text);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .info-item {
             margin-bottom: 2rem;
         }
 
-        .puppy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .puppy-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .puppy-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .puppy-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-bottom: 3px solid var(--accent-blue);
-        }
-
-        .puppy-details {
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .puppy-name {
+        .info-title {
             color: var(--primary-blue);
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .puppy-breed {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .puppy-age {
-            color: #444;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .puppy-price {
-            color: var(--primary-blue);
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin: 1rem 0;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background: var(--accent-blue);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-            background: var(--primary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Loading State */
-        .loading {
-            text-align: center;
-            padding: 2rem;
             font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-content {
+            color: var(--dark-bg);
+            line-height: 1.6;
+        }
+
+        .info-content a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .info-content a:hover {
             color: var(--primary-blue);
         }
 
-        /* Error State */
-        .error-message {
-            text-align: center;
-            color: #dc3545;
-            padding: 2rem;
+        .contact-map {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
         }
 
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2rem;
+            .contact-container {
+                grid-template-columns: 1fr;
             }
             
-            .puppy-grid {
-                grid-template-columns: 1fr;
+            .contact-header {
+                padding: 3rem 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <main>
-        <header id="mainHeader">
+     <header id="mainHeader">
         <nav class="nav-container">
             <a href="/" class="logo">
-                <img src="/media/image/AngelLogo.png" alt="Angelpoms Logo">
-                Angelpoms
+                <img src="/media/image/Angelpomslogo.jpg" alt="Angelpoms Logo">
+                AngelPoms
             </a>
             <button class="menu-toggle">☰</button>
             <ul class="nav-links">
-                <li><a href="./index.html" class="nav-item">Home</a></li>
+                <li><a href="/index.html" class="nav-item">Home</a></li>
                 <li><a href="/pages/about.html" class="nav-item">About</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Breeds ▾</a>
@@ -343,7 +349,7 @@
                         <li><a href="#" class="dropdown-item">Chihuahua</a></li> -->
                     </ul>
                 </li>
-                <li><a href="/pages/book a puppy.html" class="nav-item">Book A Puppy</a></li>
+                <li><a href="" class="nav-item">Book A Puppy</a></li>
                 <li><a href="#" class="nav-item">Stud Dogs</a></li>
                 <li><a href="#" class="nav-item">Rehoming</a></li>
                 <li class="dropdown">
@@ -358,36 +364,90 @@
             </ul>
         </nav>
     </header>
-        <section class="booking-hero">
-            <div class="hero-content">
-                <h1 class="hero-title">Find Your Perfect Companion</h1>
-                <p class="hero-subtitle">Browse our available pedigree puppies</p>
-            </div>
+    <section class="contact-header">
+        <h1 class="contact-title">Contact AngelPoms</h1>
+        <p>Richmond Close, Amersham, Buckinghamshire, HP6 6UY</p>
+        <p style="margin-top: 1rem; color: var(--accent-blue); font-weight: 600;">
+            Guide Price: £TBC
+        </p>
+    </section>
+
+    <div class="contact-container">
+        <section class="contact-form">
+            <h2 class="info-title">Enquiry Form</h2>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label class="form-label" for="name">Full Name</label>
+                    <input type="text" class="form-input" id="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" class="form-input" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number</label>
+                    <input type="tel" class="form-input" id="phone">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="subject">Subject</label>
+                    <input type="text" class="form-input" id="subject" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="message">Message</label>
+                    <textarea class="form-input" id="message" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
         </section>
 
-        <section class="puppy-grid-section">
-            <h2 class="section-title">Available Puppies</h2>
-            <div class="puppy-grid" id="puppyContainer">
-                <div class="loading">
-                    <i class="fas fa-paw fa-spin"></i> Loading puppies...
+        <section class="contact-info">
+            <div class="info-item">
+                <h3 class="info-title">Location Details</h3>
+                <div class="info-content">
+                    <p><i class="fas fa-map-marker-alt"></i> Richmond Close<br>
+                    Amersham, Buckinghamshire<br>
+                    HP6 6UY</p>
+                    <p style="margin-top: 1rem; font-weight: 600; color: var(--accent-blue);">
+                        Guide Price: £TBC
+                    </p>
                 </div>
             </div>
+
+            <div class="info-item">
+                <h3 class="info-title">Contact Information</h3>
+                <div class="info-content">
+                    <p><i class="fas fa-phone"></i> <a href="tel:+441234567890">+44 79048 49556</a></p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:ira.chizh2204@gmail.com">ira.chizh2204@gmail.com</a></p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <h3 class="info-title">Map Location</h3>
+                <iframe class="contact-map" 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2486.9265475498085!2d-0.6022107234431216!3d51.41589077179366!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4876610e7e3d8a2f%3A0x6e9d0c3a9c5d5b1e!2sRichmond%20Cl%2C%20Amersham%20HP6%206UY%2C%20UK!5e0!3m2!1sen!2sus!4v1718812231938!5m2!1sen!2sus" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
         </section>
-    </main>
+    </div>
+
+    <div class="notification" id="notification"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            getDocs
-        } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDrmpMXUZpJ46n-eRiDjQJSJf-YK6whUEM",
             authDomain: "prom-dog.firebaseapp.com",
             projectId: "prom-dog",
-            storageBucket: "prom-dog.appspot.com",
+            storageBucket: "prom-dog.firebasestorage.app",
             messagingSenderId: "945953941353",
             appId: "1:945953941353:web:e6272892f5352c004b7ff8",
             measurementId: "G-WMGY01WT20"
@@ -396,55 +456,37 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        async function loadPuppies() {
-            const container = document.getElementById('puppyContainer');
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
             
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                timestamp: new Date(),
+                location: "Richmond Close, Amersham"
+            };
+
             try {
-                const querySnapshot = await getDocs(collection(db, "puppies"));
-                container.innerHTML = '';
-
-                if (querySnapshot.empty) {
-                    container.innerHTML = `
-                        <div class="error-message">
-                            No puppies available at the moment. Please check back later.
-                        </div>
-                    `;
-                    return;
-                }
-
-                querySnapshot.forEach((doc) => {
-                    const puppy = doc.data();
-                    const puppyCard = `
-                        <div class="puppy-card" data-id="${doc.id}">
-                            <img src="${puppy.imageUrl}" 
-                                 alt="${puppy.name}" 
-                                 class="puppy-image"
-                                 loading="lazy">
-                            <div class="puppy-details">
-                                <h3 class="puppy-name">${puppy.name}</h3>
-                                <p class="puppy-breed">${puppy.breed}</p>
-                                <p class="puppy-age">${puppy.age} weeks old</p>
-                                <p class="puppy-price">£${puppy.price.toLocaleString()}</p>
-                                <a href="#inquire" class="cta-button">Reserve Now</a>
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += puppyCard;
-                });
-
+                await addDoc(collection(db, "contacts"), formData);
+                showNotification('Thank you! Your enquiry has been submitted.', false);
+                document.getElementById('contactForm').reset();
             } catch (error) {
-                console.error("Error loading puppies:", error);
-                container.innerHTML = `
-                    <div class="error-message">
-                        Error loading puppies. Please try again later.
-                    </div>
-                `;
+                console.error("Error adding document: ", error);
+                showNotification('Error submitting form. Please try again.', true);
             }
-        }
+        });
 
-        // Initialize the page
-        window.addEventListener('DOMContentLoaded', loadPuppies);
-                // Mobile Menu Toggle
+        function showNotification(message, isError) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification${isError ? ' error' : ''}`;
+            notification.style.display = 'block';
+            setTimeout(() => notification.style.display = 'none', 5000);
+        }
+                        // Mobile Menu Toggle
         document.querySelector('.menu-toggle').addEventListener('click', () => {
             document.querySelector('.nav-links').classList.toggle('active');
         });

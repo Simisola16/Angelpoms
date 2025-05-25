@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Microchipping Services | Prom Dogs</title>
+    <title>Pomeranian Breed Profile | Prom Dogs</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Reuse existing CSS variables and base styles */
-        :root {
+       :root {
             --primary-blue: #003366;
             --accent-blue: #0066cc;
+            --dark-bg: #080808;
             --light-text: #ffffff;
             --section-bg: #f8f9fa;
-            --text-color: #333;
-            --dark-bg: #080808;
         }
 
         * {
@@ -25,9 +23,9 @@
         }
 
         body {
-            background-color: var(--section-bg);
-            color: var(--text-color);
-            line-height: 1.6;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.7;
         }
                header {
             background-color: var(--dark-bg);
@@ -192,13 +190,13 @@
             }
         }
 
-        /* Microchipping Hero Section */
-        .microchip-hero {
-            background: linear-gradient(rgba(0, 51, 102, 0.9), rgba(0, 51, 102, 0.9)),
-                        url('https://images.unsplash.com/photo-1583337130417-3346d1d7a6c4') center/cover;
-            padding: 6rem 2rem;
+        /* Hero Section */
+        .breed-hero {
+            background: linear-gradient(rgba(0, 33, 71, 0.8), rgba(0, 33, 71, 0.8)),
+                        url('https://images.unsplash.com/photo-1582456780653-aabf23f711b9') center/cover;
+            padding: 8rem 2rem;
             text-align: center;
-            color: var(--light-text);
+            color: white;
         }
 
         .hero-content {
@@ -206,13 +204,13 @@
             margin: 0 auto;
         }
 
-        .hero-title {
+        .breed-title {
             font-size: 2.8rem;
             margin-bottom: 1rem;
         }
 
         /* Content Sections */
-        .content-section {
+        .section {
             padding: 4rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
@@ -223,104 +221,110 @@
             font-size: 2.2rem;
             margin-bottom: 2rem;
             text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--accent-blue);
         }
 
-        .info-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+        /* History Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
         }
 
-        .info-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .icon-container {
-            font-size: 2.5rem;
-            color: var(--accent-blue);
-            margin-bottom: 1rem;
-        }
-
-        /* Process Timeline */
-        .process-timeline {
+        .timeline-item {
             display: flex;
-            justify-content: space-between;
             margin: 3rem 0;
             position: relative;
         }
 
-        .process-step {
+        .timeline-date {
+            width: 150px;
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        .timeline-content {
             flex: 1;
-            text-align: center;
             padding: 1.5rem;
-            position: relative;
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: var(--accent-blue);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-        }
-
-        /* FAQ Section */
-        .faq-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .faq-item {
             background: white;
-            margin-bottom: 1rem;
             border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            margin-left: 2rem;
+        }
+
+        /* Image Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            position: relative;
             overflow: hidden;
+            border-radius: 8px;
+            aspect-ratio: 1/1;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Breed Characteristics */
+        .characteristics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .characteristic-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .faq-question {
-            padding: 1.5rem;
-            background: var(--primary-blue);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .faq-answer {
-            padding: 1.5rem;
-            display: none;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: var(--primary-blue);
-            color: white;
+        .characteristic-icon {
+            font-size: 2rem;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
         }
 
         @media (max-width: 768px) {
-            .process-timeline {
+            .breed-title {
+                font-size: 2rem;
+            }
+            
+            .timeline-item {
                 flex-direction: column;
             }
             
-            .hero-title {
-                font-size: 2rem;
+            .timeline-content {
+                margin-left: 0;
+                margin-top: 1rem;
             }
         }
                 /* Enhanced Footer */
@@ -364,17 +368,7 @@
             filter: grayscale(0);
             transform: scale(1.1);
         }
-
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .guarantee-grid {
-                grid-template-columns: 1fr;
-            }
+         @media (max-width: 768px) {
             .footer-content {
                 grid-template-columns: 1fr;
             }
@@ -382,25 +376,26 @@
                 grid-template-columns: repeat(3, 1fr);
             }
         }
+        
     </style>
 </head>
 <body>
-    <!-- Navigation (Link to existing site navigation) -->
-             <header id="mainHeader">
+    <!-- Navigation -->
+     <header id="mainHeader">
         <nav class="nav-container">
             <a href="/" class="logo">
-                <img src="/media/image/AngelLogo.png" alt="Angelpoms Logo">
-                Angelpoms
+                <img src="/media/image/Angelpomslogo.jpg" alt="Angelpoms Logo">
+                AngelPoms
             </a>
             <button class="menu-toggle">☰</button>
             <ul class="nav-links">
-                <li><a href="./index.html" class="nav-item">Home</a></li>
-                <li><a href="abut.html" class="nav-item">About</a></li>
+                <li><a href="/index.html" class="nav-item">Home</a></li>
+                <li><a href="/pages/about.html" class="nav-item">About</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Breeds ▾</a>
                     <ul class="dropdown-menu">
-                        <li><a href="#" class="dropdown-item">Pomeranian</a></li>
-                        <li><a href="#" class="dropdown-item">Teacup Poodle</a></li>
+                        <li><a href="/pages/Pomeranian.html" class="dropdown-item">Pomeranian</a></li>
+                        <li><a href="/pages/Teacup Poodle.html" class="dropdown-item">Teacup Poodle</a></li>
                         <!-- <li><a href="#" class="dropdown-item">Yorkshire Terrier</a></li>
                         <li><a href="#" class="dropdown-item">Chihuahua</a></li> -->
                     </ul>
@@ -422,84 +417,108 @@
     </header>
     
     <main>
-        <section class="microchip-hero">
+        <section class="breed-hero">
             <div class="hero-content">
-                <h1 class="hero-title">Protect Your Pet with Microchipping</h1>
-                <p class="hero-subtitle">Permanent ID Solution for Your Beloved Companion</p>
+                <h1 class="breed-title">Pomeranian</h1>
+                <p class="hero-subtitle">Royal Companion with Foxy Charm</p>
             </div>
         </section>
 
-        <section class="content-section">
-            <h2 class="section-title">Why Microchipping Matters</h2>
-            <div class="grid-container">
-                <div class="info-card">
-                    <div class="icon-container">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Permanent Identification</h3>
-                    <p>Lifetime protection that can't be lost or removed</p>
+        <!-- About Section -->
+        <section class="section">
+            <h2 class="section-title">About the Breed</h2>
+            <div class="characteristics-grid">
+                <div class="characteristic-card">
+                    <i class="fas fa-paw characteristic-icon"></i>
+                    <h3>Origin</h3>
+                    <p>Descended from large Arctic sled dogs in Pomerania (now Germany/Poland)</p>
                 </div>
-                <div class="info-card">
-                    <div class="icon-container">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <h3>National Database</h3>
-                    <p>24/7 access to owner information through secure databases</p>
+                <div class="characteristic-card">
+                    <i class="fas fa-weight characteristic-icon"></i>
+                    <h3>Size</h3>
+                    <p>3-7 lbs (Teacup), 7-12 lbs (Standard)</p>
                 </div>
-                <div class="info-card">
-                    <div class="icon-container">
-                        <i class="fas fa-heartbeat"></i>
-                    </div>
-                    <h3>Safe & Reliable</h3>
-                    <p>Quick, painless procedure with no maintenance required</p>
+                <div class="characteristic-card">
+                    <i class="fas fa-heart characteristic-icon"></i>
+                    <h3>Temperament</h3>
+                    <p>Lively, intelligent, and confident with bold personality</p>
                 </div>
             </div>
         </section>
 
-        <section class="content-section">
-            <h2 class="section-title">The Microchipping Process</h2>
-            <div class="process-timeline">
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <h3>Registration</h3>
-                    <p>Complete simple owner documentation</p>
+        <section class="section">
+            <!-- <h2 class="section-title">Gallery</h2> -->
+            <div class="gallery-grid">
+                <!-- <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1583337130417-3346d1d7a6c4" alt="Pomeranian puppy">
+                </div> -->
+                <div class="gallery-item">
+                    <img src="/media/image/dog 20.jpg" alt="Adult Pomeranian">
                 </div>
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <h3>Implantation</h3>
-                    <p>Quick injection between shoulder blades</p>
+                <div class="gallery-item">
+                    <img src="/media/image/dog 21.jpg" alt="Pomeranian smiling">
                 </div>
-                <div class="process-step">
-                    <div class="step-number">3</div>
-                    <h3>Verification</h3>
-                    <p>Immediate scan confirmation</p>
+                <div class="gallery-item">
+                    <img src="/media/image/dog 18.jpg" alt="Pomeranian sitting">
                 </div>
             </div>
         </section>
 
-        <!-- <section class="content-section">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <div class="faq-container">
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span>Is microchipping painful for my pet?</span>
-                        <i class="fas fa-chevron-down"></i>
+        <!-- History Section -->
+        <section class="section" style="background: var(--light-bg);">
+            <h2 class="section-title">Breed History</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">18th Century</div>
+                    <div class="timeline-content">
+                        <h3>Origins in Pomerania</h3>
+                        <p>Bred down from larger German Spitz dogs, used as working dogs and companions</p>
                     </div>
-                    <div class="faq-answer">
-                        <p>The procedure is quick and causes minimal discomfort, similar to a routine vaccination.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1767</div>
+                    <div class="timeline-content">
+                        <h3>Royal Adoption</h3>
+                        <p>Queen Charlotte brought Pomeranians to England, popularizing the breed among nobility</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1888</div>
+                    <div class="timeline-content">
+                        <h3>Queen Victoria's Influence</h3>
+                        <p>The Queen's smaller-sized Poms established the modern breed standard</p>
                     </div>
                 </div>
             </div>
-        </section> -->
+        </section>
 
-        <section class="cta-section">
-            <h2>Ready to Protect Your Pet?</h2>
-            <p>Schedule your microchipping appointment today</p>
-            <a href="/contact" class="cta-button">Book Now</a>
+        <!-- Gallery Section -->
+        
+
+        <!-- Characteristics Section -->
+        <section class="section">
+            <h2 class="section-title">Key Characteristics</h2>
+            <div class="characteristics-grid">
+                <div class="characteristic-card">
+                    <i class="fas fa-cut characteristic-icon"></i>
+                    <h3>Coat</h3>
+                    <p>Double coat with fluffy undercoat and long guard hairs</p>
+                </div>
+                <div class="characteristic-card">
+                    <i class="fas fa-dumbbell characteristic-icon"></i>
+                    <h3>Energy Level</h3>
+                    <p>High energy with moderate exercise needs</p>
+                </div>
+                <div class="characteristic-card">
+                    <i class="fas fa-comments characteristic-icon"></i>
+                    <h3>Vocalness</h3>
+                    <p>Alert watchdogs with tendency to bark</p>
+                </div>
+            </div>
         </section>
     </main>
 
-    <!-- Footer (Link to existing footer) -->
+    <!-- Footer -->
              <footer>
             <div class="footer-content">
                 <div class="footer-section">
@@ -518,12 +537,12 @@ Guide Price £TBC</p>
                 <div class="footer-section">
                     <h3>Certifications</h3>
                     <div class="footer-images">
-                        <img src="/media/image/dog 7.jpg" class="footer-image" alt="UK Kennel Club Certification">
-                        <img src="/media/image/dog 8.jpg" class="footer-image" alt="Veterinary Approved">
-                        <img src="/media/image/dog 9.jpg" class="footer-image" alt="5 Star Rating">
-                        <img src="/media/image/dog 10.jpg" class="footer-image" alt="Ethical Breeder">
-                        <img src="/media/image/dog 11.jpg" class="footer-image" alt="DNA Tested">
-                        <img src="/media/image/dog 12.jpg" class="footer-image" alt="Breeding Award">
+                        <img src="./media/image/dog 7.jpg" class="footer-image" alt="UK Kennel Club Certification">
+                        <img src="./media/image/dog 8.jpg" class="footer-image" alt="Veterinary Approved">
+                        <img src="./media/image/dog 9.jpg" class="footer-image" alt="5 Star Rating">
+                        <img src="./media/image/dog 10.jpg" class="footer-image" alt="Ethical Breeder">
+                        <img src="./media/image/dog 11.jpg" class="footer-image" alt="DNA Tested">
+                        <img src="./media/image/dog 12.jpg" class="footer-image" alt="Breeding Award">
                     </div>
                 </div>
             </div>
@@ -538,15 +557,7 @@ Guide Price £TBC</p>
         </footer>
 
     <script>
-        // FAQ Toggle
-        document.querySelectorAll('.faq-question').forEach(item => {
-            item.addEventListener('click', () => {
-                const answer = item.nextElementSibling;
-                answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
-                item.querySelector('i').classList.toggle('fa-chevron-up');
-            });
-        });
-               // Mobile Menu Toggle
+         // Mobile Menu Toggle
         document.querySelector('.menu-toggle').addEventListener('click', () => {
             document.querySelector('.nav-links').classList.toggle('active');
         });
@@ -573,6 +584,29 @@ Guide Price £TBC</p>
             animateOnScroll(document.querySelectorAll('.stat-item'), 'visible');
             animateOnScroll(document.querySelectorAll('.puppy-card'), 'visible');
             animateOnScroll(document.querySelectorAll('.guarantee-item'), 'visible');
+        });
+        // Image Modal Functionality
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.querySelector('img').src;
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                    cursor: pointer;
+                `;
+                modal.innerHTML = `<img src="${imgSrc}" style="max-width: 90%; max-height: 90%; border-radius: 8px;">`;
+                modal.addEventListener('click', () => modal.remove());
+                document.body.appendChild(modal);
+            });
         });
     </script>
 </body>
