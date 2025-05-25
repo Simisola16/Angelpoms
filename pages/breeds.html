@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Breeds - AngelPomps</title>
+    <!-- Keep existing header styles and scripts -->
+    <style>
+        /* Breed-specific styles */
+        .breed-hero {
+            background: linear-gradient(rgba(0, 51, 102, 0.9), rgba(0, 51, 102, 0.9));
+            padding: 4rem 5% 2rem;
+            color: white;
+            margin-top: 76px;
+        }
+
+        .breed-section {
+            padding: 4rem 5%;
+            background: var(--section-bg);
+        }
+
+        .breed-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .breed-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .breed-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .breed-image-main {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .breed-image-thumb {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .breed-image-thumb:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .breed-details {
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .breed-features {
+            columns: 2;
+            margin: 1.5rem 0;
+        }
+
+        .breed-cta {
+            background: var(--primary-blue);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .breed-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .breed-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .breed-features {
+                columns: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Existing navigation -->
+    </header>
+
+    <main>
+        <section class="breed-hero">
+            <div class="breed-container">
+                <h1>Our Premium Breeds</h1>
+                <p>Discover the exceptional qualities of our carefully curated breeds</p>
+            </div>
+        </section>
+
+        <!-- Pomeranian Breed Section -->
+        <section class="breed-section">
+            <div class="breed-container">
+                <div class="breed-grid">
+                    <div class="breed-gallery">
+                        <img src="./media/breeds/pomeranian-main.jpg" alt="Pomeranian" class="breed-image-main">
+                        <div class="breed-gallery-thumbs">
+                            <img src="./media/breeds/pom1.jpg" alt="Pomeranian thumbnail" class="breed-image-thumb">
+                            <img src="./media/breeds/pom2.jpg" alt="Pomeranian thumbnail" class="breed-image-thumb">
+                            <img src="./media/breeds/pom3.jpg" alt="Pomeranian thumbnail" class="breed-image-thumb">
+                        </div>
+                    </div>
+                    
+                    <div class="breed-details">
+                        <h2>Pomeranian</h2>
+                        <div class="breed-features">
+                            <p><strong>Size:</strong> Toy (3-7 lbs)</p>
+                            <p><strong>Coat:</strong> Double-coated, Fluffy</p>
+                            <p><strong>Life Span:</strong> 12-16 Years</p>
+                            <p><strong>Temperament:</strong> Lively, Intelligent, Bold</p>
+                            <p><strong>Exercise Needs:</strong> Moderate</p>
+                            <p><strong>Ideal For:</strong> Apartments, Families, Seniors</p>
+                        </div>
+                        <div class="breed-cta">
+                            <h3>Champion Bloodline Features</h3>
+                            <ul>
+                                <li>AKC Registered Pedigree</li>
+                                <li>DNA Health Certified</li>
+                                <li>Early Socialization Program</li>
+                            </ul>
+                            <a href="#inquiry" class="cta-button">Inquire About Availability</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teacup Poodle Section -->
+        <section class="breed-section">
+            <div class="breed-container">
+                <div class="breed-grid reverse">
+                    <div class="breed-details">
+                        <h2>Teacup Poodle</h2>
+                        <div class="breed-features">
+                            <p><strong>Size:</strong> Toy (4-6 lbs)</p>
+                            <p><strong>Coat:</strong> Hypoallergenic, Curly</p>
+                            <p><strong>Life Span:</strong> 12-15 Years</p>
+                            <p><strong>Temperament:</strong> Intelligent, Alert, Loyal</p>
+                            <p><strong>Exercise Needs:</strong> Moderate</p>
+                            <p><strong>Ideal For:</strong> Allergy sufferers, City living</p>
+                        </div>
+                        <div class="breed-cta">
+                            <h3>Premium Care Package</h3>
+                            <ul>
+                                <li>Full Vaccination Records</li>
+                                <li>Starter Grooming Kit</li>
+                                <li>Lifetime Support Guarantee</li>
+                            </ul>
+                            <a href="#inquiry" class="cta-button">Schedule a Viewing</a>
+                        </div>
+                    </div>
+                    <div class="breed-gallery">
+                        <img src="./media/breeds/poodle-main.jpg" alt="Teacup Poodle" class="breed-image-main">
+                        <div class="breed-gallery-thumbs">
+                            <img src="./media/breeds/poodle1.jpg" alt="Poodle thumbnail" class="breed-image-thumb">
+                            <img src="./media/breeds/poodle2.jpg" alt="Poodle thumbnail" class="breed-image-thumb">
+                            <img src="./media/breeds/poodle3.jpg" alt="Poodle thumbnail" class="breed-image-thumb">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add other breed sections following same structure -->
+
+        <!-- Breed Comparison Table -->
+        <section class="section section-light">
+            <div class="container">
+                <h2 class="section-title">Breed Comparison</h2>
+                <table class="breed-comparison">
+                    <thead>
+                        <tr>
+                            <th>Breed</th>
+                            <th>Size</th>
+                            <th>Exercise Needs</th>
+                            <th>Coat Maintenance</th>
+                            <th>Ideal For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pomeranian</td>
+                            <td>Toy (3-7 lbs)</td>
+                            <td>Moderate</td>
+                            <td>Daily Brushing</td>
+                            <td>Families, Apartments</td>
+                        </tr>
+                        <!-- Add other breeds -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Image Gallery Interaction
+        document.querySelectorAll('.breed-image-thumb').forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                const mainImage = thumb.closest('.breed-gallery').querySelector('.breed-image-main');
+                mainImage.src = thumb.src;
+                mainImage.alt = thumb.alt;
+            });
+        });
+
+        // Breed Comparison Table Sorting
+        document.querySelectorAll('.breed-comparison th').forEach(header => {
+            header.addEventListener('click', () => {
+                // Add sorting logic
+            });
+        });
+    </script>
+</body>
+</html>

@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Angelpoms - Premium Dog Breeders</title>
+    <title>Pet Microchipping Services | Prom Dogs</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Reuse existing CSS variables and base styles */
         :root {
             --primary-blue: #003366;
             --accent-blue: #0066cc;
-            --dark-bg: #080808;
             --light-text: #ffffff;
             --section-bg: #f8f9fa;
+            --text-color: #333;
+            --dark-bg: #080808;
         }
 
         * {
@@ -22,8 +24,12 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Header Styles */
-       header {
+        body {
+            background-color: var(--section-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+               header {
             background-color: var(--dark-bg);
             padding: 1rem 2rem;
             position: fixed;
@@ -185,221 +191,140 @@
                 padding: 0.5rem 0;
             }
         }
-        /* About Page Styles */
-        .about-hero {
-            background: linear-gradient(rgba(0,51,102,0.9), rgba(0,51,102,0.9)),
-                        url('hero-bg.jpg') center/cover;
-            height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+
+        /* Microchipping Hero Section */
+        .microchip-hero {
+            background: linear-gradient(rgba(0, 51, 102, 0.9), rgba(0, 51, 102, 0.9)),
+                        url('https://images.unsplash.com/photo-1583337130417-3346d1d7a6c4') center/cover;
+            padding: 6rem 2rem;
             text-align: center;
             color: var(--light-text);
-            margin-top: 76px;
         }
 
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Content Sections */
         .content-section {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 0 2rem;
-        }
-
-        .grid-2col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .history-image {
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
-        .history-image img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-        }
-
-        .timeline {
-            position: relative;
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 2rem 0;
-        }
-
-        .timeline::after {
-            content: '';
-            position: absolute;
-            width: 4px;
-            background: var(--accent-blue);
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            margin-left: -2px;
-        }
-
-        .timeline-item {
-            padding: 1.5rem 3rem;
-            position: relative;
-            width: 50%;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-        }
-
-        .timeline-item.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .timeline-item:nth-child(odd) {
-            left: 0;
-            text-align: right;
-        }
-
-        .timeline-item:nth-child(even) {
-            left: 50%;
-        }
-
-        .certifications {
             padding: 4rem 2rem;
-            background: var(--primary-blue);
-            color: white;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .cert-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 2rem;
-            justify-items: center;
-        }
-
-        .cert-item {
+        .section-title {
+            color: var(--primary-blue);
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
             text-align: center;
-            padding: 1rem;
         }
 
-        .video-tour {
-            position: relative;
-            padding-bottom: 56.25%;
-            margin: 4rem 0;
-        }
-
-        .video-tour iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-        }
-
-        .testimonial-grid {
+        .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
+            margin: 2rem 0;
         }
 
-        .testimonial-card {
+        .info-card {
             background: white;
             padding: 2rem;
-            border-radius: 8px;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            aspect-ratio: 1/1;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
         }
 
-        .gallery-item:hover img {
-            transform: scale(1.05);
+        .info-card:hover {
+            transform: translateY(-5px);
         }
 
-        .accordion {
-            margin-top: 2rem;
+        .icon-container {
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
         }
 
-        .accordion-btn {
-            width: 100%;
-            padding: 1rem;
-            text-align: left;
-            background: var(--section-bg);
-            border: none;
+        /* Process Timeline */
+        .process-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .process-step {
+            flex: 1;
+            text-align: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: var(--primary-blue);
+            color: white;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            padding: 0 1rem;
+        .faq-answer {
+            padding: 1.5rem;
+            display: none;
         }
 
-        /* Responsive Styles */
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--primary-blue);
+            color: white;
+        }
+
         @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
+            .process-timeline {
+                flex-direction: column;
             }
-
-            .grid-2col {
-                grid-template-columns: 1fr;
-            }
-
-            .timeline::after {
-                left: 30px;
-            }
-
-            .timeline-item {
-                width: 100%;
-                padding-left: 70px;
-            }
-
-            .timeline-item:nth-child(odd),
-            .timeline-item:nth-child(even) {
-                left: 0;
-                text-align: left;
-            }
-
-            .history-image img {
-                height: 300px;
+            
+            .hero-title {
+                font-size: 2rem;
             }
         }
-
-        @media (max-width: 480px) {
-            .content-section {
-                padding: 0 1rem;
-            }
-
-            .cert-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-                footer {
+                /* Enhanced Footer */
+        footer {
             background: var(--dark-bg);
             color: white;
             padding: 4rem 5%;
@@ -460,7 +385,8 @@
     </style>
 </head>
 <body>
-     <header id="mainHeader">
+    <!-- Navigation (Link to existing site navigation) -->
+             <header id="mainHeader">
         <nav class="nav-container">
             <a href="/" class="logo">
                 <img src="/media/image/AngelLogo.png" alt="Angelpoms Logo">
@@ -475,129 +401,107 @@
                     <ul class="dropdown-menu">
                         <li><a href="#" class="dropdown-item">Pomeranian</a></li>
                         <li><a href="#" class="dropdown-item">Teacup Poodle</a></li>
-                        <li><a href="#" class="dropdown-item">Yorkshire Terrier</a></li>
-                        <li><a href="#" class="dropdown-item">Chihuahua</a></li>
+                        <!-- <li><a href="#" class="dropdown-item">Yorkshire Terrier</a></li>
+                        <li><a href="#" class="dropdown-item">Chihuahua</a></li> -->
                     </ul>
                 </li>
-                <li><a href="book a puppy.html" class="nav-item">Book A Puppy</a></li>
+                <li><a href="/pages/book a puppy.html" class="nav-item">Book A Puppy</a></li>
                 <li><a href="#" class="nav-item">Stud Dogs</a></li>
                 <li><a href="#" class="nav-item">Rehoming</a></li>
-                <li><a href="#" class="nav-item">Service</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-item">Service ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/pages/microchipping.html" class="dropdown-item"> Microchipping</a></li>
+                        <li><a href="#" class="dropdown-item">Pregnancy scans</a></li>
+                        <li><a href="#" class="dropdown-item">Cytology testing</a></li>
+                    </ul>
                 <li><a href="#" class="nav-item">Contact</a></li>
-                <li><a href="./admin.html" class="nav-item">Admin</a></li>
+                <li><a href="/pages/admin.html" class="nav-item">Admin</a></li>
             </ul>
         </nav>
     </header>
+    
     <main>
-        <section class="about-hero">
-            <div class="content-section">
-                <h1>Our Breeding Legacy</h1>
-                <p>Excellence in canine care since 2010</p>
+        <section class="microchip-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Protect Your Pet with Microchipping</h1>
+                <p class="hero-subtitle">Permanent ID Solution for Your Beloved Companion</p>
             </div>
         </section>
 
         <section class="content-section">
-            <div class="grid-2col">
-                <div class="history-image">
-                    <img src="kennels.jpg" alt="Our Facilities">
+            <h2 class="section-title">Why Microchipping Matters</h2>
+            <div class="grid-container">
+                <div class="info-card">
+                    <div class="icon-container">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Permanent Identification</h3>
+                    <p>Lifetime protection that can't be lost or removed</p>
                 </div>
-                <div class="history-text">
-                    <h2>Our Story</h2>
-                    <p>Founded with passion and commitment to quality...</p>
+                <div class="info-card">
+                    <div class="icon-container">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>National Database</h3>
+                    <p>24/7 access to owner information through secure databases</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon-container">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3>Safe & Reliable</h3>
+                    <p>Quick, painless procedure with no maintenance required</p>
                 </div>
             </div>
         </section>
 
         <section class="content-section">
-            <h2>Our Timeline</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>2010 - Foundation</h3>
-                        <p>Began our breeding journey</p>
+            <h2 class="section-title">The Microchipping Process</h2>
+            <div class="process-timeline">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>Registration</h3>
+                    <p>Complete simple owner documentation</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>Implantation</h3>
+                    <p>Quick injection between shoulder blades</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>Verification</h3>
+                    <p>Immediate scan confirmation</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is microchipping painful for my pet?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The procedure is quick and causes minimal discomfort, similar to a routine vaccination.</p>
                     </div>
                 </div>
-                <!-- Add timeline items -->
+                <!-- Add more FAQ items -->
             </div>
         </section>
 
-        <section class="certifications">
-            <div class="content-section">
-                <h2>Accreditations</h2>
-                <div class="cert-grid">
-                    <div class="cert-item">
-                        <i class="fas fa-award fa-3x"></i>
-                        <p>UKKC Registered</p>
-                    </div>
-                    <!-- Add certifications -->
-                </div>
-            </div>
+        <section class="cta-section">
+            <h2>Ready to Protect Your Pet?</h2>
+            <p>Schedule your microchipping appointment today</p>
+            <a href="/contact" class="cta-button">Book Now</a>
         </section>
+    </main>
 
-        <section class="content-section">
-            <h2>Virtual Tour</h2>
-            <div class="video-tour">
-                <iframe src="https://www.youtube.com/embed/your-video-id" allowfullscreen></iframe>
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2>Client Testimonials</h2>
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <p>"Exceptional service and healthy puppies..."</p>
-                    <h4>- Sarah Johnson</h4>
-                </div>
-                <div class="testimonial-card">
-                    <p>"Exceptional service and healthy puppies..."</p>
-                    <h4>- Sarah Johnson</h4>
-                </div>
-                <!-- Add testimonials -->
-            </div>
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <p>"Exceptional service and healthy puppies..."</p>
-                    <h4>- Sarah Johnson</h4>
-                </div>
-                <!-- Add testimonials -->
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2>Photo Gallery</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="/media/image/dog 13.jpg" alt="Puppy Playtime">
-                </div>
-                 <div class="gallery-item">
-                    <img src="/media/image/dog 14.jpg" alt="Puppy Playtime">
-                </div>
-                <div class="gallery-item">
-                    <img src="/media/image/dog 15.jpg" alt="Puppy Playtime">
-                </div>
-                <div class="gallery-item">
-                    <img src="/media/image/dog 16.jpg" alt="Puppy Playtime">
-                </div>
-                <div class="gallery-item">
-                    <img src="/media/image/dog 17.jpg" alt="Puppy Playtime">
-                </div>
-                <!-- Add gallery items -->
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2>FAQ</h2>
-            <div class="accordion">
-                <div class="accordion-item">
-                    <button class="accordion-btn">Breeding Process<span>+</span></button>
-                    <div class="accordion-content">
-                        <p>Our careful selection process...</p>
-                    </div>
-                </div>
-                <!-- Add FAQ items -->
-            </div>
-        </section>
-                <footer>
+    <!-- Footer (Link to existing footer) -->
+             <footer>
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Contact Us</h3>
@@ -615,12 +519,12 @@ Guide Price £TBC</p>
                 <div class="footer-section">
                     <h3>Certifications</h3>
                     <div class="footer-images">
-                        <img src="./media/image/dog 7.jpg" class="footer-image" alt="UK Kennel Club Certification">
-                        <img src="./media/image/dog 8.jpg" class="footer-image" alt="Veterinary Approved">
-                        <img src="./media/image/dog 9.jpg" class="footer-image" alt="5 Star Rating">
-                        <img src="./media/image/dog 10.jpg" class="footer-image" alt="Ethical Breeder">
-                        <img src="./media/image/dog 11.jpg" class="footer-image" alt="DNA Tested">
-                        <img src="./media/image/dog 12.jpg" class="footer-image" alt="Breeding Award">
+                        <img src="/media/image/dog 7.jpg" class="footer-image" alt="UK Kennel Club Certification">
+                        <img src="/media/image/dog 8.jpg" class="footer-image" alt="Veterinary Approved">
+                        <img src="/media/image/dog 9.jpg" class="footer-image" alt="5 Star Rating">
+                        <img src="/media/image/dog 10.jpg" class="footer-image" alt="Ethical Breeder">
+                        <img src="/media/image/dog 11.jpg" class="footer-image" alt="DNA Tested">
+                        <img src="/media/image/dog 12.jpg" class="footer-image" alt="Breeding Award">
                     </div>
                 </div>
             </div>
@@ -633,10 +537,17 @@ Guide Price £TBC</p>
                 </div>
             </div>
         </footer>
-    </main>
 
     <script>
-                // Mobile Menu Toggle
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(item => {
+            item.addEventListener('click', () => {
+                const answer = item.nextElementSibling;
+                answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+                item.querySelector('i').classList.toggle('fa-chevron-up');
+            });
+        });
+               // Mobile Menu Toggle
         document.querySelector('.menu-toggle').addEventListener('click', () => {
             document.querySelector('.nav-links').classList.toggle('active');
         });
@@ -663,39 +574,6 @@ Guide Price £TBC</p>
             animateOnScroll(document.querySelectorAll('.stat-item'), 'visible');
             animateOnScroll(document.querySelectorAll('.puppy-card'), 'visible');
             animateOnScroll(document.querySelectorAll('.guarantee-item'), 'visible');
-        });
-               // Dynamic Copyright Year
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-        // Mobile Menu
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        // Accordion
-        document.querySelectorAll('.accordion-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                button.classList.toggle('active');
-                content.style.maxHeight = button.classList.contains('active') 
-                    ? content.scrollHeight + "px" 
-                    : 0;
-            });
-        });
-
-        // Scroll Animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.timeline-item').forEach(item => {
-            observer.observe(item);
         });
     </script>
 </body>
