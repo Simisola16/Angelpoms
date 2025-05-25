@@ -25,6 +25,25 @@
         body {
             background-color: var(--section-bg);
         }
+
+ :root {
+            --primary-blue: #003366;
+            --accent-blue: #0066cc;
+            --dark-bg: #1a1a1a;
+            --light-text: #ffffff;
+            --section-bg: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--section-bg);
+        }
                 /* Enhanced Header Styles */
         header {
             background-color: var(--dark-bg);
@@ -323,8 +342,7 @@
     </style>
 </head>
 <body>
-    <main>
-        <header id="mainHeader">
+     <header id="mainHeader">
         <nav class="nav-container">
             <a href="/" class="logo">
                 <img src="/media/image/AngelLogo.png" alt="Angelpoms Logo">
@@ -351,13 +369,15 @@
                     <ul class="dropdown-menu">
                         <li><a href="/pages/microchipping.html" class="dropdown-item"> Microchipping</a></li>
                         <li><a href="/pages/pregnacy scan.html" class="dropdown-item">Pregnancy scans</a></li>
-                        <li><a href="/pages/Cytology Testing.html" class="dropdown-item">Cytology testing</a></li>
+                        <li><a href="/pages/Cytology Testing.html" class="dropdown-item">Cytology testing</a></li>
                     </ul>
                 <li><a href="/pages/contact.html" class="nav-item">Contact</a></li>
                 <li><a href="/pages/admin.html" class="nav-item">Admin</a></li>
             </ul>
         </nav>
     </header>
+
+    <main>
         <section class="booking-hero">
             <div class="hero-content">
                 <h1 class="hero-title">Find Your Perfect Companion</h1>
@@ -375,103 +395,35 @@
         </section>
     </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            getDocs
-        } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDrmpMXUZpJ46n-eRiDjQJSJf-YK6whUEM",
-            authDomain: "prom-dog.firebaseapp.com",
-            projectId: "prom-dog",
-            storageBucket: "prom-dog.appspot.com",
-            messagingSenderId: "945953941353",
-            appId: "1:945953941353:web:e6272892f5352c004b7ff8",
-            measurementId: "G-WMGY01WT20"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        async function loadPuppies() {
+    <script>
+        // Load puppies from Local Storage
+        function loadPuppies() {
+            const puppies = JSON.parse(localStorage.getItem('puppies')) || [];
             const container = document.getElementById('puppyContainer');
             
-            try {
-                const querySnapshot = await getDocs(collection(db, "puppies"));
-                container.innerHTML = '';
-
-                if (querySnapshot.empty) {
-                    container.innerHTML = `
-                        <div class="error-message">
-                            No puppies available at the moment. Please check back later.
+            container.innerHTML = puppies.length > 0 
+                ? puppies.map(puppy => `
+                    <div class="puppy-card">
+                        <img src="${puppy.image}" class="puppy-image" alt="${puppy.name}">
+                        <div class="puppy-details">
+                            <h3 class="puppy-name">${puppy.name}</h3>
+                            <p class="puppy-breed">${puppy.breed}</p>
+                            <p class="puppy-age">${puppy.age} weeks old</p>
+                            <p class="puppy-price">£${puppy.price}</p>
+                            <a href="/pages/contact.html" class="cta-button">Reserve Now</a>
                         </div>
-                    `;
-                    return;
-                }
-
-                querySnapshot.forEach((doc) => {
-                    const puppy = doc.data();
-                    const puppyCard = `
-                        <div class="puppy-card" data-id="${doc.id}">
-                            <img src="${puppy.imageUrl}" 
-                                 alt="${puppy.name}" 
-                                 class="puppy-image"
-                                 loading="lazy">
-                            <div class="puppy-details">
-                                <h3 class="puppy-name">${puppy.name}</h3>
-                                <p class="puppy-breed">${puppy.breed}</p>
-                                <p class="puppy-age">${puppy.age} weeks old</p>
-                                <p class="puppy-price">£${puppy.price.toLocaleString()}</p>
-                                <a href="/pages/contact.html" class="cta-button">Reserve Now</a>
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += puppyCard;
-                });
-
-            } catch (error) {
-                console.error("Error loading puppies:", error);
-                container.innerHTML = `
-                    <div class="error-message">
-                        Error loading puppies. Please try again later.
                     </div>
-                `;
-            }
+                `).join('')
+                : '<div class="error-message">No puppies available at the moment. Please check back later.</div>';
         }
 
-        // Initialize the page
-        window.addEventListener('DOMContentLoaded', loadPuppies);
-                // Mobile Menu Toggle
-        document.querySelector('.menu-toggle').addEventListener('click', () => {
+        // Mobile Menu Toggle
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
             document.querySelector('.nav-links').classList.toggle('active');
         });
 
-        // Scroll Effects
-        window.addEventListener('scroll', () => {
-            // Navbar Scroll Effect
-            const header = document.getElementById('mainHeader');
-            window.scrollY > 100 ? 
-                header.classList.add('scrolled-nav') : 
-                header.classList.remove('scrolled-nav');
-
-            // Scroll Reveal Animations
-            const animateOnScroll = (elements, className) => {
-                elements.forEach(element => {
-                    const elementTop = element.getBoundingClientRect().top;
-                    if (elementTop < window.innerHeight - 100) {
-                        element.classList.add(className);
-                    }
-                });
-            };
-
-            animateOnScroll(document.querySelectorAll('.hero-content'), 'visible');
-            animateOnScroll(document.querySelectorAll('.stat-item'), 'visible');
-            animateOnScroll(document.querySelectorAll('.puppy-card'), 'visible');
-            animateOnScroll(document.querySelectorAll('.guarantee-item'), 'visible');
-        });
+        // Initial load
+        window.addEventListener('DOMContentLoaded', loadPuppies);
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AngelPomps - Professional Puppy Management</title>
+    <title>Admin Dashboard - AngelPomps</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -54,119 +54,7 @@
             opacity: 0.8;
         }
 
-        /* Authentication Overlay */
-        .auth-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .auth-box {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            animation: scaleUp 0.3s ease;
-        }
-
-        @keyframes scaleUp {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #4CAF50;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 5px;
-            display: none;
-            animation: slideIn 0.3s ease-out;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
-            z-index: 1001;
-        }
-
-        .notification.error {
-            background: #f44336;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-
-        /* Loading Overlay */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.9);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1002;
-        }
-
-        /* Puppy Grid Styles */
-        .puppy-grid-section {
-            padding: 4rem 2rem;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            color: var(--primary-blue);
-            margin-bottom: 2rem;
-        }
-
-        .puppy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .puppy-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            position: relative;
-        }
-
-        .puppy-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .puppy-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-bottom: 3px solid var(--accent-blue);
-            transition: transform 0.3s ease;
-            aspect-ratio: 3/2;
-        }
-
-        .puppy-card:hover .puppy-image {
-            transform: scale(1.05);
-        }
-
-        /* Dashboard Styles */
+        /* Main Content */
         .dashboard {
             padding: 2rem;
             max-width: 1200px;
@@ -194,13 +82,18 @@
             font-size: 1rem;
         }
 
-        .dashboard-products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+        .image-preview-container {
+            margin: 1rem 0;
         }
 
-        /* Buttons */
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            display: none;
+            margin-top: 1rem;
+        }
+
         .cta-button {
             display: inline-block;
             background: var(--accent-blue);
@@ -232,357 +125,152 @@
             width: 100%;
         }
 
-        .hidden {
-            display: none;
+        .dashboard-products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
 
-        /* Confirmation Modal */
-        .confirmation-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .puppy-card {
             background: white;
-            padding: 2rem;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 1003;
-            display: none;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
 
-        .modal-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            justify-content: flex-end;
+        .puppy-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .puppy-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--accent-blue);
         }
     </style>
 </head>
 <body>
-    <!-- Authentication Overlay -->
-    <div class="auth-overlay" id="authOverlay">
-        <div class="auth-box">
-            <h2 style="margin-bottom: 1.5rem; text-align: center;">Admin Login</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" id="loginEmail" required>
-                </div>
-                <div class="form-group">
-                    <label>Password:</label>
-                    <input type="password" id="loginPassword" required>
-                </div>
-                <button type="submit" class="cta-button" style="width: 100%; margin-top: 1rem;">Login</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div class="confirmation-modal" id="confirmationModal">
-        <p id="modalMessage"></p>
-        <div class="modal-buttons">
-            <button class="cta-button" id="modalConfirm">Confirm</button>
-            <button class="delete-button" id="modalCancel">Cancel</button>
-        </div>
-    </div>
-
-    <!-- Notifications -->
-    <div class="notification" id="notification"></div>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <i class="fas fa-paw fa-spin fa-3x" style="color: var(--primary-blue);"></i>
-    </div>
-
-    <!-- Main Content -->
-    <nav class="dashboard-nav admin-only" style="display: none;">
+    <nav class="dashboard-nav">
         <ul class="nav-list">
             <li><a href="./book a puppy.html" class="nav-link">View Site</a></li>
-            <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
             <li style="margin-left: auto;"><button class="cta-button" id="logoutButton">Logout</button></li>
         </ul>
     </nav>
 
-    <main>
-        <!-- Public View -->
-        <section id="public-view">
-            <div class="booking-hero">
-                <div class="hero-content">
-                    <h1 class="hero-title">Find Your Perfect Companion</h1>
-                    <p class="hero-subtitle">Browse our available pedigree puppies</p>
+    <main class="dashboard">
+        <h2>Admin Dashboard</h2>
+        
+        <div class="add-puppy-form">
+            <h3>Add New Puppy</h3>
+            <form id="addPuppyForm">
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" name="name" required>
                 </div>
-            </div>
-
-            <div class="puppy-grid-section">
-                <h2 class="section-title">Available Puppies</h2>
-                <div class="puppy-grid" id="puppyContainer">
-                    <div class="loading">
-                        <i class="fas fa-paw fa-spin"></i> Loading puppies...
+                <div class="form-group">
+                    <label>Breed:</label>
+                    <input type="text" name="breed" required>
+                </div>
+                <div class="form-group">
+                    <label>Age (weeks):</label>
+                    <input type="number" name="age" required>
+                </div>
+                <div class="form-group">
+                    <label>Price (£):</label>
+                    <input type="number" name="price" required>
+                </div>
+                <div class="form-group">
+                    <label>Puppy Image:</label>
+                    <input type="file" id="puppyImage" accept="image/*" required>
+                    <div class="image-preview-container">
+                        <img class="image-preview" id="imagePreview" alt="Image preview">
                     </div>
                 </div>
-            </div>
-        </section>
+                <button type="submit" class="cta-button">Add Puppy</button>
+            </form>
+        </div>
 
-        <!-- Admin Dashboard -->
-        <section id="dashboard" class="hidden admin-only">
-            <div class="dashboard">
-                <h2>Admin Dashboard</h2>
-                
-                <div class="add-puppy-form">
-                    <h3>Add New Puppy</h3>
-                    <form id="addPuppyForm">
-                        <div class="form-group">
-                            <label>Name:</label>
-                            <input type="text" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Breed:</label>
-                            <input type="text" name="breed" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Age (weeks):</label>
-                            <input type="number" name="age" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Price (£):</label>
-                            <input type="number" name="price" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Image URL:</label>
-                            <input type="url" name="imageUrl" required>
-                        </div>
-                        <button type="submit" class="cta-button">Add Puppy</button>
-                    </form>
-                </div>
-
-                <h3>Manage Puppies</h3>
-                <div class="dashboard-products" id="dashboardProducts"></div>
-            </div>
-        </section>
+        <h3>Manage Puppies</h3>
+        <div class="dashboard-products" id="dashboardProducts"></div>
     </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            getDocs,
-            addDoc,
-            deleteDoc,
-            doc
-        } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword,
-            signOut,
-            onAuthStateChanged
-        } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    <script>
+        let puppies = JSON.parse(localStorage.getItem('puppies')) || [];
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDrmpMXUZpJ46n-eRiDjQJSJf-YK6whUEM",
-            authDomain: "prom-dog.firebaseapp.com",
-            projectId: "prom-dog",
-            storageBucket: "prom-dog.appspot.com",
-            messagingSenderId: "945953941353",
-            appId: "1:945953941353:web:e6272892f5352c004b7ff8",
-            measurementId: "G-WMGY01WT20"
-        };
+        // Image upload handler
+        document.getElementById('puppyImage').addEventListener('change', function(e) {
+            const reader = new FileReader();
+            const preview = document.getElementById('imagePreview');
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            
+            if(this.files[0]) reader.readAsDataURL(this.files[0]);
+        });
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        // UI Elements
-        const notification = document.getElementById('notification');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const logoutButton = document.getElementById('logoutButton');
-        const confirmationModal = document.getElementById('confirmationModal');
-        const modalMessage = document.getElementById('modalMessage');
-        const modalConfirm = document.getElementById('modalConfirm');
-        const modalCancel = document.getElementById('modalCancel');
-
-        // Custom Confirmation Dialog
-        function showConfirmation(message) {
-            return new Promise((resolve) => {
-                modalMessage.textContent = message;
-                confirmationModal.style.display = 'block';
-                
-                const handleResponse = (result) => {
-                    confirmationModal.style.display = 'none';
-                    resolve(result);
+        // Save puppy
+        document.getElementById('addPuppyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const reader = new FileReader();
+            const file = document.getElementById('puppyImage').files[0];
+            
+            reader.onloadend = function() {
+                const puppyData = {
+                    id: Date.now(),
+                    name: document.querySelector('[name="name"]').value,
+                    breed: document.querySelector('[name="breed"]').value,
+                    age: document.querySelector('[name="age"]').value,
+                    price: document.querySelector('[name="price"]').value,
+                    image: reader.result
                 };
 
-                modalConfirm.onclick = () => handleResponse(true);
-                modalCancel.onclick = () => handleResponse(false);
+                puppies.push(puppyData);
+                localStorage.setItem('puppies', JSON.stringify(puppies));
+                
+                e.target.reset();
+                document.getElementById('imagePreview').style.display = 'none';
+                loadPuppies();
+            }
+
+            if (file) reader.readAsDataURL(file);
+        });
+
+        // Load puppies
+        function loadPuppies() {
+            const container = document.getElementById('dashboardProducts');
+            container.innerHTML = '';
+            
+            puppies.forEach(puppy => {
+                const card = `
+                    <div class="puppy-card" data-id="${puppy.id}">
+                        <img src="${puppy.image}" class="puppy-image" alt="${puppy.name}">
+                        <div class="puppy-details" style="padding: 1rem;">
+                            <h3 style="margin: 0.5rem 0;">${puppy.name}</h3>
+                            <p style="margin: 0.3rem 0;">Breed: ${puppy.breed}</p>
+                            <p style="margin: 0.3rem 0;">Age: ${puppy.age} weeks</p>
+                            <p style="margin: 0.3rem 0; font-weight: bold;">Price: £${puppy.price}</p>
+                            <button class="delete-button" onclick="deletePuppy(${puppy.id})">Delete Puppy</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
             });
         }
 
-        // Notification System
-        function showNotification(message, isError = false) {
-            notification.textContent = message;
-            notification.className = `notification${isError ? ' error' : ''}`;
-            notification.style.display = 'block';
-            setTimeout(() => notification.style.display = 'none', 3000);
-        }
-
-        // Loading State
-        function setLoading(state) {
-            loadingOverlay.style.display = state ? 'flex' : 'none';
-        }
-
-        // Authentication
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            setLoading(true);
-            try {
-                await signInWithEmailAndPassword(
-                    auth,
-                    document.getElementById('loginEmail').value,
-                    document.getElementById('loginPassword').value
-                );
-                showNotification('Login successful');
-            } catch (error) {
-                showNotification(`Login failed: ${error.message}`, true);
-            } finally {
-                setLoading(false);
-            }
-        });
-
-        // Logout Handler
-        logoutButton.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                showNotification('Logged out successfully');
-            } catch (error) {
-                showNotification(`Logout failed: ${error.message}`, true);
-            }
-        });
-
-        // Auth State Listener
-        onAuthStateChanged(auth, (user) => {
-            const adminElements = document.querySelectorAll('.admin-only');
-            if (user) {
-                document.getElementById('authOverlay').style.display = 'none';
-                adminElements.forEach(el => el.style.display = 'block');
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('public-view').classList.add('hidden');
-            } else {
-                document.getElementById('authOverlay').style.display = 'flex';
-                adminElements.forEach(el => el.style.display = 'none');
-                document.getElementById('dashboard').classList.add('hidden');
-                document.getElementById('public-view').classList.remove('hidden');
-            }
-        });
-
-        // Puppy Management
-        document.getElementById('addPuppyForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            setLoading(true);
-            const form = e.target;
-            try {
-                await addDoc(collection(db, "puppies"), {
-                    name: form.name.value,
-                    breed: form.breed.value,
-                    age: parseInt(form.age.value),
-                    price: parseFloat(form.price.value),
-                    imageUrl: form.imageUrl.value,
-                    createdAt: new Date()
-                });
-                form.reset();
-                showNotification('Puppy added successfully');
-                loadPuppies();
-            } catch (error) {
-                showNotification(`Failed to add puppy: ${error.message}`, true);
-            } finally {
-                setLoading(false);
-            }
-        });
-
-        async function deletePuppy(puppyId) {
-            try {
-                const confirm = await showConfirmation('Are you sure you want to delete this puppy?');
-                if (!confirm) return;
-                
-                setLoading(true);
-                await deleteDoc(doc(db, "puppies", puppyId));
-                document.querySelectorAll(`[data-id="${puppyId}"]`).forEach(el => el.remove());
-                showNotification('Puppy deleted successfully');
-            } catch (error) {
-                showNotification(`Failed to delete puppy: ${error.message}`, true);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        // Puppy Loading
-        async function loadPuppies() {
-            const publicContainer = document.getElementById('puppyContainer');
-            const dashboardContainer = document.getElementById('dashboardProducts');
-            
-            try {
-                setLoading(true);
-                const snapshot = await getDocs(collection(db, "puppies"));
-                
-                publicContainer.innerHTML = '';
-                dashboardContainer.innerHTML = '';
-
-                if (snapshot.empty) {
-                    publicContainer.innerHTML = '<div class="error-message">No puppies available</div>';
-                    dashboardContainer.innerHTML = '<div class="error-message">No puppies found</div>';
-                    return;
-                }
-
-                snapshot.forEach(doc => {
-                    const puppy = doc.data();
-                    const id = doc.id;
-
-                    // Public View Card
-                    publicContainer.innerHTML += `
-                        <div class="puppy-card" data-id="${id}">
-                            <img src="${puppy.imageUrl}" class="puppy-image" alt="${puppy.name}">
-                            <div class="puppy-details" style="padding: 1rem; text-align: center;">
-                                <h3 class="puppy-name" style="margin: 0.5rem 0;">${puppy.name}</h3>
-                                <p class="puppy-breed" style="color: #666;">${puppy.breed}</p>
-                                <p class="puppy-age" style="margin: 0.5rem 0;">${puppy.age} weeks old</p>
-                                <p class="puppy-price" style="font-weight: bold; color: var(--primary-blue);">£${puppy.price.toLocaleString()}</p>
-                                <button class="cta-button" style="margin: 1rem auto;">Reserve Now</button>
-                            </div>
-                        </div>
-                    `;
-
-                    // Dashboard Card
-                    dashboardContainer.innerHTML += `
-                        <div class="puppy-card" data-id="${id}">
-                            <img src="${puppy.imageUrl}" class="puppy-image" style="height: 200px;">
-                            <div class="puppy-details" style="padding: 1rem;">
-                                <h3 style="margin: 0.5rem 0;">${puppy.name}</h3>
-                                <p style="margin: 0.3rem 0;">Breed: ${puppy.breed}</p>
-                                <p style="margin: 0.3rem 0;">Age: ${puppy.age} weeks</p>
-                                <p style="margin: 0.3rem 0; font-weight: bold;">Price: £${puppy.price}</p>
-                                <button class="delete-button">Delete Puppy</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                showNotification(`Failed to load puppies: ${error.message}`, true);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        // Event Delegation
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('delete-button')) {
-                const puppyId = e.target.closest('[data-id]').dataset.id;
-                deletePuppy(puppyId);
-            }
-        });
-
-        // Initial Load
-        window.addEventListener('DOMContentLoaded', () => {
+        // Delete puppy
+        window.deletePuppy = function(id) {
+            puppies = puppies.filter(puppy => puppy.id !== id);
+            localStorage.setItem('puppies', JSON.stringify(puppies));
             loadPuppies();
-        });
+        }
+
+        // Initial load
+        loadPuppies();
     </script>
 </body>
 </html>
