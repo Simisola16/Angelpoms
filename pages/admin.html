@@ -94,6 +94,7 @@
             display: none;
             animation: slideIn 0.3s ease-out;
             box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+            z-index: 1001;
         }
 
         .notification.error {
@@ -116,7 +117,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1001;
+            z-index: 1002;
         }
 
         /* Puppy Grid Styles */
@@ -145,6 +146,7 @@
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
+            position: relative;
         }
 
         .puppy-card:hover {
@@ -156,6 +158,12 @@
             height: 250px;
             object-fit: cover;
             border-bottom: 3px solid var(--accent-blue);
+            transition: transform 0.3s ease;
+            aspect-ratio: 3/2;
+        }
+
+        .puppy-card:hover .puppy-image {
+            transform: scale(1.05);
         }
 
         /* Dashboard Styles */
@@ -227,6 +235,27 @@
         .hidden {
             display: none;
         }
+
+        /* Confirmation Modal */
+        .confirmation-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1003;
+            display: none;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
     </style>
 </head>
 <body>
@@ -248,6 +277,15 @@
         </div>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div class="confirmation-modal" id="confirmationModal">
+        <p id="modalMessage"></p>
+        <div class="modal-buttons">
+            <button class="cta-button" id="modalConfirm">Confirm</button>
+            <button class="delete-button" id="modalCancel">Cancel</button>
+        </div>
+    </div>
+
     <!-- Notifications -->
     <div class="notification" id="notification"></div>
 
@@ -261,7 +299,7 @@
         <ul class="nav-list">
             <li><a href="./book a puppy.html" class="nav-link">View Site</a></li>
             <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
-            <li style="margin-left: auto;"><button class="cta-button" onclick="logout()">Logout</button></li>
+            <li style="margin-left: auto;"><button class="cta-button" id="logoutButton">Logout</button></li>
         </ul>
     </nav>
 
@@ -357,6 +395,27 @@
         // UI Elements
         const notification = document.getElementById('notification');
         const loadingOverlay = document.getElementById('loadingOverlay');
+        const logoutButton = document.getElementById('logoutButton');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalConfirm = document.getElementById('modalConfirm');
+        const modalCancel = document.getElementById('modalCancel');
+
+        // Custom Confirmation Dialog
+        function showConfirmation(message) {
+            return new Promise((resolve) => {
+                modalMessage.textContent = message;
+                confirmationModal.style.display = 'block';
+                
+                const handleResponse = (result) => {
+                    confirmationModal.style.display = 'none';
+                    resolve(result);
+                };
+
+                modalConfirm.onclick = () => handleResponse(true);
+                modalCancel.onclick = () => handleResponse(false);
+            });
+        }
 
         // Notification System
         function showNotification(message, isError = false) {
@@ -389,17 +448,15 @@
             }
         });
 
-        async function logout() {
-            setLoading(true);
+        // Logout Handler
+        logoutButton.addEventListener('click', async () => {
             try {
                 await signOut(auth);
                 showNotification('Logged out successfully');
             } catch (error) {
                 showNotification(`Logout failed: ${error.message}`, true);
-            } finally {
-                setLoading(false);
             }
-        }
+        });
 
         // Auth State Listener
         onAuthStateChanged(auth, (user) => {
@@ -408,9 +465,11 @@
                 document.getElementById('authOverlay').style.display = 'none';
                 adminElements.forEach(el => el.style.display = 'block');
                 document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('public-view').classList.add('hidden');
             } else {
                 document.getElementById('authOverlay').style.display = 'flex';
                 adminElements.forEach(el => el.style.display = 'none');
+                document.getElementById('dashboard').classList.add('hidden');
                 document.getElementById('public-view').classList.remove('hidden');
             }
         });
@@ -438,12 +497,13 @@
                 setLoading(false);
             }
         });
-        
 
         async function deletePuppy(puppyId) {
-            if (!confirm('Are you sure you want to delete this puppy?')) return;
-            setLoading(true);
             try {
+                const confirm = await showConfirmation('Are you sure you want to delete this puppy?');
+                if (!confirm) return;
+                
+                setLoading(true);
                 await deleteDoc(doc(db, "puppies", puppyId));
                 document.querySelectorAll(`[data-id="${puppyId}"]`).forEach(el => el.remove());
                 showNotification('Puppy deleted successfully');
@@ -480,26 +540,26 @@
                     publicContainer.innerHTML += `
                         <div class="puppy-card" data-id="${id}">
                             <img src="${puppy.imageUrl}" class="puppy-image" alt="${puppy.name}">
-                            <div class="puppy-details">
-                                <h3 class="puppy-name">${puppy.name}</h3>
-                                <p class="puppy-breed">${puppy.breed}</p>
-                                <p class="puppy-age">${puppy.age} weeks old</p>
-                                <p class="puppy-price">£${puppy.price.toLocaleString()}</p>
-                                <button class="cta-button">Reserve Now</button>
+                            <div class="puppy-details" style="padding: 1rem; text-align: center;">
+                                <h3 class="puppy-name" style="margin: 0.5rem 0;">${puppy.name}</h3>
+                                <p class="puppy-breed" style="color: #666;">${puppy.breed}</p>
+                                <p class="puppy-age" style="margin: 0.5rem 0;">${puppy.age} weeks old</p>
+                                <p class="puppy-price" style="font-weight: bold; color: var(--primary-blue);">£${puppy.price.toLocaleString()}</p>
+                                <button class="cta-button" style="margin: 1rem auto;">Reserve Now</button>
                             </div>
                         </div>
                     `;
 
                     // Dashboard Card
                     dashboardContainer.innerHTML += `
-                        <div class="dashboard-card" data-id="${id}">
+                        <div class="puppy-card" data-id="${id}">
                             <img src="${puppy.imageUrl}" class="puppy-image" style="height: 200px;">
-                            <div class="puppy-details">
-                                <h3>${puppy.name}</h3>
-                                <p>Breed: ${puppy.breed}</p>
-                                <p>Age: ${puppy.age} weeks</p>
-                                <p>Price: £${puppy.price}</p>
-                                <button class="delete-button" onclick="deletePuppy('${id}')">Delete Puppy</button>
+                            <div class="puppy-details" style="padding: 1rem;">
+                                <h3 style="margin: 0.5rem 0;">${puppy.name}</h3>
+                                <p style="margin: 0.3rem 0;">Breed: ${puppy.breed}</p>
+                                <p style="margin: 0.3rem 0;">Age: ${puppy.age} weeks</p>
+                                <p style="margin: 0.3rem 0; font-weight: bold;">Price: £${puppy.price}</p>
+                                <button class="delete-button">Delete Puppy</button>
                             </div>
                         </div>
                     `;

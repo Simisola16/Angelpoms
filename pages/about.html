@@ -22,8 +22,8 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Header Styles */
-       header {
+        /* Enhanced Header Styles */
+        header {
             background-color: var(--dark-bg);
             padding: 1rem 2rem;
             position: fixed;
@@ -53,7 +53,7 @@
         }
 
         .logo img {
-            height: 50px;
+            height: 90px;
             width: auto;
             margin-right: 10px;
             transition: all 0.3s ease;
@@ -156,6 +156,7 @@
             .menu-toggle {
                 display: block;
             }
+
             .nav-links {
                 display: none;
                 position: absolute;
@@ -166,25 +167,35 @@
                 flex-direction: column;
                 padding: 1rem 2rem;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                z-index: 1000;
             }
+
             .nav-links.active {
                 display: flex;
             }
+
             .nav-item {
                 padding: 0.75rem 0;
                 border-bottom: 1px solid rgba(255,255,255,0.1);
             }
+
             .dropdown-menu {
                 position: static;
                 background: rgba(0,0,0,0.1);
                 box-shadow: none;
                 margin-left: 1rem;
+                display: none !important;
             }
-            .dropdown-item {
-                color: rgba(255,255,255,0.9);
-                padding: 0.5rem 0;
+
+            .dropdown.active .dropdown-menu {
+                display: block !important;
+            }
+
+            .menu-toggle.active {
+                color: var(--accent-blue);
             }
         }
+
         /* About Page Styles */
         .about-hero {
             background: linear-gradient(rgba(0,51,102,0.9), rgba(0,51,102,0.9)),
@@ -362,10 +373,6 @@
 
         /* Responsive Styles */
         @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-
             .grid-2col {
                 grid-template-columns: 1fr;
             }
@@ -399,7 +406,8 @@
                 grid-template-columns: 1fr 1fr;
             }
         }
-                footer {
+
+        footer {
             background: var(--dark-bg);
             color: white;
             padding: 4rem 5%;
@@ -441,18 +449,10 @@
         }
 
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .guarantee-grid {
-                grid-template-columns: 1fr;
-            }
             .footer-content {
                 grid-template-columns: 1fr;
             }
+
             .footer-images {
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -460,7 +460,7 @@
     </style>
 </head>
 <body>
-    <header id="mainHeader">
+     <header id="mainHeader">
         <nav class="nav-container">
             <a href="/" class="logo">
                 <img src="/media/image/Angelpomslogo.jpg" alt="Angelpoms Logo">
@@ -468,37 +468,34 @@
             </a>
             <button class="menu-toggle">☰</button>
             <ul class="nav-links">
-                <li><a href="/index.html" class="nav-item">Home</a></li>
+                <li><a href="./index.html" class="nav-item">Home</a></li>
                 <li><a href="/pages/about.html" class="nav-item">About</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Breeds ▾</a>
                     <ul class="dropdown-menu">
                         <li><a href="/pages/Pomeranian.html" class="dropdown-item">Pomeranian</a></li>
-                        <li><a href="#" class="dropdown-item">Teacup Poodle</a></li>
-                        <!-- <li><a href="#" class="dropdown-item">Yorkshire Terrier</a></li>
-                        <li><a href="#" class="dropdown-item">Chihuahua</a></li> -->
+                        <li><a href="/pages/Teacup Poodle.html" class="dropdown-item">Teacup Poodle</a></li>
                     </ul>
                 </li>
-                <li><a href="" class="nav-item">Book A Puppy</a></li>
-                <li><a href="#" class="nav-item">Stud Dogs</a></li>
-                <li><a href="#" class="nav-item">Rehoming</a></li>
+                <li><a href="/pages/book a puppy.html" class="nav-item">Book A Puppy</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Service ▾</a>
                     <ul class="dropdown-menu">
                         <li><a href="/pages/microchipping.html" class="dropdown-item"> Microchipping</a></li>
-                        <li><a href="#" class="dropdown-item">Pregnancy scans</a></li>
-                        <li><a href="#" class="dropdown-item">Cytology testing</a></li>
+                        <li><a href="/pages/pregnacy scan.html" class="dropdown-item">Pregnancy scans</a></li>
+                        <li><a href="/pages/Cytology Testing.html" class="dropdown-item">Cytology testing</a></li>
                     </ul>
-                <li><a href="#" class="nav-item">Contact</a></li>
+                <li><a href="/pages/contact.html" class="nav-item">Contact</a></li>
                 <li><a href="/pages/admin.html" class="nav-item">Admin</a></li>
             </ul>
         </nav>
     </header>
+
     <main>
         <section class="about-hero">
             <div class="content-section">
                 <h1>About AngelPoms</h1>
-                <p>We offer a professional services by providing support to new breeders with no experience, providing a professional advice starting with cytology services, pregnancy scan and microchipping the litter of puppies</p>
+                <p>We offer professional services by providing support to new breeders with no experience, offering professional advice starting with cytology services, pregnancy scans, and microchipping for litters of puppies</p>
             </div>
         </section>
 
@@ -514,113 +511,19 @@
             </div>
         </section>
 
-        <section class="content-section">
-            <h2>Our Timeline</h2>
-            <!-- <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>2010 - Foundation</h3>
-                        <p>Began our breeding journey</p>
-                    </div>
-                </div> -->
-                <!-- Add timeline items -->
-            <!-- </div> -->
-        </section>
-
-        <!-- <section class="certifications">
-            <div class="content-section">
-                <h2>Accreditations</h2>
-                <div class="cert-grid">
-                    <div class="cert-item">
-                        <i class="fas fa-award fa-3x"></i>
-                        <p>UKKC Registered</p>
-                    </div>
-                </div>
-            </div>
-        </section> -->
-
-        <!-- <section class="content-section">
-            <h2>Virtual Tour</h2>
-            <div class="video-tour">
-                <iframe src="https://www.youtube.com/embed/your-video-id" allowfullscreen></iframe>
-            </div>
-        </section> -->
-
-        <section class="content-section">
-            <h2>Client Testimonials</h2>
-            <div class="testimonial-grid">
-                <!-- <div class="testimonial-card">
-                    <p>"Exceptional service and healthy puppies..."</p>
-                    <h4>- Sarah Johnson</h4>
-                </div>
-                <div class="testimonial-card">
-                    <p>"Exceptional service and healthy puppies..."</p>
-                    <h4>- Sarah Johnson</h4>
-                </div> -->
-                <!-- Add testimonials -->
-            </div>
-            
-        </section>
-
-        <section class="content-section">
-            <!-- <h2>Photo Gallery</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="/media/image/dog 13.jpg" alt="Puppy Playtime">
-                </div>
-                 <div class="gallery-item">
-                    <img src="/media/image/dog 14.jpg" alt="Puppy Playtime">
-                </div>
-                <div class="gallery-item">
-                    <img src="/media/image/dog 15.jpg" alt="Puppy Playtime">
-                </div>
-                <div class="gallery-item">
-                    <img src="/media/image/dog 16.jpg" alt="Puppy Playtime">
-                </div>
-                <div class="gallery-item">
-                    <img src="/media/image/dog 17.jpg" alt="Puppy Playtime">
-                </div> -->
-                <!-- Add gallery items -->
-            </div>
-        </section>
-
-        <!-- <section class="content-section">
-            <h2>FAQ</h2>
-            <div class="accordion">
-                <div class="accordion-item">
-                    <button class="accordion-btn">Breeding Process<span>+</span></button>
-                    <div class="accordion-content">
-                        <p>Our careful selection process...</p>
-                    </div>
-                </div> -->
-                <!-- Add FAQ items -->
-            </div>
-        </section>
-                <footer>
+        <footer>
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Contact Us</h3>
                     <p>+44 79048 49556</p>
                     <p>ira.chizh2204@gmail.com</p>
-                    <p>Richmond Close, Amersham, Buckinghamshire, HP6 6UY
-Guide Price £TBC</p>
+                    <p>Richmond Close, Amersham, Buckinghamshire, HP6 6UY</p>
                 </div>
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <a href="#health">Health Guarantee</a>
                     <a href="#faq">FAQ</a>
                     <a href="#reviews">Reviews</a>
-                </div>
-                <div class="footer-section">
-                    <h3>Certifications</h3>
-                    <div class="footer-images">
-                        <img src="./media/image/dog 7.jpg" class="footer-image" alt="UK Kennel Club Certification">
-                        <img src="./media/image/dog 8.jpg" class="footer-image" alt="Veterinary Approved">
-                        <img src="./media/image/dog 9.jpg" class="footer-image" alt="5 Star Rating">
-                        <img src="./media/image/dog 10.jpg" class="footer-image" alt="Ethical Breeder">
-                        <img src="./media/image/dog 11.jpg" class="footer-image" alt="DNA Tested">
-                        <img src="./media/image/dog 12.jpg" class="footer-image" alt="Breeding Award">
-                    </div>
                 </div>
             </div>
             <div class="legal-section">
@@ -635,66 +538,56 @@ Guide Price £TBC</p>
     </main>
 
     <script>
-                // Mobile Menu Toggle
-        document.querySelector('.menu-toggle').addEventListener('click', () => {
-            document.querySelector('.nav-links').classList.toggle('active');
-        });
+        // Mobile Menu Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            const dropdowns = document.querySelectorAll('.dropdown');
 
-        // Scroll Effects
-        window.addEventListener('scroll', () => {
-            // Navbar Scroll Effect
-            const header = document.getElementById('mainHeader');
-            window.scrollY > 100 ? 
-                header.classList.add('scrolled-nav') : 
-                header.classList.remove('scrolled-nav');
-
-            // Scroll Reveal Animations
-            const animateOnScroll = (elements, className) => {
-                elements.forEach(element => {
-                    const elementTop = element.getBoundingClientRect().top;
-                    if (elementTop < window.innerHeight - 100) {
-                        element.classList.add(className);
-                    }
-                });
-            };
-
-            animateOnScroll(document.querySelectorAll('.hero-content'), 'visible');
-            animateOnScroll(document.querySelectorAll('.stat-item'), 'visible');
-            animateOnScroll(document.querySelectorAll('.puppy-card'), 'visible');
-            animateOnScroll(document.querySelectorAll('.guarantee-item'), 'visible');
-        });
-               // Dynamic Copyright Year
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-        // Mobile Menu
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        // Accordion
-        document.querySelectorAll('.accordion-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                button.classList.toggle('active');
-                content.style.maxHeight = button.classList.contains('active') 
-                    ? content.scrollHeight + "px" 
-                    : 0;
+            // Toggle mobile menu
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                navLinks.classList.toggle('active');
+                this.classList.toggle('active');
             });
-        });
 
-        // Scroll Animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.nav-container')) {
+                    navLinks.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
                 }
             });
-        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.timeline-item').forEach(item => {
-            observer.observe(item);
+            // Handle dropdown menus on mobile
+            dropdowns.forEach(dropdown => {
+                const link = dropdown.querySelector('.nav-item');
+                link.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 1024) {
+                        e.preventDefault();
+                        dropdown.classList.toggle('active');
+                    }
+                });
+            });
+
+            // Close menu on resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 1024) {
+                    navLinks.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
+                }
+            });
+
+            // Scroll Effects
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('mainHeader');
+                header.classList.toggle('scrolled-nav', window.scrollY > 100);
+            });
+
+            // Copyright Year
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
         });
     </script>
 </body>
