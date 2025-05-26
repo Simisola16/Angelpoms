@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Previous CSS styles remain unchanged */
         :root {
             --primary-blue: #003366;
             --accent-blue: #0066cc;
@@ -26,7 +27,62 @@
             background-color: var(--section-bg);
         }
 
-        /* Navigation */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .cta-button {
+            background: var(--accent-blue);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-blue);
+        }
+
+        .error-message {
+            color: #dc3545;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
         .dashboard-nav {
             background: var(--primary-blue);
             padding: 1rem 2rem;
@@ -54,7 +110,6 @@
             opacity: 0.8;
         }
 
-        /* Main Content */
         .dashboard {
             padding: 2rem;
             max-width: 1200px;
@@ -69,19 +124,6 @@
             margin-bottom: 2rem;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-top: 0.5rem;
-            font-size: 1rem;
-        }
-
         .image-preview-container {
             margin: 1rem 0;
         }
@@ -92,25 +134,6 @@
             border-radius: 8px;
             display: none;
             margin-top: 1rem;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background: var(--accent-blue);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .cta-button:hover {
-            background: var(--primary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .delete-button {
@@ -152,125 +175,233 @@
     </style>
 </head>
 <body>
-    <nav class="dashboard-nav">
-        <ul class="nav-list">
-            <li><a href="./book a puppy.html" class="nav-link">View Site</a></li>
-            <li style="margin-left: auto;"><button class="cta-button" id="logoutButton">Logout</button></li>
-        </ul>
-    </nav>
-
-    <main class="dashboard">
-        <h2>Admin Dashboard</h2>
-        
-        <div class="add-puppy-form">
-            <h3>Add New Puppy</h3>
-            <form id="addPuppyForm">
+    <!-- Login Overlay -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-container">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary-blue);">Admin Login</h2>
+            <form id="loginForm">
                 <div class="form-group">
-                    <label>Name:</label>
-                    <input type="text" name="name" required>
+                    <label>Email:</label>
+                    <input type="email" id="email" required>
                 </div>
                 <div class="form-group">
-                    <label>Breed:</label>
-                    <input type="text" name="breed" required>
+                    <label>Password:</label>
+                    <input type="password" id="password" required>
                 </div>
-                <div class="form-group">
-                    <label>Age (weeks):</label>
-                    <input type="number" name="age" required>
-                </div>
-                <div class="form-group">
-                    <label>Price (£):</label>
-                    <input type="number" name="price" required>
-                </div>
-                <div class="form-group">
-                    <label>Puppy Image:</label>
-                    <input type="file" id="puppyImage" accept="image/*" required>
-                    <div class="image-preview-container">
-                        <img class="image-preview" id="imagePreview" alt="Image preview">
-                    </div>
-                </div>
-                <button type="submit" class="cta-button">Add Puppy</button>
+                <button type="submit" class="cta-button">Login</button>
             </form>
+            <div class="error-message" id="errorMessage">Invalid credentials</div>
         </div>
+    </div>
 
-        <h3>Manage Puppies</h3>
-        <div class="dashboard-products" id="dashboardProducts"></div>
-    </main>
+    <!-- Dashboard Content -->
+    <div id="dashboardContent" style="display: none;">
+        <nav class="dashboard-nav">
+            <ul class="nav-list">
+                <li><a href="./book a puppy.html" class="nav-link">View Site</a></li>
+                <li style="margin-left: auto;"><button class="cta-button" id="logoutButton">Logout</button></li>
+            </ul>
+        </nav>
 
-    <script>
-        let puppies = JSON.parse(localStorage.getItem('puppies')) || [];
-
-        // Image upload handler
-        document.getElementById('puppyImage').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            const preview = document.getElementById('imagePreview');
+        <main class="dashboard">
+            <h2>Admin Dashboard</h2>
             
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            }
-            
-            if(this.files[0]) reader.readAsDataURL(this.files[0]);
-        });
-
-        // Save puppy
-        document.getElementById('addPuppyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const reader = new FileReader();
-            const file = document.getElementById('puppyImage').files[0];
-            
-            reader.onloadend = function() {
-                const puppyData = {
-                    id: Date.now(),
-                    name: document.querySelector('[name="name"]').value,
-                    breed: document.querySelector('[name="breed"]').value,
-                    age: document.querySelector('[name="age"]').value,
-                    price: document.querySelector('[name="price"]').value,
-                    image: reader.result
-                };
-
-                puppies.push(puppyData);
-                localStorage.setItem('puppies', JSON.stringify(puppies));
-                
-                e.target.reset();
-                document.getElementById('imagePreview').style.display = 'none';
-                loadPuppies();
-            }
-
-            if (file) reader.readAsDataURL(file);
-        });
-
-        // Load puppies
-        function loadPuppies() {
-            const container = document.getElementById('dashboardProducts');
-            container.innerHTML = '';
-            
-            puppies.forEach(puppy => {
-                const card = `
-                    <div class="puppy-card" data-id="${puppy.id}">
-                        <img src="${puppy.image}" class="puppy-image" alt="${puppy.name}">
-                        <div class="puppy-details" style="padding: 1rem;">
-                            <h3 style="margin: 0.5rem 0;">${puppy.name}</h3>
-                            <p style="margin: 0.3rem 0;">Breed: ${puppy.breed}</p>
-                            <p style="margin: 0.3rem 0;">Age: ${puppy.age} weeks</p>
-                            <p style="margin: 0.3rem 0; font-weight: bold;">Price: £${puppy.price}</p>
-                            <button class="delete-button" onclick="deletePuppy(${puppy.id})">Delete Puppy</button>
+            <div class="add-puppy-form">
+                <h3>Add New Puppy</h3>
+                <form id="addPuppyForm">
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Breed:</label>
+                        <input type="text" name="breed" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Age (weeks):</label>
+                        <input type="number" name="age" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price (£):</label>
+                        <input type="number" name="price" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Puppy Image:</label>
+                        <input type="file" id="puppyImage" accept="image/*" required>
+                        <div class="image-preview-container">
+                            <img class="image-preview" id="imagePreview" alt="Image preview">
                         </div>
                     </div>
-                `;
-                container.innerHTML += card;
+                    <button type="submit" class="cta-button">Add Puppy</button>
+                </form>
+            </div>
+
+            <h3>Manage Puppies</h3>
+            <div class="dashboard-products" id="dashboardProducts"></div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Admin credentials setup
+            if (!localStorage.getItem('adminCredentials')) {
+                const admins = [
+                    { email: 'ira.chizh2204@gmail.com', password: '12345678' },
+                    { email: 'olamilekanmuhayad@yahoo.com', password: 'muhayad2008' }
+                ];
+                localStorage.setItem('adminCredentials', JSON.stringify(admins));
+            }
+
+            // Session management
+            if (sessionStorage.getItem('loggedIn')) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+
+            // Login handler
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const admins = JSON.parse(localStorage.getItem('adminCredentials'));
+
+                if (!validateEmail(email)) {
+                    showError('Please enter a valid email address');
+                    return;
+                }
+
+                const validAdmin = admins.find(admin => 
+                    admin.email === email && admin.password === password
+                );
+
+                if (validAdmin) {
+                    sessionStorage.setItem('loggedIn', 'true');
+                    showDashboard();
+                } else {
+                    showError('Invalid email or password');
+                }
             });
-        }
+
+            // Logout handler
+            document.getElementById('logoutButton').addEventListener('click', function() {
+                sessionStorage.removeItem('loggedIn');
+                showLogin();
+            });
+
+            // Session termination on page leave/close
+            window.addEventListener('beforeunload', function() {
+                sessionStorage.removeItem('loggedIn');
+            });
+
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'hidden') {
+                    sessionStorage.removeItem('loggedIn');
+                }
+            });
+
+            // Puppy management system
+            let puppies = JSON.parse(localStorage.getItem('puppies')) || [];
+
+            // Image preview
+            document.getElementById('puppyImage').addEventListener('change', function(e) {
+                const reader = new FileReader();
+                const preview = document.getElementById('imagePreview');
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                
+                if(this.files[0]) reader.readAsDataURL(this.files[0]);
+            });
+
+            // Add puppy
+            document.getElementById('addPuppyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const reader = new FileReader();
+                const file = document.getElementById('puppyImage').files[0];
+                
+                reader.onloadend = function() {
+                    const puppyData = {
+                        id: Date.now(),
+                        name: document.querySelector('[name="name"]').value,
+                        breed: document.querySelector('[name="breed"]').value,
+                        age: document.querySelector('[name="age"]').value,
+                        price: document.querySelector('[name="price"]').value,
+                        image: reader.result
+                    };
+
+                    puppies.push(puppyData);
+                    localStorage.setItem('puppies', JSON.stringify(puppies));
+                    
+                    e.target.reset();
+                    document.getElementById('imagePreview').style.display = 'none';
+                    loadPuppies();
+                }
+
+                if (file) reader.readAsDataURL(file);
+            });
+
+            // Load puppies
+            function loadPuppies() {
+                const container = document.getElementById('dashboardProducts');
+                container.innerHTML = '';
+                
+                puppies.forEach(puppy => {
+                    const card = `
+                        <div class="puppy-card" data-id="${puppy.id}">
+                            <img src="${puppy.image}" class="puppy-image" alt="${puppy.name}">
+                            <div style="padding: 1rem;">
+                                <h3 style="margin: 0.5rem 0;">${puppy.name}</h3>
+                                <p style="margin: 0.3rem 0;">Breed: ${puppy.breed}</p>
+                                <p style="margin: 0.3rem 0;">Age: ${puppy.age} weeks</p>
+                                <p style="margin: 0.3rem 0; font-weight: bold;">£${puppy.price}</p>
+                                <button class="delete-button" onclick="deletePuppy(${puppy.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            }
+
+            // Initial load
+            loadPuppies();
+        });
 
         // Delete puppy
         window.deletePuppy = function(id) {
+            let puppies = JSON.parse(localStorage.getItem('puppies'));
             puppies = puppies.filter(puppy => puppy.id !== id);
             localStorage.setItem('puppies', JSON.stringify(puppies));
+            const container = document.getElementById('dashboardProducts');
+            container.innerHTML = '';
             loadPuppies();
         }
 
-        // Initial load
-        loadPuppies();
+        function showLogin() {
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('dashboardContent').style.display = 'none';
+            document.getElementById('loginForm').reset();
+        }
+
+        function showDashboard() {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+            loadPuppies();
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => errorElement.style.display = 'none', 3000);
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
     </script>
 </body>
 </html>
