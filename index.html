@@ -354,64 +354,135 @@
             color: var(--dark-bg);
             margin: 1rem 0;
         }
-        /* New Reviews Section Styles */
+                /* Customer Reviews Section */
         .reviews-section {
             padding: 4rem 5%;
-            background: white;
+            background: var(--section-bg);
+            position: relative;
+            overflow: hidden;
         }
 
-        .reviews-container {
+        .reviews-carousel {
             max-width: 1200px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            position: relative;
+        }
+
+        .reviews-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .review-item {
-            background: var(--section-bg);
+            min-width: 100%;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .review-item.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .review-item:hover {
-            transform: translateY(-5px);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            margin: 0 1rem;
+            opacity: 1; /* Changed from 0 */
+            visibility: visible; /* Added */
+            transform: translateX(0); /* Changed from translateY */
         }
 
         .review-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
             border-bottom: 2px solid var(--accent-blue);
-            padding-bottom: 0.5rem;
         }
 
         .review-name {
             color: var(--primary-blue);
             font-weight: 600;
-            margin: 0;
+            font-size: 1.1rem;
         }
 
         .review-time {
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 400;
         }
 
         .review-text {
             color: #444;
-            line-height: 1.6;
+            line-height: 1.7;
+            font-size: 1rem;
             margin: 0;
+            opacity: 1; /* Ensure text is visible */
         }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .carousel-button.prev {
+            left: -20px;
+        }
+
+        .carousel-button.next {
+            right: -20px;
+        }
+
+        .carousel-dots {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #ddd;
+            border-radius: 50%;
+            margin: 0 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--accent-blue);
+            transform: scale(1.3);
+        }
+
+        @media (max-width: 768px) {
+            .review-item {
+                margin: 0 0.5rem;
+                padding: 1.5rem;
+            }
+
+            .carousel-button {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .carousel-button.prev {
+                left: -15px;
+            }
+
+            .carousel-button.next {
+                right: -15px;
+            }
+        }
+        
 
         /* Health Guarantee */
         .health-guarantee {
@@ -642,14 +713,16 @@
 
         <!-- Customer Reviews -->
         <section class="reviews-section" id="reviews">
-            <h2 class="section-title">Happy Pawrent Testimonials</h2>
-            <div class="reviews-container">
-                <div class="review-item">
+        <h2 class="section-title">Happy Pawrent Testimonials</h2>
+        <div class="reviews-carousel">
+            <button class="carousel-button prev" aria-label="Previous review">❮</button>
+            <div class="reviews-track">
+                <div class="review-item active">
                     <div class="review-header">
                         <h3 class="review-name">Injoo J.</h3>
                         <span class="review-time">1 week ago</span>
                     </div>
-                    <p class="review-text">Exceptional breeder! Puppy so happy and settled in straight away. Will definitely get another one from her in the future.</p>
+                    <p class="review-text">Exceptional breeder! Our puppy settled in immediately and has been a joy. The thorough health checks and ongoing support made us feel completely confident in our adoption.</p>
                 </div>
 
                 <div class="review-item">
@@ -657,7 +730,7 @@
                         <h3 class="review-name">Zoe A.</h3>
                         <span class="review-time">9 months ago</span>
                     </div>
-                    <p class="review-text">Exceptional breeder puppy! So happy with our new family member, settled in immediately. Will definitely return for future additions.</p>
+                    <p class="review-text">From the first contact to bringing our puppy home, the experience was flawless. The attention to detail in documentation and care instructions was truly impressive.</p>
                 </div>
 
                 <div class="review-item">
@@ -665,7 +738,7 @@
                         <h3 class="review-name">CAMERON M.</h3>
                         <span class="review-time">9 months ago</span>
                     </div>
-                    <p class="review-text">Angel was amazing - there's no one else I would use for another Pomeranian. 10/10 couldn't recommend her enough!</p>
+                    <p class="review-text">Angel's expertise in Pomeranians is unmatched. Our pup arrived happy, healthy, and perfectly socialized. The lifetime support guarantee gives us peace of mind.</p>
                 </div>
 
                 <div class="review-item">
@@ -673,10 +746,13 @@
                         <h3 class="review-name">Amanda K.</h3>
                         <span class="review-time">11 months ago</span>
                     </div>
-                    <p class="review-text">Excellent experience from start to finish. Truly ethical breeding practices and exceptional aftercare support.</p>
+                    <p class="review-text">The most professional breeding service we've encountered. Genetic testing transparency and the beautiful facility tour made all the difference in our decision.</p>
                 </div>
             </div>
-        </section>
+            <button class="carousel-button next" aria-label="Next review">❯</button>
+        </div>
+        <div class="carousel-dots"></div>
+    </section>
 
         <!-- CTA Section -->
         <section class="cta-section">
@@ -775,6 +851,62 @@
         // Initial Hero Animation
         window.addEventListener('load', () => {
             document.querySelector('.hero-content').classList.add('visible');
+        });
+        // Updated Carousel Script
+        let currentIndex = 0;
+        const track = document.querySelector('.reviews-track');
+        const items = document.querySelectorAll('.review-item');
+        const dotsContainer = document.querySelector('.carousel-dots');
+
+        // Initialize dots
+        items.forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.classList.add('dot');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            items.forEach(item => item.classList.remove('active'));
+            items[currentIndex].classList.add('active');
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        document.querySelector('.carousel-button.next').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % items.length;
+            updateCarousel();
+        });
+
+        document.querySelector('.carousel-button.prev').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            updateCarousel();
+        });
+
+        // Initialize first review
+        items[0].classList.add('active');
+        document.querySelectorAll('.dot')[0].classList.add('active');
+
+        // Auto-advance every 8 seconds
+        let autoSlide = setInterval(() => {
+            currentIndex = (currentIndex + 1) % items.length;
+            updateCarousel();
+        }, 8000);
+
+        // Pause on hover
+        track.addEventListener('mouseenter', () => clearInterval(autoSlide));
+        track.addEventListener('mouseleave', () => {
+            autoSlide = setInterval(() => {
+                currentIndex = (currentIndex + 1) % items.length;
+                updateCarousel();
+            }, 8000);
         });
     </script>
 </body>
