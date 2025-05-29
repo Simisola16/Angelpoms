@@ -6,9 +6,9 @@
     <title>AngelPoms Admin Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <style>
         :root {
             --primary-blue: #003366;
@@ -33,6 +33,7 @@
             color: #333;
             line-height: 1.6;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Login Overlay */
@@ -42,11 +43,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: linear-gradient(135deg, #003366 0%, #1a1a1a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            padding: 20px;
         }
 
         .login-container {
@@ -55,8 +57,20 @@
             border-radius: 12px;
             width: 100%;
             max-width: 420px;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent-gold);
         }
 
         .login-container h2 {
@@ -130,12 +144,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-list {
             list-style: none;
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             margin: 0;
             padding: 0;
         }
@@ -148,6 +163,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
         }
 
         .nav-link:hover {
@@ -161,6 +177,7 @@
             color: white;
             font-weight: 600;
             font-size: 1.4rem;
+            margin-right: 1rem;
         }
 
         .logo i {
@@ -170,9 +187,10 @@
 
         /* Dashboard Content */
         .dashboard {
-            padding: 2.5rem;
+            padding: 2rem;
             max-width: 1300px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .dashboard-header {
@@ -180,6 +198,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .dashboard-header h2 {
@@ -202,6 +222,12 @@
             display: flex;
             align-items: center;
             gap: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
         .stat-icon {
@@ -212,6 +238,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.8rem;
+            flex-shrink: 0;
         }
 
         .stat-icon.puppy {
@@ -222,6 +249,11 @@
         .stat-icon.stud {
             background: rgba(212, 175, 55, 0.15);
             color: var(--accent-gold);
+        }
+
+        .stat-icon.total {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
         }
 
         .stat-content h3 {
@@ -237,7 +269,7 @@
         /* Form Section */
         .add-section {
             background: white;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 12px;
             box-shadow: var(--card-shadow);
             margin-bottom: 2.5rem;
@@ -255,11 +287,12 @@
             display: flex;
             gap: 1rem;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
         }
 
         .type-btn {
             flex: 1;
-            padding: 1.2rem;
+            padding: 1rem;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             background: #f9f9f9;
@@ -267,6 +300,7 @@
             transition: var(--transition);
             text-align: center;
             font-weight: 500;
+            min-width: 140px;
         }
 
         .type-btn.active {
@@ -313,6 +347,7 @@
             display: none;
             margin: 0 auto;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
         }
 
         /* Animal Cards */
@@ -328,6 +363,7 @@
             overflow: hidden;
             box-shadow: var(--card-shadow);
             transition: var(--transition);
+            position: relative;
         }
 
         .animal-card:hover {
@@ -426,11 +462,12 @@
             align-items: center;
             justify-content: center;
             z-index: 2000;
+            padding: 20px;
         }
 
         .modal-content {
             background: white;
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 12px;
             width: 100%;
             max-width: 500px;
@@ -447,17 +484,18 @@
             gap: 1.5rem;
             margin-top: 2rem;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .modal-btn {
-            padding: 1rem 2rem;
+            padding: 1rem;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             border: none;
             font-size: 1rem;
             transition: var(--transition);
-            min-width: 160px;
+            min-width: 140px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -491,14 +529,122 @@
             background: rgba(0, 102, 204, 0.25);
         }
 
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 3000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            max-width: 90%;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: #28a745;
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+
+        /* Admin Info */
+        .admin-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-left: auto;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
         /* Responsive Design */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .dashboard {
                 padding: 1.5rem;
             }
             
-            .form-row {
-                grid-template-columns: 1fr;
+            .animal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-list {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(to right, var(--primary-blue), #004080);
+                flex-direction: column;
+                gap: 0;
+                padding: 1rem 0;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 100;
+            }
+            
+            .nav-list.active {
+                display: flex;
+            }
+            
+            .nav-list li {
+                width: 100%;
+            }
+            
+            .nav-link {
+                padding: 1rem 2rem;
+                width: 100%;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            
+            .admin-info {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+            }
+            
+            .dashboard-nav {
+                position: relative;
+                padding: 1rem;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
             }
             
             .type-selector {
@@ -510,12 +656,51 @@
                 align-items: center;
             }
             
-            .nav-list {
-                gap: 1rem;
+            .modal-btn {
+                width: 100%;
             }
             
-            .stat-cards {
+            .animal-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .image-preview {
+                max-height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem;
+            }
+            
+            .dashboard {
+                padding: 1rem;
+            }
+            
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stat-icon {
+                margin-bottom: 1rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .animal-card {
+                max-width: 100%;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+            }
+            
+            .add-section {
+                padding: 1rem;
             }
         }
     </style>
@@ -524,15 +709,15 @@
     <!-- Login Overlay -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-container">
-            <h2>Admin Login</h2>
+            <h2>AngelPoms Admin Login</h2>
             <form id="loginForm">
                 <div class="form-group">
                     <label>Email:</label>
-                    <input type="email" id="email" required>
+                    <input type="email" id="email" value="olamilekanmuhayad@yahoo.com" required>
                 </div>
                 <div class="form-group">
                     <label>Password:</label>
-                    <input type="password" id="password" required>
+                    <input type="password" id="password" value="muhayad2008" required>
                 </div>
                 <button type="submit" class="cta-button">Login</button>
             </form>
@@ -547,10 +732,20 @@
                 <i class="fas fa-paw"></i>
                 <span>AngelPoms Admin</span>
             </div>
-            <ul class="nav-list">
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-list" id="navList">
                 <li><a href="#" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="#" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
                 <li><button class="cta-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+                <li>
+                    <div class="admin-info">
+                        <i class="fas fa-user-circle"></i> olamilekanmuhayad@yahoo.com
+                    </div>
+                </li>
             </ul>
         </nav>
 
@@ -579,6 +774,15 @@
                     <div class="stat-content">
                         <h3 id="studCount">0</h3>
                         <p>Stud Dogs</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalCount">0</h3>
+                        <p>Total Animals</p>
                     </div>
                 </div>
             </div>
@@ -613,7 +817,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Age:</label>
-                            <input type="text" name="age" required>
+                            <input type="text" name="age" placeholder="e.g., 8 weeks" required>
                         </div>
                         <div class="form-group">
                             <label>Price (£):</label>
@@ -662,6 +866,9 @@
             </div>
         </div>
     </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
 
     <script>
         // Firebase configuration
@@ -678,6 +885,7 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
         const puppiesCollection = db.collection('puppies');
         const studDogsCollection = db.collection('studDogs');
 
@@ -694,11 +902,15 @@
         const animalGrid = document.getElementById('animalGrid');
         const puppyCount = document.getElementById('puppyCount');
         const studCount = document.getElementById('studCount');
+        const totalCount = document.getElementById('totalCount');
         const typeButtons = document.querySelectorAll('.type-btn');
         const addAnimalBtn = document.getElementById('addAnimalBtn');
         const selectionModal = document.getElementById('selectionModal');
         const addPuppyBtn = document.getElementById('addPuppyBtn');
         const addStudBtn = document.getElementById('addStudBtn');
+        const notification = document.getElementById('notification');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navList = document.getElementById('navList');
 
         // Global variables
         let currentAnimalType = 'puppy';
@@ -706,22 +918,14 @@
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize admin credentials
-            if (!localStorage.getItem('adminCredentials')) {
-                const admins = [
-                    { email: 'admin@angelpoms.com', password: 'securepassword123' },
-                    { email: 'ira.chizh2204@gmail.com', password: '12345678' },
-                    { email: 'olamilekanmuhayad@yahoo.com', password: 'muhayad2008' }
-                ];
-                localStorage.setItem('adminCredentials', JSON.stringify(admins));
-            }
-
             // Check if user is logged in
-            if (sessionStorage.getItem('loggedIn')) {
-                showDashboard();
-            } else {
-                showLogin();
-            }
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    showDashboard();
+                } else {
+                    showLogin();
+                }
+            });
 
             // Event listeners
             loginForm.addEventListener('submit', handleLogin);
@@ -731,6 +935,9 @@
             addAnimalBtn.addEventListener('click', showSelectionModal);
             addPuppyBtn.addEventListener('click', () => showAddForm('puppy'));
             addStudBtn.addEventListener('click', () => showAddForm('stud'));
+            mobileMenuBtn.addEventListener('click', () => {
+                navList.classList.toggle('active');
+            });
             
             // Type selector
             typeButtons.forEach(button => {
@@ -746,12 +953,12 @@
         function showLogin() {
             loginOverlay.style.display = 'flex';
             dashboardContent.style.display = 'none';
-            loginForm.reset();
         }
 
         function showDashboard() {
             loginOverlay.style.display = 'none';
             dashboardContent.style.display = 'block';
+            showNotification('Welcome to AngelPoms Admin Dashboard', 'success');
             loadAnimals();
         }
 
@@ -780,28 +987,23 @@
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
-            const admins = JSON.parse(localStorage.getItem('adminCredentials'));
-
-            if (!validateEmail(email)) {
-                showError('Please enter a valid email address');
-                return;
-            }
-
-            const validAdmin = admins.find(admin => 
-                admin.email === email && admin.password === password
-            );
-
-            if (validAdmin) {
-                sessionStorage.setItem('loggedIn', 'true');
-                showDashboard();
-            } else {
-                showError('Invalid email or password');
-            }
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    showDashboard();
+                })
+                .catch((error) => {
+                    console.error('Login error:', error);
+                    showError('Invalid email or password');
+                    showNotification('Login failed: ' + error.message, 'error');
+                });
         }
 
         function handleLogout() {
-            sessionStorage.removeItem('loggedIn');
-            showLogin();
+            auth.signOut().then(() => {
+                showNotification('You have been logged out', 'success');
+                showLogin();
+            });
         }
 
         function handleImagePreview(e) {
@@ -820,12 +1022,12 @@
             const file = animalImage.files[0];
             
             if (!file) {
-                alert('Please select an image');
+                showError('Please select an image');
                 return;
             }
 
             if(file.size > 500000) {
-                alert('Image too large (max 500KB)');
+                showError('Image too large (max 500KB)');
                 return;
             }
 
@@ -846,22 +1048,21 @@
                     // Add to appropriate collection
                     if (currentAnimalType === 'puppy') {
                         await puppiesCollection.add(animalData);
+                        showNotification('Puppy added successfully!', 'success');
                     } else {
                         await studDogsCollection.add(animalData);
+                        showNotification('Stud dog added successfully!', 'success');
                     }
 
                     // Reset form
                     animalForm.reset();
                     imagePreview.style.display = 'none';
                     
-                    // Show success message
-                    alert(`${currentAnimalType === 'puppy' ? 'Puppy' : 'Stud dog'} added successfully!`);
-                    
                     // Reload animals
                     loadAnimals();
                 } catch (error) {
                     console.error('Error adding animal: ', error);
-                    alert('Error adding animal. Please try again.');
+                    showNotification('Error adding animal: ' + error.message, 'error');
                 }
             };
             
@@ -903,6 +1104,7 @@
                 
                 // Combine all animals
                 const allAnimals = [...puppies, ...studDogs];
+                totalCount.textContent = allAnimals.length;
                 
                 // Sort by creation date (newest first)
                 allAnimals.sort((a, b) => b.createdAt - a.createdAt);
@@ -948,13 +1150,15 @@
             try {
                 if (type === 'puppy') {
                     await puppiesCollection.doc(id).delete();
+                    showNotification('Puppy deleted successfully', 'success');
                 } else {
                     await studDogsCollection.doc(id).delete();
+                    showNotification('Stud dog deleted successfully', 'success');
                 }
                 loadAnimals();
             } catch (error) {
                 console.error('Error deleting animal: ', error);
-                alert('Error deleting animal. Please try again.');
+                showNotification('Error deleting animal: ' + error.message, 'error');
             }
         }
 
@@ -963,10 +1167,13 @@
             errorMessage.style.display = 'block';
             setTimeout(() => errorMessage.style.display = 'none', 3000);
         }
-
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
+        
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
 
         // Make deleteAnimal available globally
