@@ -139,6 +139,7 @@
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
+            z-index: 1001;
         }
 
         /* Scrolled Navbar Style */
@@ -150,40 +151,6 @@
 
         .scrolled-nav .logo img {
             height: 40px;
-        }
-
-        @media (max-width: 1024px) {
-            .menu-toggle {
-                display: block;
-            }
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--dark-bg);
-                flex-direction: column;
-                padding: 1rem 2rem;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            }
-            .nav-links.active {
-                display: flex;
-            }
-            .nav-item {
-                padding: 0.75rem 0;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }
-            .dropdown-menu {
-                position: static;
-                background: rgba(0,0,0,0.1);
-                box-shadow: none;
-                margin-left: 1rem;
-            }
-            .dropdown-item {
-                color: rgba(255,255,255,0.9);
-                padding: 0.5rem 0;
-            }
         }
 
         /* Hero Section */
@@ -215,6 +182,13 @@
         .hero-title {
             font-size: 3.5rem;
             margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .cta-button {
@@ -229,6 +203,9 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
         .cta-button::after {
@@ -297,6 +274,22 @@
             font-size: 2.5rem;
             color: var(--primary-blue);
             margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-blue);
+            border-radius: 2px;
         }
 
         .puppy-grid {
@@ -308,12 +301,13 @@
 
         .puppy-card {
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(30px);
+            position: relative;
         }
 
         .puppy-card.visible {
@@ -322,7 +316,8 @@
         }
 
         .puppy-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
         }
 
         .puppy-image {
@@ -331,6 +326,7 @@
             width: 100%;
             cursor: zoom-in;
             transition: transform 0.3s ease;
+            display: block;
         }
 
         .puppy-image:hover {
@@ -338,51 +334,69 @@
         }
 
         .puppy-details {
-            padding: 1.5rem;
+            padding: 1.8rem;
             text-align: center;
         }
 
         .puppy-breed {
             color: var(--primary-blue);
-            font-size: 1.25rem;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .puppy-age {
+            color: #555;
+            font-size: 1.1rem;
             margin-bottom: 0.5rem;
         }
 
         .puppy-price {
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 1.6rem;
+            font-weight: 700;
             color: var(--dark-bg);
-            margin: 1rem 0;
+            margin: 1.5rem 0;
+            color: #e74c3c;
         }
-                /* Customer Reviews Section */
+
+        /* Fixed Customer Reviews Section */
         .reviews-section {
-            padding: 4rem 5%;
-            background: var(--section-bg);
+            padding: 5rem 5%;
+            background: white;
             position: relative;
             overflow: hidden;
         }
 
         .reviews-carousel {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             position: relative;
+            padding: 0 50px;
         }
 
         .reviews-track {
             display: flex;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
         }
 
         .review-item {
             min-width: 100%;
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            margin: 0 1rem;
-            opacity: 1; /* Changed from 0 */
-            visibility: visible; /* Added */
-            transform: translateX(0); /* Changed from translateY */
+            flex-shrink: 0;
+            padding: 2.5rem;
+            background: var(--section-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin: 0 10px;
+            position: relative;
+            opacity: 0.7;
+            transform: scale(0.9);
+            transition: all 0.5s ease;
+        }
+
+        .review-item.active {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .review-header {
@@ -390,28 +404,38 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+            padding-bottom: 1.2rem;
             border-bottom: 2px solid var(--accent-blue);
         }
 
         .review-name {
             color: var(--primary-blue);
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: 700;
+            font-size: 1.2rem;
         }
 
         .review-time {
             color: #666;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 400;
         }
 
         .review-text {
             color: #444;
-            line-height: 1.7;
-            font-size: 1rem;
+            line-height: 1.8;
+            font-size: 1.05rem;
             margin: 0;
-            opacity: 1; /* Ensure text is visible */
+            font-style: italic;
+        }
+
+        .review-quote {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 3rem;
+            color: var(--accent-blue);
+            opacity: 0.2;
+            font-family: Georgia, serif;
         }
 
         .carousel-button {
@@ -421,38 +445,44 @@
             background: var(--accent-blue);
             color: white;
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
             transition: all 0.3s ease;
             z-index: 10;
+            font-size: 1.2rem;
+        }
+
+        .carousel-button:hover {
+            background: var(--primary-blue);
+            transform: translateY(-50%) scale(1.1);
         }
 
         .carousel-button.prev {
-            left: -20px;
+            left: -15px;
         }
 
         .carousel-button.next {
-            right: -20px;
+            right: -15px;
         }
 
         .carousel-dots {
             text-align: center;
-            margin-top: 2rem;
+            margin-top: 3rem;
         }
 
         .dot {
             display: inline-block;
-            width: 10px;
-            height: 10px;
+            width: 14px;
+            height: 14px;
             background: #ddd;
             border-radius: 50%;
-            margin: 0 6px;
+            margin: 0 8px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -462,49 +492,29 @@
             transform: scale(1.3);
         }
 
-        @media (max-width: 768px) {
-            .review-item {
-                margin: 0 0.5rem;
-                padding: 1.5rem;
-            }
-
-            .carousel-button {
-                width: 35px;
-                height: 35px;
-                font-size: 0.9rem;
-            }
-
-            .carousel-button.prev {
-                left: -15px;
-            }
-
-            .carousel-button.next {
-                right: -15px;
-            }
-        }
-        
-
         /* Health Guarantee */
         .health-guarantee {
-            padding: 4rem 5%;
-            background: white;
+            padding: 5rem 5%;
+            background: linear-gradient(to bottom, #f0f8ff, white);
             text-align: center;
         }
 
         .guarantee-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+            gap: 3rem;
             margin-top: 3rem;
         }
 
         .guarantee-item {
-            padding: 2rem;
-            border-radius: 8px;
-            background: var(--section-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            background: white;
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.6s ease-out;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            border: 1px solid #e6f2ff;
         }
 
         .guarantee-item.visible {
@@ -513,23 +523,46 @@
         }
 
         .guarantee-item i {
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: var(--accent-blue);
+            margin-bottom: 1.5rem;
+            background: #e6f2ff;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+        }
+
+        .guarantee-item h3 {
+            font-size: 1.5rem;
             margin-bottom: 1rem;
+            color: var(--primary-blue);
         }
 
         /* CTA Section */
         .cta-section {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
                         url('https://images.unsplash.com/photo-1587300003388-59208cc962cb') center/cover;
             padding: 6rem 5%;
             text-align: center;
             color: white;
+            position: relative;
         }
 
         .cta-title {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .cta-text {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
         /* Enhanced Footer */
@@ -543,52 +576,323 @@
         .footer-content {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+            gap: 3rem;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .footer-section h3 {
             color: var(--accent-blue);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
+            font-size: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
         }
 
-        .footer-images {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 1rem;
-            margin-top: 2rem;
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-blue);
         }
 
-        .footer-image {
-            width: 100%;
-            height: 80px;
-            object-fit: contain;
-            filter: grayscale(100%);
+        .footer-section p {
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
             transition: all 0.3s ease;
-            cursor: pointer;
+            font-size: 1.1rem;
         }
 
-        .footer-image:hover {
-            filter: grayscale(0);
-            transform: scale(1.1);
+        .footer-section a:hover {
+            color: var(--accent-blue);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 1024px) {
+            /* Tablets and small laptops */
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .guarantee-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .cta-title {
+                font-size: 2.3rem;
+            }
+            
+            .review-item {
+                padding: 2rem;
+            }
         }
 
         @media (max-width: 768px) {
+            /* Larger mobile devices */
             .hero-title {
                 font-size: 2.5rem;
             }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 3rem 5%;
             }
+            
             .guarantee-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
+            
             .footer-content {
                 grid-template-columns: 1fr;
+                gap: 2.5rem;
             }
-            .footer-images {
-                grid-template-columns: repeat(3, 1fr);
+            
+            .reviews-carousel {
+                padding: 0 40px;
+            }
+            
+            .review-item {
+                padding: 1.8rem;
+            }
+            
+            .carousel-button {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .puppy-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+            
+            .cta-text {
+                font-size: 1.1rem;
+            }
+            
+            /* Mobile menu toggle */
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: rgba(0,0,0,0.95);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                z-index: 999;
+                transform: translateY(-100%);
+                transition: transform 0.4s ease;
+            }
+            
+            .nav-links.active {
+                display: flex;
+                transform: translateY(0);
+            }
+            
+            .nav-item {
+                padding: 1.2rem 0;
+                font-size: 1.5rem;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                width: 100%;
+                text-align: center;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                background: transparent;
+                box-shadow: none;
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .dropdown-item {
+                color: rgba(255,255,255,0.9);
+                padding: 0.8rem 0;
+                font-size: 1.2rem;
+            }
+            
+            .dropdown:hover .dropdown-menu {
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Smaller mobile devices */
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .reviews-carousel {
+                padding: 0 30px;
+            }
+            
+            .review-item {
+                padding: 1.5rem;
+            }
+            
+            .review-name {
+                font-size: 1.1rem;
+            }
+            
+            .review-text {
+                font-size: 0.95rem;
+            }
+            
+            .carousel-button {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .carousel-button.prev {
+                left: -10px;
+            }
+            
+            .carousel-button.next {
+                right: -10px;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .puppy-breed {
+                font-size: 1.2rem;
+            }
+            
+            .puppy-price {
+                font-size: 1.4rem;
+            }
+            
+            .cta-title {
+                font-size: 1.8rem;
+            }
+            
+            .guarantee-item {
+                padding: 1.8rem;
+            }
+            
+            .guarantee-item i {
+                width: 70px;
+                height: 70px;
+                font-size: 2.5rem;
+            }
+            
+            .guarantee-item h3 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            /* Very small devices */
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .review-item {
+                padding: 1.2rem;
+            }
+            
+            .review-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .cta-title {
+                font-size: 1.6rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -603,7 +907,7 @@
             <button class="menu-toggle">☰</button>
             <ul class="nav-links">
                 <li><a href="./index.html" class="nav-item">Home</a></li>
-                <li><a href="/pages/about.html" class="nav-item">About</a></li>
+                <li><a href="/pages/about.html" class="nav-item">About Us</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Breeds ▾</a>
                     <ul class="dropdown-menu">
@@ -612,14 +916,16 @@
                     </ul>
                 </li>
                 <li><a href="/pages/book a puppy.html" class="nav-item">Book A Puppy</a></li>
+                 <li><a href="#" class="nav-item">Stud Dogs</a></li>
+                <li><a href="#" class="nav-item">Rehoming</a></li>
                 <li class="dropdown">
-                    <a href="#" class="nav-item">Service ▾</a>
+                    <a href="#" class="nav-item">Services ▾</a>
                     <ul class="dropdown-menu">
                         <li><a href="/pages/microchipping.html" class="dropdown-item"> Microchipping</a></li>
                         <li><a href="/pages/pregnacy scan.html" class="dropdown-item">Pregnancy scans</a></li>
                         <li><a href="/pages/Cytology Testing.html" class="dropdown-item">Cytology testing</a></li>
                     </ul>
-                <li><a href="/pages/contact.html" class="nav-item">Contact</a></li>
+                <li><a href="/pages/contact.html" class="nav-item">Contact Us</a></li>
                 <li><a href="/pages/admin.html" class="nav-item">Admin</a></li>
             </ul>
         </nav>
@@ -649,10 +955,10 @@
                 <div class="stat-number">5★</div>
                 <div class="stat-label">Customer Rating</div>
             </div>
-            <!-- <div class="stat-item">
-                <div class="stat-number">UKKC</div>
-                <div class="stat-label">Registered Breeder</div>
-            </div> -->
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Happy Families</div>
+            </div>
         </section>
 
         <!-- Featured Puppies -->
@@ -660,7 +966,7 @@
             <h2 class="section-title">Available Puppies</h2>
             <div class="puppy-grid">
                 <div class="puppy-card">
-                    <img src="./media/image/dogone.jpg" alt="Pomeranian Puppy" class="puppy-image">
+                    <img src="https://images.unsplash.com/photo-1591958911319-0fea0c8e1f1a?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=400" alt="Pomeranian Puppy" class="puppy-image">
                     <div class="puppy-details">
                         <h3 class="puppy-breed">Pomeranian</h3>
                         <p class="puppy-age">12 Weeks Old</p>
@@ -669,7 +975,7 @@
                     </div>
                 </div>
                 <div class="puppy-card">
-                    <img src="./media/image/dog 2.jpg" alt="Pomeranian Puppy" class="puppy-image">
+                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=400" alt="Pomeranian Puppy" class="puppy-image">
                     <div class="puppy-details">
                         <h3 class="puppy-breed">Pomeranian</h3>
                         <p class="puppy-age">12 Weeks Old</p>
@@ -678,7 +984,7 @@
                     </div>
                 </div>
                 <div class="puppy-card">
-                    <img src="./media/image/dog 5.jpg" alt="Pomeranian Puppy" class="puppy-image">
+                    <img src="https://images.unsplash.com/photo-1615751072497-5f5169febe17?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=400" alt="Pomeranian Puppy" class="puppy-image">
                     <div class="puppy-details">
                         <h3 class="puppy-breed">Teacup Poodle</h3>
                         <p class="puppy-age">12 Weeks Old</p>
@@ -711,53 +1017,10 @@
             </div>
         </section>
 
-        <!-- Customer Reviews -->
-        <section class="reviews-section" id="reviews">
-        <h2 class="section-title">Happy Pawrent Testimonials</h2>
-        <div class="reviews-carousel">
-            <button class="carousel-button prev" aria-label="Previous review">❮</button>
-            <div class="reviews-track">
-                <div class="review-item active">
-                    <div class="review-header">
-                        <h3 class="review-name">Injoo J.</h3>
-                        <span class="review-time">1 week ago</span>
-                    </div>
-                    <p class="review-text">Exceptional breeder! Our puppy settled in immediately and has been a joy. The thorough health checks and ongoing support made us feel completely confident in our adoption.</p>
-                </div>
-
-                <div class="review-item">
-                    <div class="review-header">
-                        <h3 class="review-name">Zoe A.</h3>
-                        <span class="review-time">9 months ago</span>
-                    </div>
-                    <p class="review-text">From the first contact to bringing our puppy home, the experience was flawless. The attention to detail in documentation and care instructions was truly impressive.</p>
-                </div>
-
-                <div class="review-item">
-                    <div class="review-header">
-                        <h3 class="review-name">CAMERON M.</h3>
-                        <span class="review-time">9 months ago</span>
-                    </div>
-                    <p class="review-text">Angel's expertise in Pomeranians is unmatched. Our pup arrived happy, healthy, and perfectly socialized. The lifetime support guarantee gives us peace of mind.</p>
-                </div>
-
-                <div class="review-item">
-                    <div class="review-header">
-                        <h3 class="review-name">Amanda K.</h3>
-                        <span class="review-time">11 months ago</span>
-                    </div>
-                    <p class="review-text">The most professional breeding service we've encountered. Genetic testing transparency and the beautiful facility tour made all the difference in our decision.</p>
-                </div>
-            </div>
-            <button class="carousel-button next" aria-label="Next review">❯</button>
-        </div>
-        <div class="carousel-dots"></div>
-    </section>
-
         <!-- CTA Section -->
         <section class="cta-section">
             <h2 class="cta-title">Ready to Meet Your New Best Friend?</h2>
-            <p class="cta-text">Schedule a Private Viewing at Our Surrey Kennels</p>
+            <p class="cta-text">Schedule a Private Viewing at Our Buckinghamshire Kennels</p>
             <div class="cta-buttons">
                 <a href="/pages/contact.html" class="cta-button">Book Appointment</a>
             </div>
@@ -775,24 +1038,62 @@
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <a href="#health">Health Guarantee</a>
-                    <a href="#reviews">Reviews</a>
+                    <a href="#reviews">Customer Reviews</a>
+                    <a href="#">Available Puppies</a>
+                    <a href="#">Breed Information</a>
+                    <a href="#">Puppy Care Guide</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Hours of Operation</h3>
+                    <p>Monday - Friday: 9am - 6pm</p>
+                    <p>Saturday: 10am - 4pm</p>
+                    <p>Sunday: Appointment Only</p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    </div>
                 </div>
             </div>
-            <div class="legal-section">
-                <p>© <span id="currentYear"></span> Angelpoms. All rights reserved.</p>
-                <div class="legal-links">
+            <div class="footer-bottom">
+                <p>© <span id="currentYear"></span> Angelpoms. All rights reserved. | 
                     <a href="#privacy">Privacy Policy</a> | 
-                    <a href="#terms">Terms of Service</a> | 
-                    <a href="#cookies">Cookie Settings</a>
-                </div>
+                    <a href="#terms">Terms of Service</a></p>
             </div>
         </footer>
     </main>
 
     <script>
         // Mobile Menu Toggle
-        document.querySelector('.menu-toggle').addEventListener('click', () => {
-            document.querySelector('.nav-links').classList.toggle('active');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+        
+        // Dropdown functionality for mobile
+        dropdowns.forEach(dropdown => {
+            const trigger = dropdown.querySelector('.nav-item');
+            
+            trigger.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('active');
+                }
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (navLinks.classList.contains('active') && 
+                !e.target.closest('.nav-links') && 
+                !e.target.closest('.menu-toggle')) {
+                navLinks.classList.remove('active');
+                menuToggle.textContent = '☰';
+            }
         });
 
         // Scroll Effects
@@ -815,7 +1116,6 @@
             animateOnScroll(document.querySelectorAll('.stat-item'), 'visible');
             animateOnScroll(document.querySelectorAll('.puppy-card'), 'visible');
             animateOnScroll(document.querySelectorAll('.guarantee-item'), 'visible');
-            animateOnScroll(document.querySelectorAll('.review-item'), 'visible');
         });
 
         // Image Lightbox
@@ -852,25 +1152,46 @@
         window.addEventListener('load', () => {
             document.querySelector('.hero-content').classList.add('visible');
         });
-        // Updated Carousel Script
+        
+        // Carousel Functionality
         let currentIndex = 0;
         const track = document.querySelector('.reviews-track');
         const items = document.querySelectorAll('.review-item');
         const dotsContainer = document.querySelector('.carousel-dots');
+        const dots = [];
 
-        // Initialize dots
+        // Create dots
         items.forEach((_, index) => {
             const dot = document.createElement('span');
             dot.classList.add('dot');
-            dot.addEventListener('click', () => goToSlide(index));
+            dot.addEventListener('click', () => {
+                goToSlide(index);
+            });
             dotsContainer.appendChild(dot);
+            dots.push(dot);
         });
 
+        // Initialize the carousel
+        function initCarousel() {
+            updateCarousel();
+            // Auto-advance every 8 seconds
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % items.length;
+                updateCarousel();
+            }, 8000);
+        }
+
         function updateCarousel() {
+            // Update track position
             track.style.transform = `translateX(-${currentIndex * 100}%)`;
-            items.forEach(item => item.classList.remove('active'));
-            items[currentIndex].classList.add('active');
-            document.querySelectorAll('.dot').forEach((dot, index) => {
+            
+            // Update active class for items
+            items.forEach((item, index) => {
+                item.classList.toggle('active', index === currentIndex);
+            });
+            
+            // Update active dot
+            dots.forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentIndex);
             });
         }
@@ -880,6 +1201,7 @@
             updateCarousel();
         }
 
+        // Navigation buttons
         document.querySelector('.carousel-button.next').addEventListener('click', () => {
             currentIndex = (currentIndex + 1) % items.length;
             updateCarousel();
@@ -890,24 +1212,8 @@
             updateCarousel();
         });
 
-        // Initialize first review
-        items[0].classList.add('active');
-        document.querySelectorAll('.dot')[0].classList.add('active');
-
-        // Auto-advance every 8 seconds
-        let autoSlide = setInterval(() => {
-            currentIndex = (currentIndex + 1) % items.length;
-            updateCarousel();
-        }, 8000);
-
-        // Pause on hover
-        track.addEventListener('mouseenter', () => clearInterval(autoSlide));
-        track.addEventListener('mouseleave', () => {
-            autoSlide = setInterval(() => {
-                currentIndex = (currentIndex + 1) % items.length;
-                updateCarousel();
-            }, 8000);
-        });
+        // Initialize the carousel
+        initCarousel();
     </script>
 </body>
 </html>

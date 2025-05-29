@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book a Puppy - AngelPomps</title>
+    <title>AngelPoms - Premium Pedigree Puppies</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
         :root {
             --primary-blue: #003366;
             --accent-blue: #0066cc;
-            --dark-bg: #1a1a1a;
+            --accent-gold: #D4AF37;
+            --dark-bg: #080808;
             --light-text: #ffffff;
             --section-bg: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         * {
@@ -24,27 +28,11 @@
 
         body {
             background-color: var(--section-bg);
+            color: #333;
+            line-height: 1.6;
         }
 
- :root {
-            --primary-blue: #003366;
-            --accent-blue: #0066cc;
-            --dark-bg: #1a1a1a;
-            --light-text: #ffffff;
-            --section-bg: #f8f9fa;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background-color: var(--section-bg);
-        }
-                /* Enhanced Header Styles */
+        /* Header Styles */
         header {
             background-color: var(--dark-bg);
             padding: 1rem 2rem;
@@ -75,7 +63,7 @@
         }
 
         .logo img {
-            height: 90px;
+            height: 60px;
             width: auto;
             margin-right: 10px;
             transition: all 0.3s ease;
@@ -161,6 +149,7 @@
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
+            z-index: 1001;
         }
 
         /* Scrolled Navbar Style */
@@ -174,256 +163,527 @@
             height: 40px;
         }
 
-        @media (max-width: 1024px) {
-            .menu-toggle {
-                display: block;
-            }
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--dark-bg);
-                flex-direction: column;
-                padding: 1rem 2rem;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            }
-            .nav-links.active {
-                display: flex;
-            }
-            .nav-item {
-                padding: 0.75rem 0;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }
-            .dropdown-menu {
-                position: static;
-                background: rgba(0,0,0,0.1);
-                box-shadow: none;
-                margin-left: 1rem;
-            }
-            .dropdown-item {
-                color: rgba(255,255,255,0.9);
-                padding: 0.5rem 0;
-            }
-        }
-
         /* Hero Section */
-        .booking-hero {
+        .hero-section {
             background: linear-gradient(rgba(0, 51, 102, 0.9), rgba(0, 51, 102, 0.9)),
-                        url('https://images.unsplash.com/photo-1583337130417-3346d1d7a6c4') center/cover;
-            height: 60vh;
+                        url('https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb') center/cover;
+            height: 50vh;
             display: flex;
             align-items: center;
-            text-align: center;
             color: var(--light-text);
-            padding: 2rem;
+            margin-top: 76px;
+            text-align: center;
         }
 
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
+            padding: 2rem;
         }
 
         .hero-title {
             font-size: 2.5rem;
             margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* Puppy Grid */
-        .puppy-grid-section {
-            padding: 4rem 2rem;
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .section-title {
             text-align: center;
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--primary-blue);
             margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        .puppy-grid {
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        /* Animal Grid */
+        .animal-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
-        .puppy-card {
+        .animal-card {
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .puppy-card:hover {
-            transform: translateY(-5px);
+        .animal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
-        .puppy-image {
+        .animal-image {
             width: 100%;
             height: 250px;
             object-fit: cover;
-            border-bottom: 3px solid var(--accent-blue);
+            border-bottom: 4px solid var(--accent-blue);
         }
 
-        .puppy-details {
+        .stud .animal-image {
+            border-color: var(--accent-gold);
+        }
+
+        .animal-details {
             padding: 1.5rem;
             text-align: center;
         }
 
-        .puppy-name {
+        .animal-name {
             color: var(--primary-blue);
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             margin-bottom: 0.5rem;
         }
 
-        .puppy-breed {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .puppy-age {
-            color: #444;
+        .animal-type {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 500;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
 
-        .puppy-price {
-            color: var(--primary-blue);
+        .type-puppy {
+            background: rgba(0, 102, 204, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .type-stud {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .animal-info {
+            margin-bottom: 0.8rem;
+            color: #555;
+        }
+
+        .animal-info span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .animal-price {
             font-size: 1.5rem;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--primary-blue);
             margin: 1rem 0;
+            text-align: center;
+        }
+
+        .stud .animal-price {
+            color: var(--accent-gold);
         }
 
         .cta-button {
             display: inline-block;
             background: var(--accent-blue);
             color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
+            padding: 0.8rem 1.8rem;
+            border-radius: 30px;
             text-decoration: none;
             transition: all 0.3s ease;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+
+        .stud .cta-button {
+            background: var(--accent-gold);
         }
 
         .cta-button:hover {
             background: var(--primary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
         }
 
-        /* Loading State */
+        .stud .cta-button:hover {
+            background: var(--dark-gold);
+        }
+
         .loading {
             text-align: center;
-            padding: 2rem;
-            font-size: 1.2rem;
+            padding: 3rem;
+            font-size: 1.3rem;
             color: var(--primary-blue);
+            grid-column: 1 / -1;
         }
 
-        /* Error State */
         .error-message {
             text-align: center;
             color: #dc3545;
-            padding: 2rem;
+            padding: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        /* Tab Navigation */
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            background: #eaeaea;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 30px;
+            margin: 0 0.5rem;
+        }
+
+        .tab-button.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
         }
 
         @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: rgba(0,0,0,0.95);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                z-index: 999;
+                transform: translateY(-100%);
+                transition: transform 0.4s ease;
+            }
+            
+            .nav-links.active {
+                display: flex;
+                transform: translateY(0);
+            }
+            
+            .nav-item {
+                padding: 1.2rem 0;
+                font-size: 1.5rem;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                width: 100%;
+                text-align: center;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                background: transparent;
+                box-shadow: none;
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .dropdown-item {
+                color: rgba(255,255,255,0.9);
+                padding: 0.8rem 0;
+                font-size: 1.2rem;
+            }
+            
+            .dropdown:hover .dropdown-menu {
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+            
             .hero-title {
                 font-size: 2rem;
             }
             
-            .puppy-grid {
-                grid-template-columns: 1fr;
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+            
+            .tab-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-     <header id="mainHeader">
+    <header id="mainHeader">
         <nav class="nav-container">
             <a href="/" class="logo">
-                <img src="/media/image/AngelLogo.png" alt="Angelpoms Logo">
-                Angelpoms
+                <img src="https://via.placeholder.com/60" alt="Angelpoms Logo">
+                AngelPoms
             </a>
             <button class="menu-toggle">☰</button>
             <ul class="nav-links">
-                <li><a href="/index.html" class="nav-item">Home</a></li>
-                <li><a href="/pages/about.html" class="nav-item">About</a></li>
+                <li><a href="./index.html" class="nav-item">Home</a></li>
+                <li><a href="/pages/about.html" class="nav-item">About Us</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Breeds ▾</a>
                     <ul class="dropdown-menu">
                         <li><a href="/pages/Pomeranian.html" class="dropdown-item">Pomeranian</a></li>
                         <li><a href="/pages/Toy Poodle.html" class="dropdown-item">Toy Poodle</a></li>
-                        <!-- <li><a href="#" class="dropdown-item">Yorkshire Terrier</a></li>
-                        <li><a href="#" class="dropdown-item">Chihuahua</a></li> -->
                     </ul>
                 </li>
-                <li><a href="/pages/book a puppy.html" class="nav-item">Book A Puppy</a></li>
-                <!-- <li><a href="#" class="nav-item">Stud Dogs</a></li>
-                <li><a href="#" class="nav-item">Rehoming</a></li> -->
+                <li><a href="/pages/book-a-puppy.html" class="nav-item active">Book A Puppy</a></li>
+                <li><a href="/pages/stud-dogs.html" class="nav-item">Stud Dogs</a></li>
+                <li><a href="#" class="nav-item">Rehoming</a></li>
                 <li class="dropdown">
-                    <a href="#" class="nav-item">Service ▾</a>
+                    <a href="#" class="nav-item">Services ▾</a>
                     <ul class="dropdown-menu">
                         <li><a href="/pages/microchipping.html" class="dropdown-item"> Microchipping</a></li>
-                        <li><a href="/pages/pregnacy scan.html" class="dropdown-item">Pregnancy scans</a></li>
-                        <li><a href="/pages/Cytology Testing.html" class="dropdown-item">Cytology testing</a></li>
+                        <li><a href="/pages/pregnancy-scan.html" class="dropdown-item">Pregnancy scans</a></li>
+                        <li><a href="/pages/cytology-testing.html" class="dropdown-item">Cytology testing</a></li>
                     </ul>
-                <li><a href="/pages/contact.html" class="nav-item">Contact</a></li>
+                </li>
+                <li><a href="/pages/contact.html" class="nav-item">Contact Us</a></li>
                 <li><a href="/pages/admin.html" class="nav-item">Admin</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="booking-hero">
+        <!-- Hero Section -->
+        <section class="hero-section" id="puppyHero">
             <div class="hero-content">
                 <h1 class="hero-title">Find Your Perfect Companion</h1>
                 <p class="hero-subtitle">Browse our available pedigree puppies</p>
             </div>
         </section>
 
-        <section class="puppy-grid-section">
-            <h2 class="section-title">Available Puppies</h2>
-            <div class="puppy-grid" id="puppyContainer">
-                <div class="loading">
-                    <i class="fas fa-paw fa-spin"></i> Loading puppies...
-                </div>
+        <section class="hero-section" id="studHero" style="display: none; background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1560807707-8cc77767d783') center/cover;">
+            <div class="hero-content">
+                <h1 class="hero-title">Premium Stud Dogs</h1>
+                <p class="hero-subtitle">Our champion bloodline stud dogs with excellent pedigrees</p>
             </div>
         </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="tab-container">
+                <button class="tab-button active" id="puppyTab">Puppies</button>
+                <button class="tab-button" id="studTab">Stud Dogs</button>
+            </div>
+            
+            <div id="puppySection">
+                <h2 class="section-title">Available Puppies</h2>
+                <div class="animal-grid" id="puppyContainer">
+                    <div class="loading">
+                        <i class="fas fa-paw fa-spin"></i> Loading puppies...
+                    </div>
+                </div>
+            </div>
+            
+            <div id="studSection" style="display: none;">
+                <h2 class="section-title">Available Stud Dogs</h2>
+                <div class="animal-grid" id="studContainer">
+                    <div class="loading">
+                        <i class="fas fa-crown fa-spin"></i> Loading stud dogs...
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script>
-        // Load puppies from Local Storage
-        function loadPuppies() {
-            const puppies = JSON.parse(localStorage.getItem('puppies')) || [];
-            const container = document.getElementById('puppyContainer');
-            
-            container.innerHTML = puppies.length > 0 
-                ? puppies.map(puppy => `
-                    <div class="puppy-card">
-                        <img src="${puppy.image}" class="puppy-image" alt="${puppy.name}">
-                        <div class="puppy-details">
-                            <h3 class="puppy-name">${puppy.name}</h3>
-                            <p class="puppy-breed">${puppy.breed}</p>
-                            <p class="puppy-age">${puppy.age} weeks old</p>
-                            <p class="puppy-price">£${puppy.price}</p>
-                            <a href="/pages/contact.html" class="cta-button">Reserve Now</a>
-                        </div>
-                    </div>
-                `).join('')
-                : '<div class="error-message">No puppies available at the moment. Please check back later.</div>';
-        }
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrmpMXUZpJ46n-eRiDjQJSJf-YK6whUEM",
+            authDomain: "prom-dog.firebaseapp.com",
+            projectId: "prom-dog",
+            storageBucket: "prom-dog.appspot.com",
+            messagingSenderId: "945953941353",
+            appId: "1:945953941353:web:e6272892f5352c004b7ff8",
+            measurementId: "G-WMGY01WT20"
+        };
 
-        // Mobile Menu Toggle
-        document.querySelector('.menu-toggle').addEventListener('click', function() {
-            document.querySelector('.nav-links').classList.toggle('active');
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const puppiesCollection = db.collection('puppies');
+        const studDogsCollection = db.collection('studDogs');
+
+        // DOM elements
+        const puppyTab = document.getElementById('puppyTab');
+        const studTab = document.getElementById('studTab');
+        const puppySection = document.getElementById('puppySection');
+        const studSection = document.getElementById('studSection');
+        const puppyHero = document.getElementById('puppyHero');
+        const studHero = document.getElementById('studHero');
+        const puppyContainer = document.getElementById('puppyContainer');
+        const studContainer = document.getElementById('studContainer');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        const dropdowns = document.querySelectorAll('.dropdown');
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial content
+            loadPuppies();
+            
+            // Mobile menu toggle
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+            });
+            
+            // Dropdown functionality for mobile
+            dropdowns.forEach(dropdown => {
+                const trigger = dropdown.querySelector('.nav-item');
+                
+                trigger.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        dropdown.classList.toggle('active');
+                    }
+                });
+            });
+            
+            // Tab switching
+            puppyTab.addEventListener('click', () => {
+                puppyTab.classList.add('active');
+                studTab.classList.remove('active');
+                puppySection.style.display = 'block';
+                studSection.style.display = 'none';
+                puppyHero.style.display = 'flex';
+                studHero.style.display = 'none';
+                loadPuppies();
+            });
+            
+            studTab.addEventListener('click', () => {
+                studTab.classList.add('active');
+                puppyTab.classList.remove('active');
+                puppySection.style.display = 'none';
+                studSection.style.display = 'block';
+                puppyHero.style.display = 'none';
+                studHero.style.display = 'flex';
+                loadStudDogs();
+            });
         });
 
-        // Initial load
-        window.addEventListener('DOMContentLoaded', loadPuppies);
+        // Functions
+        function loadPuppies() {
+            puppyContainer.innerHTML = '<div class="loading"><i class="fas fa-paw fa-spin"></i> Loading puppies...</div>';
+            
+            puppiesCollection.onSnapshot((snapshot) => {
+                puppyContainer.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    puppyContainer.innerHTML = '<div class="error-message">No puppies available at the moment</div>';
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const puppy = doc.data();
+                    puppyContainer.innerHTML += `
+                        <div class="animal-card">
+                            <img src="${puppy.image}" class="animal-image" alt="${puppy.name}">
+                            <div class="animal-details">
+                                <h3 class="animal-name">${puppy.name}</h3>
+                                <div class="animal-type type-puppy">Puppy</div>
+                                <p class="animal-info"><span>Breed:</span> ${puppy.breed}</p>
+                                <p class="animal-info"><span>Age:</span> ${puppy.age} weeks</p>
+                                <div class="animal-price">£${puppy.price}</div>
+                                <a href="/pages/contact.html" class="cta-button">Reserve Now</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }, error => {
+                console.error('Error loading puppies: ', error);
+                puppyContainer.innerHTML = '<div class="error-message">Error loading puppies. Please try again later.</div>';
+            });
+        }
+
+        function loadStudDogs() {
+            studContainer.innerHTML = '<div class="loading"><i class="fas fa-crown fa-spin"></i> Loading stud dogs...</div>';
+            
+            studDogsCollection.onSnapshot((snapshot) => {
+                studContainer.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    studContainer.innerHTML = '<div class="error-message">No stud dogs available at the moment</div>';
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const stud = doc.data();
+                    studContainer.innerHTML += `
+                        <div class="animal-card stud">
+                            <img src="${stud.image}" class="animal-image" alt="${stud.name}">
+                            <div class="animal-details">
+                                <h3 class="animal-name">${stud.name}</h3>
+                                <div class="animal-type type-stud">Stud Dog</div>
+                                <p class="animal-info"><span>Breed:</span> ${stud.breed}</p>
+                                <p class="animal-info"><span>Age:</span> ${stud.age} weeks</p>
+                                <div class="animal-price">£${stud.price}</div>
+                                <a href="/pages/contact.html" class="cta-button">Book This Stud</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }, error => {
+                console.error('Error loading stud dogs: ', error);
+                studContainer.innerHTML = '<div class="error-message">Error loading stud dogs. Please try again later.</div>';
+            });
+        }
     </script>
 </body>
 </html>

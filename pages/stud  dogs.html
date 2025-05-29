@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stud Dogs - AngelPoms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-gold: #B8860B;
+            --light-text: #ffffff;
+            --section-bg: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--section-bg);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #1a1a1a;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 60px;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-gold);
+        }
+
+        .stud-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                        url('https://images.unsplash.com/photo-1560807707-8cc77767d783') center/cover;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--light-text);
+            margin-top: 80px;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .stud-grid-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--dark-gold);
+            margin-bottom: 3rem;
+        }
+
+        .stud-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .stud-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .stud-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        .stud-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-bottom: 4px solid var(--primary-gold);
+        }
+
+        .stud-details {
+            padding: 1.8rem;
+            text-align: center;
+        }
+
+        .stud-name {
+            color: var(--dark-gold);
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .stud-info {
+            margin-bottom: 0.8rem;
+            color: #555;
+            font-size: 1.05rem;
+        }
+
+        .stud-info span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .stud-description {
+            margin: 1.2rem 0;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .stud-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-gold);
+            margin: 1.5rem 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-gold);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+
+        .cta-button:hover {
+            background: var(--dark-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.3rem;
+            color: var(--dark-gold);
+            grid-column: 1 / -1;
+        }
+
+        .error-message {
+            text-align: center;
+            color: #dc3545;
+            padding: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .stud-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/media/image/AngelLogo.png" alt="Angelpoms Logo">
+                Angelpoms
+            </a>
+            <ul class="nav-links">
+                <li><a href="/index.html" class="nav-item">Home</a></li>
+                <li><a href="/pages/about.html" class="nav-item">About</a></li>
+                <li><a href="/pages/book-a-puppy.html" class="nav-item">Puppies</a></li>
+                <li><a href="/pages/stud-dogs.html" class="nav-item">Stud Dogs</a></li>
+                <li><a href="/pages/contact.html" class="nav-item">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="stud-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Premium Stud Dogs</h1>
+                <p class="hero-subtitle">Our champion bloodline stud dogs with excellent pedigrees and proven genetics</p>
+            </div>
+        </section>
+
+        <section class="stud-grid-section">
+            <h2 class="section-title">Available Stud Dogs</h2>
+            <div class="stud-grid" id="studContainer">
+                <div class="loading">
+                    <i class="fas fa-crown fa-spin"></i> Loading stud dogs...
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrmpMXUZpJ46n-eRiDjQJSJf-YK6whUEM",
+            authDomain: "prom-dog.firebaseapp.com",
+            projectId: "prom-dog",
+            storageBucket: "prom-dog.appspot.com",
+            messagingSenderId: "945953941353",
+            appId: "1:945953941353:web:e6272892f5352c004b7ff8",
+            measurementId: "G-WMGY01WT20"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const studDogsCollection = db.collection('studDogs');
+
+        // Load stud dogs
+        function loadStudDogs() {
+            const container = document.getElementById('studContainer');
+            
+            studDogsCollection.onSnapshot((snapshot) => {
+                container.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    container.innerHTML = '<div class="error-message">No stud dogs available at the moment. Please check back soon!</div>';
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const stud = doc.data();
+                    container.innerHTML += `
+                        <div class="stud-card">
+                            <img src="${stud.image}" class="stud-image" alt="${stud.name}">
+                            <div class="stud-details">
+                                <h3 class="stud-name">${stud.name}</h3>
+                                <p class="stud-info"><span>Breed:</span> ${stud.breed}</p>
+                                <p class="stud-info"><span>Age:</span> ${stud.age}</p>
+                                <p class="stud-description">${stud.description || 'A premium stud dog with excellent pedigree and proven genetics.'}</p>
+                                <div class="stud-price">£${stud.price}</div>
+                                <a href="/pages/contact.html" class="cta-button">Book This Stud</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }, error => {
+                console.error('Error loading stud dogs: ', error);
+                container.innerHTML = '<div class="error-message">Error loading stud dogs. Please try again later.</div>';
+            });
+        }
+
+        // Initial load
+        window.addEventListener('DOMContentLoaded', loadStudDogs);
+    </script>
+</body>
+</html>
