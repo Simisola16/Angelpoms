@@ -14,6 +14,7 @@
             --primary-blue: #003366;
             --accent-blue: #0066cc;
             --accent-gold: #D4AF37;
+            --accent-red: #dc3545;
             --dark-bg: #1a1a1a;
             --light-text: #ffffff;
             --section-bg: #f8f9fa;
@@ -251,6 +252,11 @@
             color: var(--accent-gold);
         }
 
+        .stat-icon.rehome {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--accent-red);
+        }
+
         .stat-icon.total {
             background: rgba(40, 167, 69, 0.15);
             color: #28a745;
@@ -315,10 +321,13 @@
             display: block;
             font-size: 2rem;
             margin-bottom: 0.8rem;
+        }
+
+        .type-btn.puppy.active i {
             color: var(--accent-blue);
         }
 
-        .type-btn.stud.active i {
+        .type-btn.stud i {
             color: var(--accent-gold);
         }
 
@@ -326,6 +335,16 @@
             border-color: var(--accent-gold);
             background: rgba(212, 175, 55, 0.05);
             color: var(--accent-gold);
+        }
+
+        .type-btn.rehome i {
+            color: var(--accent-red);
+        }
+
+        .type-btn.rehome.active {
+            border-color: var(--accent-red);
+            background: rgba(220, 53, 69, 0.05);
+            color: var(--accent-red);
         }
 
         .form-row {
@@ -382,6 +401,10 @@
             border-color: var(--accent-gold);
         }
 
+        .rehome .animal-image {
+            border-color: var(--accent-red);
+        }
+
         .animal-details {
             padding: 1.5rem;
         }
@@ -411,6 +434,11 @@
             color: var(--accent-gold);
         }
 
+        .type-rehome {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--accent-red);
+        }
+
         .animal-info {
             margin-bottom: 0.8rem;
             color: #555;
@@ -431,6 +459,10 @@
 
         .stud .animal-price {
             color: var(--accent-gold);
+        }
+
+        .rehome .animal-price {
+            color: var(--accent-red);
         }
 
         .delete-button {
@@ -516,6 +548,11 @@
             color: var(--accent-blue);
         }
 
+        .btn-rehome {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--accent-red);
+        }
+
         .modal-btn:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
@@ -527,6 +564,10 @@
 
         .btn-puppy:hover {
             background: rgba(0, 102, 204, 0.25);
+        }
+
+        .btn-rehome:hover {
+            background: rgba(220, 53, 69, 0.25);
         }
 
         /* Notification */
@@ -643,10 +684,6 @@
                 align-items: flex-start;
             }
             
-            .section-title {
-                font-size: 1.3rem;
-            }
-            
             .type-selector {
                 flex-direction: column;
             }
@@ -738,8 +775,9 @@
             </button>
             
             <ul class="nav-list" id="navList">
-                <li><a href="#" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="/pages/book a puppy.html" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
+                <li><a href="/pages/book a puppy.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/index.html" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
+                <li><a href="#" class="nav-link" id="rehomingLink"><i class="fas fa-heart"></i> Rehoming</a></li>
                 <li><button class="cta-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
                 <li>
                     <div class="admin-info">
@@ -777,6 +815,15 @@
                     </div>
                 </div>
                 <div class="stat-card">
+                    <div class="stat-icon rehome">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="rehomingCount">0</h3>
+                        <p>Rehoming Animals</p>
+                    </div>
+                </div>
+                <div class="stat-card">
                     <div class="stat-icon total">
                         <i class="fas fa-database"></i>
                     </div>
@@ -799,6 +846,10 @@
                     <div class="type-btn stud" data-type="stud">
                         <i class="fas fa-crown"></i>
                         Add Stud Dog
+                    </div>
+                    <div class="type-btn rehome" data-type="rehome">
+                        <i class="fas fa-heart"></i>
+                        Add Rehoming
                     </div>
                 </div>
                 
@@ -825,6 +876,19 @@
                         </div>
                     </div>
                     
+                    <div id="rehomingFields" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Reason for Rehoming:</label>
+                                <input type="text" name="reason" placeholder="e.g., Owner relocation">
+                            </div>
+                            <div class="form-group">
+                                <label>History:</label>
+                                <input type="text" name="history" placeholder="e.g., Previous home details">
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
                         <label>Description:</label>
                         <textarea name="description" class="form-control" rows="3" style="width: 100%; padding: 0.9rem; border: 1px solid #ddd; border-radius: 6px;"></textarea>
@@ -845,6 +909,10 @@
             <!-- Animal Management -->
             <h3 class="section-title">Manage Animals</h3>
             <div class="animal-grid" id="animalGrid"></div>
+
+            <!-- Rehoming Management -->
+            <h3 class="section-title" id="rehomingTitle" style="display: none;">Manage Rehoming Animals</h3>
+            <div class="animal-grid" id="rehomingGrid" style="display: none;"></div>
         </main>
     </div>
 
@@ -862,6 +930,10 @@
                 <button class="modal-btn btn-stud" id="addStudBtn">
                     <i class="fas fa-crown"></i>
                     Add a Stud Dog
+                </button>
+                <button class="modal-btn btn-rehome" id="addRehomeBtn">
+                    <i class="fas fa-heart"></i>
+                    Add Rehoming
                 </button>
             </div>
         </div>
@@ -888,6 +960,7 @@
         const auth = firebase.auth();
         const puppiesCollection = db.collection('puppies');
         const studDogsCollection = db.collection('studDogs');
+        const rehomingCollection = db.collection('rehoming');
 
         // DOM elements
         const loginOverlay = document.getElementById('loginOverlay');
@@ -902,16 +975,22 @@
         const animalGrid = document.getElementById('animalGrid');
         const puppyCount = document.getElementById('puppyCount');
         const studCount = document.getElementById('studCount');
+        const rehomingCount = document.getElementById('rehomingCount');
         const totalCount = document.getElementById('totalCount');
         const typeButtons = document.querySelectorAll('.type-btn');
         const addAnimalBtn = document.getElementById('addAnimalBtn');
         const selectionModal = document.getElementById('selectionModal');
         const addPuppyBtn = document.getElementById('addPuppyBtn');
         const addStudBtn = document.getElementById('addStudBtn');
+        const addRehomeBtn = document.getElementById('addRehomeBtn');
         const notification = document.getElementById('notification');
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const navList = document.getElementById('navList');
         const adminEmailSpan = document.getElementById('adminEmail');
+        const rehomingLink = document.getElementById('rehomingLink');
+        const rehomingTitle = document.getElementById('rehomingTitle');
+        const rehomingGrid = document.getElementById('rehomingGrid');
+        const rehomingFields = document.getElementById('rehomingFields');
 
         // Global variables
         let currentAnimalType = 'puppy';
@@ -937,6 +1016,7 @@
             addAnimalBtn.addEventListener('click', showSelectionModal);
             addPuppyBtn.addEventListener('click', () => showAddForm('puppy'));
             addStudBtn.addEventListener('click', () => showAddForm('stud'));
+            addRehomeBtn.addEventListener('click', () => showAddForm('rehome'));
             mobileMenuBtn.addEventListener('click', () => {
                 navList.classList.toggle('active');
             });
@@ -947,7 +1027,28 @@
                     typeButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
                     currentAnimalType = button.dataset.type;
+                    
+                    // Show/hide rehoming fields
+                    if (currentAnimalType === 'rehome') {
+                        rehomingFields.style.display = 'block';
+                    } else {
+                        rehomingFields.style.display = 'none';
+                    }
                 });
+            });
+            
+            // Rehoming link
+            rehomingLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Hide all sections
+                document.querySelectorAll('.section-title, .animal-grid').forEach(el => {
+                    el.style.display = 'none';
+                });
+                // Show rehoming section
+                rehomingTitle.style.display = 'block';
+                rehomingGrid.style.display = 'grid';
+                // Load rehoming animals
+                loadRehomingAnimals();
             });
         });
 
@@ -982,6 +1083,13 @@
                     button.classList.add('active');
                 }
             });
+            
+            // Show/hide rehoming fields
+            if (type === 'rehome') {
+                rehomingFields.style.display = 'block';
+            } else {
+                rehomingFields.style.display = 'none';
+            }
             
             // Scroll to form
             addSection.scrollIntoView({ behavior: 'smooth' });
@@ -1049,13 +1157,22 @@
                         createdAt: new Date()
                     };
 
+                    // Add rehoming specific fields
+                    if (currentAnimalType === 'rehome') {
+                        animalData.reason = document.querySelector('[name="reason"]').value;
+                        animalData.history = document.querySelector('[name="history"]').value;
+                    }
+
                     // Add to appropriate collection
                     if (currentAnimalType === 'puppy') {
                         await puppiesCollection.add(animalData);
                         showNotification('Puppy added successfully!', 'success');
-                    } else {
+                    } else if (currentAnimalType === 'stud') {
                         await studDogsCollection.add(animalData);
                         showNotification('Stud dog added successfully!', 'success');
+                    } else if (currentAnimalType === 'rehome') {
+                        await rehomingCollection.add(animalData);
+                        showNotification('Rehoming animal added successfully!', 'success');
                     }
 
                     // Reset form
@@ -1094,6 +1211,50 @@
                 console.error("Error loading stud dogs:", error);
                 animalGrid.innerHTML = '<div class="error-message">Error loading stud dogs. Please try again.</div>';
             });
+            
+            // Load rehoming animals
+            rehomingCollection.onSnapshot((snapshot) => {
+                rehomingCount.textContent = snapshot.size;
+                renderAnimals();
+            }, error => {
+                console.error("Error loading rehoming animals:", error);
+            });
+        }
+        
+        function loadRehomingAnimals() {
+            rehomingGrid.innerHTML = '<div class="loading">Loading rehoming animals...</div>';
+            
+            rehomingCollection.onSnapshot((snapshot) => {
+                rehomingGrid.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    rehomingGrid.innerHTML = '<div class="error-message">No rehoming animals available</div>';
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const animal = doc.data();
+                    rehomingGrid.innerHTML += `
+                        <div class="animal-card rehome">
+                            <img src="${animal.image}" class="animal-image" alt="${animal.name}">
+                            <div class="animal-details">
+                                <h3>${animal.name}</h3>
+                                <div class="animal-type type-rehome">Rehoming</div>
+                                <p class="animal-info"><span>Breed:</span> ${animal.breed}</p>
+                                <p class="animal-info"><span>Age:</span> ${animal.age}</p>
+                                <p class="animal-info"><span>Reason:</span> ${animal.reason || 'N/A'}</p>
+                                <div class="animal-price">£${animal.price}</div>
+                                <button class="delete-button" onclick="deleteAnimal('${doc.id}', 'rehome')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }, error => {
+                console.error('Error loading rehoming animals: ', error);
+                rehomingGrid.innerHTML = '<div class="error-message">Error loading rehoming animals. Please try again.</div>';
+            });
         }
 
         async function renderAnimals() {
@@ -1106,8 +1267,12 @@
                 const studDogsSnapshot = await studDogsCollection.get();
                 const studDogs = studDogsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
+                // Get rehoming animals
+                const rehomingSnapshot = await rehomingCollection.get();
+                const rehomingAnimals = rehomingSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
                 // Combine all animals
-                const allAnimals = [...puppies, ...studDogs];
+                const allAnimals = [...puppies, ...studDogs, ...rehomingAnimals];
                 totalCount.textContent = allAnimals.length;
                 
                 // Sort by creation date (newest first)
@@ -1122,24 +1287,60 @@
                 }
                 
                 allAnimals.forEach(animal => {
-                    const card = `
-                        <div class="animal-card ${animal.type}">
-                            <img src="${animal.image}" class="animal-image" alt="${animal.name}">
-                            <div class="animal-details">
-                                <h3>${animal.name}</h3>
-                                <div class="animal-type ${animal.type === 'puppy' ? 'type-puppy' : 'type-stud'}">
-                                    ${animal.type === 'puppy' ? 'Puppy' : 'Stud Dog'}
+                    let card = '';
+                    if (animal.type === 'puppy') {
+                        card = `
+                            <div class="animal-card">
+                                <img src="${animal.image}" class="animal-image" alt="${animal.name}">
+                                <div class="animal-details">
+                                    <h3>${animal.name}</h3>
+                                    <div class="animal-type type-puppy">Puppy</div>
+                                    <p class="animal-info"><span>Breed:</span> ${animal.breed}</p>
+                                    <p class="animal-info"><span>Age:</span> ${animal.age}</p>
+                                    <p class="animal-description">${animal.description || 'No description available'}</p>
+                                    <div class="animal-price">£${animal.price}</div>
+                                    <button class="delete-button" onclick="deleteAnimal('${animal.id}', 'puppy')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
                                 </div>
-                                <p class="animal-info"><span>Breed:</span> ${animal.breed}</p>
-                                <p class="animal-info"><span>Age:</span> ${animal.age}</p>
-                                <p class="animal-description">${animal.description || 'No description available'}</p>
-                                <div class="animal-price">£${animal.price}</div>
-                                <button class="delete-button" onclick="deleteAnimal('${animal.id}', '${animal.type}')">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    } else if (animal.type === 'stud') {
+                        card = `
+                            <div class="animal-card stud">
+                                <img src="${animal.image}" class="animal-image" alt="${animal.name}">
+                                <div class="animal-details">
+                                    <h3>${animal.name}</h3>
+                                    <div class="animal-type type-stud">Stud Dog</div>
+                                    <p class="animal-info"><span>Breed:</span> ${animal.breed}</p>
+                                    <p class="animal-info"><span>Age:</span> ${animal.age}</p>
+                                    <p class="animal-description">${animal.description || 'No description available'}</p>
+                                    <div class="animal-price">£${animal.price}</div>
+                                    <button class="delete-button" onclick="deleteAnimal('${animal.id}', 'stud')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } else if (animal.type === 'rehome') {
+                        card = `
+                            <div class="animal-card rehome">
+                                <img src="${animal.image}" class="animal-image" alt="${animal.name}">
+                                <div class="animal-details">
+                                    <h3>${animal.name}</h3>
+                                    <div class="animal-type type-rehome">Rehoming</div>
+                                    <p class="animal-info"><span>Breed:</span> ${animal.breed}</p>
+                                    <p class="animal-info"><span>Age:</span> ${animal.age}</p>
+                                    <p class="animal-info"><span>Reason:</span> ${animal.reason || 'N/A'}</p>
+                                    <p class="animal-description">${animal.description || 'No description available'}</p>
+                                    <div class="animal-price">£${animal.price}</div>
+                                    <button class="delete-button" onclick="deleteAnimal('${animal.id}', 'rehome')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
                     animalGrid.innerHTML += card;
                 });
             } catch (error) {
@@ -1149,15 +1350,18 @@
         }
 
         async function deleteAnimal(id, type) {
-            if(!confirm(`Are you sure you want to delete this ${type === 'puppy' ? 'puppy' : 'stud dog'}?`)) return;
+            if(!confirm(`Are you sure you want to delete this ${type === 'puppy' ? 'puppy' : type === 'stud' ? 'stud dog' : 'rehoming animal'}?`)) return;
             
             try {
                 if (type === 'puppy') {
                     await puppiesCollection.doc(id).delete();
                     showNotification('Puppy deleted successfully', 'success');
-                } else {
+                } else if (type === 'stud') {
                     await studDogsCollection.doc(id).delete();
                     showNotification('Stud dog deleted successfully', 'success');
+                } else if (type === 'rehome') {
+                    await rehomingCollection.doc(id).delete();
+                    showNotification('Rehoming animal deleted successfully', 'success');
                 }
                 loadAnimals();
             } catch (error) {

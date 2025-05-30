@@ -13,6 +13,7 @@
             --primary-blue: #003366;
             --accent-blue: #0066cc;
             --accent-gold: #D4AF37;
+            --accent-red: #dc3545;
             --dark-bg: #080808;
             --light-text: #ffffff;
             --section-bg: #f8f9fa;
@@ -255,6 +256,10 @@
             border-color: var(--accent-gold);
         }
 
+        .rehome .animal-image {
+            border-color: var(--accent-red);
+        }
+
         .animal-details {
             padding: 1.5rem;
             text-align: center;
@@ -285,6 +290,11 @@
             color: var(--accent-gold);
         }
 
+        .type-rehome {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--accent-red);
+        }
+
         .animal-info {
             margin-bottom: 0.8rem;
             color: #555;
@@ -307,6 +317,10 @@
             color: var(--accent-gold);
         }
 
+        .rehome .animal-price {
+            color: var(--accent-red);
+        }
+
         .cta-button {
             display: inline-block;
             background: var(--accent-blue);
@@ -326,13 +340,21 @@
             background: var(--accent-gold);
         }
 
+        .rehome .cta-button {
+            background: var(--accent-red);
+        }
+
         .cta-button:hover {
             background: var(--primary-blue);
             transform: translateY(-3px);
         }
 
         .stud .cta-button:hover {
-            background: var(--dark-gold);
+            background: #b6952a;
+        }
+
+        .rehome .cta-button:hover {
+            background: #bd2130;
         }
 
         .loading {
@@ -355,6 +377,8 @@
             display: flex;
             justify-content: center;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .tab-button {
@@ -372,6 +396,10 @@
         .tab-button.active {
             background: var(--accent-blue);
             color: white;
+        }
+
+        .tab-button.rehome.active {
+            background: var(--accent-red);
         }
 
         /* Responsive Design */
@@ -446,6 +474,11 @@
             .section-title {
                 font-size: 1.8rem;
             }
+            
+            .tab-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -458,8 +491,9 @@
             }
             
             .tab-button {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+                margin: 0.2rem;
             }
         }
     </style>
@@ -484,7 +518,7 @@
                 </li>
                 <li><a href="/pages/book a puppy.html" class="nav-item active">Book A Puppy</a></li>
                 <li><a href="/pages/book a puppy.html" class="nav-item">Stud Dogs</a></li>
-                <!-- <li><a href="#" class="nav-item">Rehoming</a></li> -->
+                <li><a href="/pages/book a puppy.html" class="nav-item">Rehoming</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Services ▾</a>
                     <ul class="dropdown-menu">
@@ -515,11 +549,19 @@
             </div>
         </section>
 
+        <section class="hero-section" id="rehomeHero" style="display: none; background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1587300003388-59208cc962cb') center/cover;">
+            <div class="hero-content">
+                <h1 class="hero-title">Animals Needing Homes</h1>
+                <p class="hero-subtitle">Give a loving home to animals in need</p>
+            </div>
+        </section>
+
         <!-- Page Content -->
         <div class="page-content">
             <div class="tab-container">
                 <button class="tab-button active" id="puppyTab">Puppies</button>
                 <button class="tab-button" id="studTab">Stud Dogs</button>
+                <button class="tab-button" id="rehomeTab">Rehoming</button>
             </div>
             
             <div id="puppySection">
@@ -536,6 +578,15 @@
                 <div class="animal-grid" id="studContainer">
                     <div class="loading">
                         <i class="fas fa-crown fa-spin"></i> Loading stud dogs...
+                    </div>
+                </div>
+            </div>
+            
+            <div id="rehomeSection" style="display: none;">
+                <h2 class="section-title">Rehoming Animals</h2>
+                <div class="animal-grid" id="rehomeContainer">
+                    <div class="loading">
+                        <i class="fas fa-heart fa-spin"></i> Loading animals...
                     </div>
                 </div>
             </div>
@@ -559,16 +610,21 @@
         const db = firebase.firestore();
         const puppiesCollection = db.collection('puppies');
         const studDogsCollection = db.collection('studDogs');
+        const rehomingCollection = db.collection('rehoming');
 
         // DOM elements
         const puppyTab = document.getElementById('puppyTab');
         const studTab = document.getElementById('studTab');
+        const rehomeTab = document.getElementById('rehomeTab');
         const puppySection = document.getElementById('puppySection');
         const studSection = document.getElementById('studSection');
+        const rehomeSection = document.getElementById('rehomeSection');
         const puppyHero = document.getElementById('puppyHero');
         const studHero = document.getElementById('studHero');
+        const rehomeHero = document.getElementById('rehomeHero');
         const puppyContainer = document.getElementById('puppyContainer');
         const studContainer = document.getElementById('studContainer');
+        const rehomeContainer = document.getElementById('rehomeContainer');
         const menuToggle = document.querySelector('.menu-toggle');
         const navLinks = document.querySelector('.nav-links');
         const dropdowns = document.querySelectorAll('.dropdown');
@@ -598,27 +654,47 @@
             
             // Tab switching
             puppyTab.addEventListener('click', () => {
-                puppyTab.classList.add('active');
-                studTab.classList.remove('active');
+                activateTab(puppyTab);
                 puppySection.style.display = 'block';
                 studSection.style.display = 'none';
+                rehomeSection.style.display = 'none';
                 puppyHero.style.display = 'flex';
                 studHero.style.display = 'none';
+                rehomeHero.style.display = 'none';
                 loadPuppies();
             });
             
             studTab.addEventListener('click', () => {
-                studTab.classList.add('active');
-                puppyTab.classList.remove('active');
+                activateTab(studTab);
                 puppySection.style.display = 'none';
                 studSection.style.display = 'block';
+                rehomeSection.style.display = 'none';
                 puppyHero.style.display = 'none';
                 studHero.style.display = 'flex';
+                rehomeHero.style.display = 'none';
                 loadStudDogs();
+            });
+            
+            rehomeTab.addEventListener('click', () => {
+                activateTab(rehomeTab);
+                puppySection.style.display = 'none';
+                studSection.style.display = 'none';
+                rehomeSection.style.display = 'block';
+                puppyHero.style.display = 'none';
+                studHero.style.display = 'none';
+                rehomeHero.style.display = 'flex';
+                loadRehoming();
             });
         });
 
         // Functions
+        function activateTab(activeTab) {
+            [puppyTab, studTab, rehomeTab].forEach(tab => {
+                tab.classList.remove('active');
+            });
+            activeTab.classList.add('active');
+        }
+
         function loadPuppies() {
             puppyContainer.innerHTML = '<div class="loading"><i class="fas fa-paw fa-spin"></i> Loading puppies...</div>';
             
@@ -682,6 +758,40 @@
             }, error => {
                 console.error('Error loading stud dogs: ', error);
                 studContainer.innerHTML = '<div class="error-message">Error loading stud dogs. Please try again later.</div>';
+            });
+        }
+
+        function loadRehoming() {
+            rehomeContainer.innerHTML = '<div class="loading"><i class="fas fa-heart fa-spin"></i> Loading animals...</div>';
+            
+            rehomingCollection.onSnapshot((snapshot) => {
+                rehomeContainer.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    rehomeContainer.innerHTML = '<div class="error-message">No animals available for rehoming at the moment</div>';
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const animal = doc.data();
+                    rehomeContainer.innerHTML += `
+                        <div class="animal-card rehome">
+                            <img src="${animal.image}" class="animal-image" alt="${animal.name}">
+                            <div class="animal-details">
+                                <h3 class="animal-name">${animal.name}</h3>
+                                <div class="animal-type type-rehome">Rehoming</div>
+                                <p class="animal-info"><span>Breed:</span> ${animal.breed}</p>
+                                <p class="animal-info"><span>Age:</span> ${animal.age}</p>
+                                <p class="animal-info"><span>Reason:</span> ${animal.reason || 'N/A'}</p>
+                                <div class="animal-price">£${animal.price}</div>
+                                <a href="/pages/contact.html" class="cta-button">Adopt Me</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }, error => {
+                console.error('Error loading rehoming animals: ', error);
+                rehomeContainer.innerHTML = '<div class="error-message">Error loading animals. Please try again later.</div>';
             });
         }
     </script>
