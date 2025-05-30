@@ -713,11 +713,11 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label>Email:</label>
-                    <input type="email" id="email" value="olamilekanmuhayad@yahoo.com" required>
+                    <input type="email" id="email" placeholder="admin@angelpoms.com" required>
                 </div>
                 <div class="form-group">
                     <label>Password:</label>
-                    <input type="password" id="password" value="muhayad2008" required>
+                    <input type="password" id="password" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="cta-button">Login</button>
             </form>
@@ -739,11 +739,11 @@
             
             <ul class="nav-list" id="navList">
                 <li><a href="#" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="#" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
+                <li><a href="/pages/book a puppy.html" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
                 <li><button class="cta-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
                 <li>
                     <div class="admin-info">
-                        <i class="fas fa-user-circle"></i> olamilekanmuhayad@yahoo.com
+                        <i class="fas fa-user-circle"></i> <span id="adminEmail"></span>
                     </div>
                 </li>
             </ul>
@@ -911,6 +911,7 @@
         const notification = document.getElementById('notification');
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const navList = document.getElementById('navList');
+        const adminEmailSpan = document.getElementById('adminEmail');
 
         // Global variables
         let currentAnimalType = 'puppy';
@@ -922,6 +923,7 @@
             auth.onAuthStateChanged(user => {
                 if (user) {
                     showDashboard();
+                    adminEmailSpan.textContent = user.email;
                 } else {
                     showLogin();
                 }
@@ -953,6 +955,8 @@
         function showLogin() {
             loginOverlay.style.display = 'flex';
             dashboardContent.style.display = 'none';
+            // Clear the form on logout
+            loginForm.reset();
         }
 
         function showDashboard() {
