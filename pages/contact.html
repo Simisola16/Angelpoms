@@ -6,6 +6,8 @@
     <title>Contact Us | AngelPoms</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
         :root {
             --primary-blue: #003366;
@@ -24,9 +26,11 @@
 
         body {
             background-color: var(--section-bg);
+            padding-top: 80px; /* For fixed header */
         }
-                /* Header Styles */
-       header {
+        
+        /* Header Styles */
+        header {
             background-color: var(--dark-bg);
             padding: 1rem 2rem;
             position: fixed;
@@ -307,6 +311,7 @@
             display: none;
             animation: slideIn 0.3s ease-out;
             box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+            z-index: 2000;
         }
 
         .notification.error {
@@ -437,44 +442,64 @@
 
     <div class="notification" id="notification"></div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-
+    <script>
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDrmpMXUZpJ46n-eRiDjQJSJf-YK6whUEM",
             authDomain: "prom-dog.firebaseapp.com",
             projectId: "prom-dog",
-            storageBucket: "prom-dog.firebasestorage.app",
+            storageBucket: "prom-dog.appspot.com",
             messagingSenderId: "945953941353",
             appId: "1:945953941353:web:e6272892f5352c004b7ff8",
             measurementId: "G-WMGY01WT20"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value,
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            if (!name || !email || !subject || !message) {
+                showNotification('Please fill in all required fields', true);
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            // Add to Firestore
+            db.collection("contacts").add({
+                name: name,
+                email: email,
+                phone: phone,
+                subject: subject,
+                message: message,
                 timestamp: new Date(),
-                location: "Richmond Close, Amersham"
-            };
-
-            try {
-                await addDoc(collection(db, "contacts"), formData);
+                location: "Richmond Close, Amersham",
+                read: false
+            })
+            .then(() => {
                 showNotification('Thank you! Your enquiry has been submitted.', false);
                 document.getElementById('contactForm').reset();
-            } catch (error) {
+            })
+            .catch((error) => {
                 console.error("Error adding document: ", error);
                 showNotification('Error submitting form. Please try again.', true);
-            }
+            })
+            .finally(() => {
+                submitBtn.innerHTML = 'Send Message';
+                submitBtn.disabled = false;
+            });
         });
 
         function showNotification(message, isError) {
@@ -482,35 +507,25 @@
             notification.textContent = message;
             notification.className = `notification${isError ? ' error' : ''}`;
             notification.style.display = 'block';
-            setTimeout(() => notification.style.display = 'none', 5000);
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
         }
-                        // Mobile Menu Toggle
-        document.querySelector('.menu-toggle').addEventListener('click', () => {
+        
+        // Mobile Menu Toggle
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
             document.querySelector('.nav-links').classList.toggle('active');
         });
 
         // Scroll Effects
-        window.addEventListener('scroll', () => {
+        window.addEventListener('scroll', function() {
             // Navbar Scroll Effect
             const header = document.getElementById('mainHeader');
-            window.scrollY > 100 ? 
-                header.classList.add('scrolled-nav') : 
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled-nav');
+            } else {
                 header.classList.remove('scrolled-nav');
-
-            // Scroll Reveal Animations
-            const animateOnScroll = (elements, className) => {
-                elements.forEach(element => {
-                    const elementTop = element.getBoundingClientRect().top;
-                    if (elementTop < window.innerHeight - 100) {
-                        element.classList.add(className);
-                    }
-                });
-            };
-
-            animateOnScroll(document.querySelectorAll('.hero-content'), 'visible');
-            animateOnScroll(document.querySelectorAll('.stat-item'), 'visible');
-            animateOnScroll(document.querySelectorAll('.puppy-card'), 'visible');
-            animateOnScroll(document.querySelectorAll('.guarantee-item'), 'visible');
+            }
         });
     </script>
 </body>

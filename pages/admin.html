@@ -15,6 +15,8 @@
             --accent-blue: #0066cc;
             --accent-gold: #D4AF37;
             --accent-green: #28a745;
+            --accent-purple: #6f42c1;
+            --accent-red: #dc3545;
             --dark-bg: #1a1a1a;
             --light-text: #ffffff;
             --section-bg: #f8f9fa;
@@ -260,6 +262,11 @@
         .stat-icon.total {
             background: rgba(108, 117, 125, 0.15);
             color: #6c757d;
+        }
+
+        .stat-icon.messages {
+            background: rgba(111, 66, 193, 0.15);
+            color: var(--accent-purple);
         }
 
         .stat-content h3 {
@@ -613,6 +620,160 @@
             padding: 8px;
         }
 
+        /* Messages Section */
+        .messages-section {
+            display: none;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2.5rem;
+        }
+
+        .message-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .messages-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .message-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-blue);
+            transition: var(--transition);
+        }
+
+        .message-card.unread {
+            background: #eef7ff;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .message-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .message-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .message-date {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .message-content {
+            margin-bottom: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .message-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .message-sender {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sender-icon {
+            color: var(--accent-purple);
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .reply-btn {
+            background: rgba(0, 102, 204, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .reply-btn:hover {
+            background: rgba(0, 102, 204, 0.2);
+        }
+
+        .delete-btn {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--accent-red);
+        }
+
+        .delete-btn:hover {
+            background: rgba(220, 53, 69, 0.2);
+        }
+
+        .mark-read-btn {
+            background: rgba(111, 66, 193, 0.1);
+            color: var(--accent-purple);
+        }
+
+        .mark-read-btn:hover {
+            background: rgba(111, 66, 193, 0.2);
+        }
+
+        .no-messages {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .dashboard {
@@ -694,6 +855,15 @@
             .image-preview {
                 max-height: 200px;
             }
+            
+            .message-filters {
+                flex-direction: column;
+            }
+            
+            .message-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         @media (max-width: 480px) {
@@ -765,7 +935,8 @@
             </button>
             
             <ul class="nav-list" id="navList">
-                <li><a href="#" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" class="nav-link dashboard-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" class="nav-link messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
                 <li><a href="/pages/book a puppy.html" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
                 <li><button class="cta-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
                 <li>
@@ -777,118 +948,141 @@
         </nav>
 
         <main class="dashboard">
-            <div class="dashboard-header">
-                <h2>Dashboard Overview</h2>
-                <div class="actions">
-                    <button class="cta-button" id="addAnimalBtn"><i class="fas fa-plus"></i> Add New</button>
+            <!-- Dashboard Overview -->
+            <div class="dashboard-overview">
+                <div class="dashboard-header">
+                    <h2>Dashboard Overview</h2>
+                    <div class="actions">
+                        <button class="cta-button" id="addAnimalBtn"><i class="fas fa-plus"></i> Add New</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="stat-cards">
-                <div class="stat-card">
-                    <div class="stat-icon puppy">
-                        <i class="fas fa-dog"></i>
+                <div class="stat-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon puppy">
+                            <i class="fas fa-dog"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="puppyCount">0</h3>
+                            <p>Available Puppies</p>
+                        </div>
                     </div>
-                    <div class="stat-content">
-                        <h3 id="puppyCount">0</h3>
-                        <p>Available Puppies</p>
+                    <div class="stat-card">
+                        <div class="stat-icon stud">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="studCount">0</h3>
+                            <p>Stud Dogs</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon rehoming">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="rehomingCount">0</h3>
+                            <p>Rehoming Pets</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon messages">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="messageCount">0</h3>
+                            <p>New Messages</p>
+                        </div>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon stud">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="studCount">0</h3>
-                        <p>Stud Dogs</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon rehoming">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="rehomingCount">0</h3>
-                        <p>Rehoming Pets</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon total">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="totalCount">0</h3>
-                        <p>Total Animals</p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Add Animal Section -->
-            <div class="add-section" id="addSection" style="display: none;">
-                <h3 class="section-title">Add New Animal</h3>
-                
-                <div class="type-selector">
-                    <div class="type-btn puppy active" data-type="puppy">
-                        <i class="fas fa-dog"></i>
-                        Add Puppy
-                    </div>
-                    <div class="type-btn stud" data-type="stud">
-                        <i class="fas fa-crown"></i>
-                        Add Stud Dog
-                    </div>
-                    <div class="type-btn rehoming" data-type="rehoming">
-                        <i class="fas fa-heart"></i>
-                        Add Rehoming
-                    </div>
-                </div>
-                
-                <form id="addAnimalForm">
-                    <div class="form-group" id="nameField">
-                        <label>Name:</label>
-                        <input type="text" name="name" required>
+                <!-- Add Animal Section -->
+                <div class="add-section" id="addSection" style="display: none;">
+                    <h3 class="section-title">Add New Animal</h3>
+                    
+                    <div class="type-selector">
+                        <div class="type-btn puppy active" data-type="puppy">
+                            <i class="fas fa-dog"></i>
+                            Add Puppy
+                        </div>
+                        <div class="type-btn stud" data-type="stud">
+                            <i class="fas fa-crown"></i>
+                            Add Stud Dog
+                        </div>
+                        <div class="type-btn rehoming" data-type="rehoming">
+                            <i class="fas fa-heart"></i>
+                            Add Rehoming
+                        </div>
                     </div>
                     
-                    <!-- Fields for Puppy/Stud -->
-                    <div id="additionalFields" style="display: none;">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Breed:</label>
-                                <input type="text" name="breed">
-                            </div>
-                            <div class="form-group">
-                                <label>Age:</label>
-                                <input type="text" name="age" placeholder="e.g., 8 weeks">
-                            </div>
+                    <form id="addAnimalForm">
+                        <div class="form-group" id="nameField">
+                            <label>Name:</label>
+                            <input type="text" name="name" required>
                         </div>
                         
-                        <div class="form-row">
+                        <!-- Fields for Puppy/Stud -->
+                        <div id="additionalFields" style="display: none;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Breed:</label>
+                                    <input type="text" name="breed">
+                                </div>
+                                <div class="form-group">
+                                    <label>Age:</label>
+                                    <input type="text" name="age" placeholder="e.g., 8 weeks">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Price (£):</label>
+                                    <input type="number" name="price">
+                                </div>
+                            </div>
+                            
                             <div class="form-group">
-                                <label>Price (£):</label>
-                                <input type="number" name="price">
+                                <label>Description:</label>
+                                <textarea name="description" class="form-control" rows="3" style="width: 100%; padding: 0.9rem; border: 1px solid #ddd; border-radius: 6px;"></textarea>
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label>Description:</label>
-                            <textarea name="description" class="form-control" rows="3" style="width: 100%; padding: 0.9rem; border: 1px solid #ddd; border-radius: 6px;"></textarea>
+                            <label>Animal Image:</label>
+                            <input type="file" id="animalImage" accept="image/*" required>
+                            <div class="image-preview-container">
+                                <img class="image-preview" id="imagePreview" alt="Image preview">
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Animal Image:</label>
-                        <input type="file" id="animalImage" accept="image/*" required>
-                        <div class="image-preview-container">
-                            <img class="image-preview" id="imagePreview" alt="Image preview">
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="cta-button">Add Animal</button>
-                </form>
+                        
+                        <button type="submit" class="cta-button">Add Animal</button>
+                    </form>
+                </div>
+
+                <!-- Animal Management -->
+                <h3 class="section-title">Manage Animals</h3>
+                <div class="animal-grid" id="animalGrid"></div>
             </div>
 
-            <!-- Animal Management -->
-            <h3 class="section-title">Manage Animals</h3>
-            <div class="animal-grid" id="animalGrid"></div>
+            <!-- Messages Section -->
+            <div class="messages-section" id="messagesSection">
+                <div class="dashboard-header">
+                    <h2>Contact Messages</h2>
+                    <div class="message-filters">
+                        <button class="filter-btn active" data-filter="all">All Messages</button>
+                        <button class="filter-btn" data-filter="unread">Unread</button>
+                        <button class="filter-btn" data-filter="read">Read</button>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <div class="no-messages">
+                        <i class="fas fa-envelope-open-text" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                        <h3>No messages yet</h3>
+                        <p>Contact form submissions will appear here</p>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -937,6 +1131,7 @@
         const puppiesCollection = db.collection('puppies');
         const studDogsCollection = db.collection('studDogs');
         const rehomingCollection = db.collection('rehoming');
+        const contactsCollection = db.collection('contacts');
 
         // DOM elements
         const loginOverlay = document.getElementById('loginOverlay');
@@ -952,7 +1147,7 @@
         const puppyCount = document.getElementById('puppyCount');
         const studCount = document.getElementById('studCount');
         const rehomingCount = document.getElementById('rehomingCount');
-        const totalCount = document.getElementById('totalCount');
+        const messageCount = document.getElementById('messageCount');
         const typeButtons = document.querySelectorAll('.type-btn');
         const addAnimalBtn = document.getElementById('addAnimalBtn');
         const selectionModal = document.getElementById('selectionModal');
@@ -965,10 +1160,19 @@
         const adminEmailSpan = document.getElementById('adminEmail');
         const nameField = document.getElementById('nameField');
         const additionalFields = document.getElementById('additionalFields');
+        const dashboardOverview = document.querySelector('.dashboard-overview');
+        const messagesSection = document.getElementById('messagesSection');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const dashboardLink = document.querySelector('.dashboard-link');
+        const messagesLink = document.querySelector('.messages-link');
 
         // Global variables
         let currentAnimalType = 'puppy';
         let animals = [];
+        let messages = [];
+        let currentFilter = 'all';
+        let unsubscribeAnimals = []; // To store unsubscribe functions
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
@@ -1004,6 +1208,20 @@
                     toggleFieldsBasedOnType();
                 });
             });
+            
+            // Navigation links
+            dashboardLink.addEventListener('click', showDashboardView);
+            messagesLink.addEventListener('click', showMessagesView);
+            
+            // Filter buttons
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentFilter = button.dataset.filter;
+                    renderMessages();
+                });
+            });
         });
 
         // Functions
@@ -1017,8 +1235,21 @@
         function showDashboard() {
             loginOverlay.style.display = 'none';
             dashboardContent.style.display = 'block';
+            showDashboardView();
             showNotification('Welcome to AngelPoms Admin Dashboard', 'success');
             loadAnimals();
+            loadMessages();
+        }
+        
+        function showDashboardView() {
+            dashboardOverview.style.display = 'block';
+            messagesSection.style.display = 'none';
+        }
+        
+        function showMessagesView() {
+            dashboardOverview.style.display = 'none';
+            messagesSection.style.display = 'block';
+            loadMessages();
         }
 
         function showSelectionModal() {
@@ -1120,23 +1351,29 @@
                     }
 
                     // Add to appropriate collection
+                    let collectionRef;
                     if (currentAnimalType === 'puppy') {
-                        await puppiesCollection.add(animalData);
-                        showNotification('Puppy added successfully!', 'success');
+                        collectionRef = puppiesCollection;
                     } else if (currentAnimalType === 'stud') {
-                        await studDogsCollection.add(animalData);
-                        showNotification('Stud dog added successfully!', 'success');
+                        collectionRef = studDogsCollection;
                     } else if (currentAnimalType === 'rehoming') {
-                        await rehomingCollection.add(animalData);
-                        showNotification('Rehoming pet added successfully!', 'success');
+                        collectionRef = rehomingCollection;
                     }
 
+                    // Add to Firestore
+                    await collectionRef.add(animalData);
+                    
                     // Reset form
                     animalForm.reset();
                     imagePreview.style.display = 'none';
                     
-                    // Reload animals
-                    loadAnimals();
+                    // Show success message
+                    showNotification(currentAnimalType.charAt(0).toUpperCase() + 
+                                     currentAnimalType.slice(1) + ' added successfully!', 'success');
+                    
+                    // Close the add form
+                    addSection.style.display = 'none';
+                    
                 } catch (error) {
                     console.error('Error adding animal: ', error);
                     showNotification('Error adding animal: ' + error.message, 'error');
@@ -1150,95 +1387,252 @@
             // Clear existing content
             animalGrid.innerHTML = '<div class="loading">Loading animals...</div>';
             
-            // Load puppies
-            puppiesCollection.onSnapshot((snapshot) => {
-                puppyCount.textContent = snapshot.size;
+            // Unsubscribe any existing listeners
+            unsubscribeAnimals.forEach(unsubscribe => unsubscribe());
+            unsubscribeAnimals = [];
+            
+            // Array to store all animals
+            animals = [];
+            
+            // Function to update counts
+            const updateCounts = () => {
+                puppyCount.textContent = animals.filter(a => a.type === 'puppy').length;
+                studCount.textContent = animals.filter(a => a.type === 'stud').length;
+                rehomingCount.textContent = animals.filter(a => a.type === 'rehoming').length;
+                
+                // Re-render animals
                 renderAnimals();
+            };
+            
+            // Load puppies
+            const puppiesUnsubscribe = puppiesCollection.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added' || change.type === 'modified') {
+                        const animal = { id: change.doc.id, ...change.doc.data() };
+                        // Remove existing if any
+                        const index = animals.findIndex(a => a.id === animal.id && a.type === 'puppy');
+                        if (index !== -1) {
+                            animals.splice(index, 1);
+                        }
+                        animals.push(animal);
+                    } else if (change.type === 'removed') {
+                        animals = animals.filter(a => !(a.id === change.doc.id && a.type === 'puppy'));
+                    }
+                });
+                updateCounts();
             }, error => {
                 console.error("Error loading puppies:", error);
                 animalGrid.innerHTML = '<div class="error-message">Error loading puppies. Please try again.</div>';
             });
+            unsubscribeAnimals.push(puppiesUnsubscribe);
             
             // Load stud dogs
-            studDogsCollection.onSnapshot((snapshot) => {
-                studCount.textContent = snapshot.size;
-                renderAnimals();
+            const studDogsUnsubscribe = studDogsCollection.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added' || change.type === 'modified') {
+                        const animal = { id: change.doc.id, ...change.doc.data() };
+                        // Remove existing if any
+                        const index = animals.findIndex(a => a.id === animal.id && a.type === 'stud');
+                        if (index !== -1) {
+                            animals.splice(index, 1);
+                        }
+                        animals.push(animal);
+                    } else if (change.type === 'removed') {
+                        animals = animals.filter(a => !(a.id === change.doc.id && a.type === 'stud'));
+                    }
+                });
+                updateCounts();
             }, error => {
                 console.error("Error loading stud dogs:", error);
                 animalGrid.innerHTML = '<div class="error-message">Error loading stud dogs. Please try again.</div>';
             });
+            unsubscribeAnimals.push(studDogsUnsubscribe);
             
             // Load rehoming pets
-            rehomingCollection.onSnapshot((snapshot) => {
-                rehomingCount.textContent = snapshot.size;
-                renderAnimals();
+            const rehomingUnsubscribe = rehomingCollection.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added' || change.type === 'modified') {
+                        const animal = { id: change.doc.id, ...change.doc.data() };
+                        // Remove existing if any
+                        const index = animals.findIndex(a => a.id === animal.id && a.type === 'rehoming');
+                        if (index !== -1) {
+                            animals.splice(index, 1);
+                        }
+                        animals.push(animal);
+                    } else if (change.type === 'removed') {
+                        animals = animals.filter(a => !(a.id === change.doc.id && a.type === 'rehoming'));
+                    }
+                });
+                updateCounts();
             }, error => {
                 console.error("Error loading rehoming pets:", error);
                 animalGrid.innerHTML = '<div class="error-message">Error loading rehoming pets. Please try again.</div>';
             });
+            unsubscribeAnimals.push(rehomingUnsubscribe);
         }
-
-        async function renderAnimals() {
-            try {
-                // Get puppies
-                const puppiesSnapshot = await puppiesCollection.get();
-                const puppies = puppiesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        function loadMessages() {
+            contactsCollection.orderBy("timestamp", "desc").onSnapshot(snapshot => {
+                messages = [];
+                let unreadCount = 0;
                 
-                // Get stud dogs
-                const studDogsSnapshot = await studDogsCollection.get();
-                const studDogs = studDogsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(doc => {
+                    const message = {
+                        id: doc.id,
+                        ...doc.data(),
+                        timestamp: doc.data().timestamp.toDate()
+                    };
+                    messages.push(message);
+                    
+                    if (!message.read) unreadCount++;
+                });
                 
-                // Get rehoming pets
-                const rehomingSnapshot = await rehomingCollection.get();
-                const rehomingPets = rehomingSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                // Combine all animals
-                const allAnimals = [...puppies, ...studDogs, ...rehomingPets];
-                totalCount.textContent = allAnimals.length;
-                
-                // Sort by creation date (newest first)
-                allAnimals.sort((a, b) => b.createdAt - a.createdAt);
-                
-                // Render to grid
-                animalGrid.innerHTML = '';
-                
-                if (allAnimals.length === 0) {
-                    animalGrid.innerHTML = '<div class="error-message">No animals found. Add your first animal!</div>';
-                    return;
-                }
-                
-                allAnimals.forEach(animal => {
-                    const isRehoming = animal.type === 'rehoming';
-                    const card = `
-                        <div class="animal-card ${animal.type}">
-                            <img src="${animal.image}" class="animal-image" alt="${animal.name}">
-                            <div class="animal-details">
-                                <h3>${animal.name}</h3>
-                                <div class="animal-type ${animal.type === 'puppy' ? 'type-puppy' : 
-                                                         animal.type === 'stud' ? 'type-stud' : 'type-rehoming'}">
-                                    ${animal.type === 'puppy' ? 'Puppy' : 
-                                      animal.type === 'stud' ? 'Stud Dog' : 'Rehoming'}
-                                </div>
-                                ${!isRehoming ? `
-                                    <p class="animal-info"><span>Breed:</span> ${animal.breed}</p>
-                                    <p class="animal-info"><span>Age:</span> ${animal.age}</p>
-                                    <p class="animal-description">${animal.description || 'No description available'}</p>
-                                    <div class="animal-price">£${animal.price}</div>
-                                ` : `
-                                    <p class="animal-description">Looking for a new loving home</p>
-                                `}
-                                <button class="delete-button" onclick="deleteAnimal('${animal.id}', '${animal.type}')">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
+                messageCount.textContent = unreadCount;
+                renderMessages();
+            }, error => {
+                console.error("Error loading messages:", error);
+                messagesContainer.innerHTML = '<div class="error-message">Error loading messages. Please try again.</div>';
+            });
+        }
+        
+        function renderMessages() {
+            if (messages.length === 0) {
+                messagesContainer.innerHTML = `
+                    <div class="no-messages">
+                        <i class="fas fa-envelope-open-text" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                        <h3>No messages yet</h3>
+                        <p>Contact form submissions will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            messagesContainer.innerHTML = '';
+            
+            const filteredMessages = messages.filter(message => {
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'unread') return !message.read;
+                if (currentFilter === 'read') return message.read;
+                return true;
+            });
+            
+            if (filteredMessages.length === 0) {
+                messagesContainer.innerHTML = `
+                    <div class="no-messages">
+                        <i class="fas fa-envelope" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                        <h3>No ${currentFilter} messages</h3>
+                        <p>Try selecting a different filter</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredMessages.forEach(message => {
+                const formattedDate = message.timestamp.toLocaleString();
+                const messageCard = document.createElement('div');
+                messageCard.className = `message-card ${message.read ? '' : 'unread'}`;
+                messageCard.innerHTML = `
+                    <div class="message-header">
+                        <div class="message-title">${message.subject}</div>
+                        <div class="message-date">${formattedDate}</div>
+                    </div>
+                    <div class="message-content">
+                        <p>${message.message}</p>
+                    </div>
+                    <div class="message-footer">
+                        <div class="message-sender">
+                            <i class="fas fa-user sender-icon"></i>
+                            <div>
+                                <strong>${message.name}</strong>
+                                <div>${message.email} | ${message.phone || 'No phone'}</div>
                             </div>
                         </div>
-                    `;
-                    animalGrid.innerHTML += card;
+                        <div class="message-actions">
+                            ${!message.read ? `
+                                <button class="action-btn mark-read-btn" onclick="markAsRead('${message.id}')">
+                                    <i class="fas fa-check-circle"></i> Mark Read
+                                </button>
+                            ` : ''}
+                            <a href="mailto:${message.email}?subject=Re: ${message.subject}" class="action-btn reply-btn">
+                                <i class="fas fa-reply"></i> Reply
+                            </a>
+                            <button class="action-btn delete-btn" onclick="deleteMessage('${message.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageCard);
+            });
+        }
+        
+        async function markAsRead(messageId) {
+            try {
+                await contactsCollection.doc(messageId).update({
+                    read: true,
+                    readAt: new Date()
                 });
+                showNotification('Message marked as read', 'success');
+                loadMessages();
             } catch (error) {
-                console.error('Error loading animals: ', error);
-                animalGrid.innerHTML = '<div class="error-message">Error loading animals. Please try again.</div>';
+                console.error('Error marking message as read: ', error);
+                showNotification('Error: ' + error.message, 'error');
             }
+        }
+        
+        async function deleteMessage(messageId) {
+            if (!confirm('Are you sure you want to delete this message?')) return;
+            
+            try {
+                await contactsCollection.doc(messageId).delete();
+                showNotification('Message deleted successfully', 'success');
+                loadMessages();
+            } catch (error) {
+                console.error('Error deleting message: ', error);
+                showNotification('Error: ' + error.message, 'error');
+            }
+        }
+
+        function renderAnimals() {
+            // Sort by creation date (newest first)
+            animals.sort((a, b) => b.createdAt - a.createdAt);
+            
+            // Render to grid
+            animalGrid.innerHTML = '';
+            
+            if (animals.length === 0) {
+                animalGrid.innerHTML = '<div class="error-message">No animals found. Add your first animal!</div>';
+                return;
+            }
+            
+            animals.forEach(animal => {
+                const isRehoming = animal.type === 'rehoming';
+                const card = `
+                    <div class="animal-card ${animal.type}">
+                        <img src="${animal.image}" class="animal-image" alt="${animal.name}">
+                        <div class="animal-details">
+                            <h3>${animal.name}</h3>
+                            <div class="animal-type ${animal.type === 'puppy' ? 'type-puppy' : 
+                                                     animal.type === 'stud' ? 'type-stud' : 'type-rehoming'}">
+                                ${animal.type === 'puppy' ? 'Puppy' : 
+                                  animal.type === 'stud' ? 'Stud Dog' : 'Rehoming'}
+                            </div>
+                            ${!isRehoming ? `
+                                <p class="animal-info"><span>Breed:</span> ${animal.breed}</p>
+                                <p class="animal-info"><span>Age:</span> ${animal.age}</p>
+                                <p class="animal-description">${animal.description || 'No description available'}</p>
+                                <div class="animal-price">£${animal.price}</div>
+                            ` : `
+                                <p class="animal-description">Looking for a new loving home</p>
+                            `}
+                            <button class="delete-button" onclick="deleteAnimal('${animal.id}', '${animal.type}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                animalGrid.innerHTML += card;
+            });
         }
 
         async function deleteAnimal(id, type) {
@@ -1255,7 +1649,7 @@
                     await rehomingCollection.doc(id).delete();
                     showNotification('Rehoming pet deleted successfully', 'success');
                 }
-                loadAnimals();
+                // The snapshot listener will handle removing it from the UI
             } catch (error) {
                 console.error('Error deleting animal: ', error);
                 showNotification('Error deleting animal: ' + error.message, 'error');
@@ -1276,8 +1670,10 @@
             }, 3000);
         }
 
-        // Make deleteAnimal available globally
+        // Make functions available globally
         window.deleteAnimal = deleteAnimal;
+        window.markAsRead = markAsRead;
+        window.deleteMessage = deleteMessage;
     </script>
 </body>
 </html>
