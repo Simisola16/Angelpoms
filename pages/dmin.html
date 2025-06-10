@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AngelPoms Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <style>
+        :root {
+            --primary-blue: #003366;
+            --accent-blue: #0066cc;
+            --accent-gold: #D4AF37;
+            --accent-green: #28a745;
+            --accent-purple: #6f42c1;
+            --accent-red: #dc3545;
+            --dark-bg: #1a1a1a;
+            --light-text: #ffffff;
+            --section-bg: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--section-bg);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Login Overlay */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #003366 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent-gold);
+        }
+
+        .login-container h2 {
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #444;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+        }
+
+        .cta-button {
+            background: var(--accent-blue);
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border: none;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #dc3545;
+            text-align: center;
+            margin-top: 1.2rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard Navigation */
+        .dashboard-nav {
+            background: linear-gradient(to right, var(--primary-blue), #004080);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.4rem;
+            margin-right: 1rem;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 1.6rem;
+        }
+
+        /* Dashboard Content */
+        .dashboard {
+            padding: 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .dashboard-header h2 {
+            color: var(--primary-blue);
+            font-size: 1.8rem;
+        }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.puppy {
+            background: rgba(0, 102, 204, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .stat-icon.stud {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .stat-icon.rehoming {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--accent-green);
+        }
+
+        .stat-icon.total {
+            background: rgba(108, 117, 125, 0.15);
+            color: #6c757d;
+        }
+
+        .stat-icon.messages {
+            background: rgba(111, 66, 193, 0.15);
+            color: var(--accent-purple);
+        }
+
+        .stat-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-content p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Form Section */
+        .add-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .type-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .type-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f9f9f9;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 500;
+            min-width: 140px;
+        }
+
+        .type-btn.active {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .type-btn.puppy.active {
+            border-color: var(--accent-blue);
+            background: rgba(0, 102, 204, 0.05);
+            color: var(--accent-blue);
+        }
+
+        .type-btn.stud.active {
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.05);
+            color: var(--accent-gold);
+        }
+
+        .type-btn.rehoming.active {
+            border-color: var(--accent-green);
+            background: rgba(40, 167, 69, 0.05);
+            color: var(--accent-green);
+        }
+
+        .type-btn i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .image-preview-container {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 280px;
+            border-radius: 10px;
+            display: none;
+            margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        /* Animal Cards */
+        .animal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .animal-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .animal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .animal-image {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+        }
+
+        .puppy .animal-image {
+            border-bottom: 4px solid var(--accent-blue);
+        }
+
+        .stud .animal-image {
+            border-bottom: 4px solid var(--accent-gold);
+        }
+
+        .rehoming .animal-image {
+            border-bottom: 4px solid var(--accent-green);
+        }
+
+        .animal-details {
+            padding: 1.5rem;
+        }
+
+        .animal-details h3 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .animal-type {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+        }
+
+        .type-puppy {
+            background: rgba(0, 102, 204, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .type-stud {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .type-rehoming {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--accent-green);
+        }
+
+        .animal-info {
+            margin-bottom: 0.8rem;
+            color: #555;
+        }
+
+        .animal-info span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .animal-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .stud .animal-price {
+            color: var(--accent-gold);
+        }
+
+        .delete-button {
+            background: #dc3545;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .delete-button:hover {
+            background: #bd2130;
+            transform: translateY(-2px);
+        }
+
+        /* Selection Modal */
+        .selection-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            transition: var(--transition);
+            min-width: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .modal-btn i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-stud {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .btn-puppy {
+            background: rgba(0, 102, 204, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .btn-rehoming {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--accent-green);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .btn-stud:hover {
+            background: rgba(212, 175, 55, 0.25);
+        }
+
+        .btn-puppy:hover {
+            background: rgba(0, 102, 204, 0.25);
+        }
+
+        .btn-rehoming:hover {
+            background: rgba(40, 167, 69, 0.25);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 3000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            max-width: 90%;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: #28a745;
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+
+        /* Admin Info */
+        .admin-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-left: auto;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Messages Section */
+        .messages-section {
+            display: none;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2.5rem;
+        }
+
+        .message-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .messages-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .message-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-blue);
+            transition: var(--transition);
+        }
+
+        .message-card.unread {
+            background: #eef7ff;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .message-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .message-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .message-date {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .message-content {
+            margin-bottom: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .message-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .message-sender {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sender-icon {
+            color: var(--accent-purple);
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .reply-btn {
+            background: rgba(0, 102, 204, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .reply-btn:hover {
+            background: rgba(0, 102, 204, 0.2);
+        }
+
+        .delete-btn {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--accent-red);
+        }
+
+        .delete-btn:hover {
+            background: rgba(220, 53, 69, 0.2);
+        }
+
+        .mark-read-btn {
+            background: rgba(111, 66, 193, 0.1);
+            color: var(--accent-purple);
+        }
+
+        .mark-read-btn:hover {
+            background: rgba(111, 66, 193, 0.2);
+        }
+
+        .no-messages {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard {
+                padding: 1.5rem;
+            }
+            
+            .animal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-list {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(to right, var(--primary-blue), #004080);
+                flex-direction: column;
+                gap: 0;
+                padding: 1rem 0;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 100;
+            }
+            
+            .nav-list.active {
+                display: flex;
+            }
+            
+            .nav-list li {
+                width: 100%;
+            }
+            
+            .nav-link {
+                padding: 1rem 2rem;
+                width: 100%;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            
+            .admin-info {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+            }
+            
+            .dashboard-nav {
+                position: relative;
+                padding: 1rem;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .type-selector {
+                flex-direction: column;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .modal-btn {
+                width: 100%;
+            }
+            
+            .animal-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-preview {
+                max-height: 200px;
+            }
+            
+            .message-filters {
+                flex-direction: column;
+            }
+            
+            .message-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem;
+            }
+            
+            .dashboard {
+                padding: 1rem;
+            }
+            
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stat-icon {
+                margin-bottom: 1rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .animal-card {
+                max-width: 100%;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+            }
+            
+            .add-section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Overlay -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-container">
+            <h2>AngelPoms Admin Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="email" placeholder="admin@angelpoms.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="cta-button">Login</button>
+            </form>
+            <div class="error-message" id="errorMessage">Invalid credentials</div>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div id="dashboardContent" style="display: none;">
+        <nav class="dashboard-nav">
+            <div class="logo">
+                <i class="fas fa-paw"></i>
+                <span>AngelPoms Admin</span>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-list" id="navList">
+                <li><a href="#" class="nav-link dashboard-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" class="nav-link messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="/pages/book a puppy.html" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
+                <li><button class="cta-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+                <li>
+                    <div class="admin-info">
+                        <i class="fas fa-user-circle"></i> <span id="adminEmail"></span>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="dashboard">
+            <!-- Dashboard Overview -->
+            <div class="dashboard-overview">
+                <div class="dashboard-header">
+                    <h2>Dashboard Overview</h2>
+                    <div class="actions">
+                        <button class="cta-button" id="addAnimalBtn"><i class="fas fa-plus"></i> Add New</button>
+                    </div>
+                </div>
+
+                <div class="stat-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon puppy">
+                            <i class="fas fa-dog"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="puppyCount">0</h3>
+                            <p>Available Puppies</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon stud">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="studCount">0</h3>
+                            <p>Stud Dogs</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon rehoming">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="rehomingCount">0</h3>
+                            <p>Rehoming Pets</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon messages">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="messageCount">0</h3>
+                            <p>New Messages</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Animal Section -->
+                <div class="add-section" id="addSection" style="display: none;">
+                    <h3 class="section-title">Add New Animal</h3>
+                    
+                    <div class="type-selector">
+                        <div class="type-btn puppy active" data-type="puppy">
+                            <i class="fas fa-dog"></i>
+                            Add Puppy
+                        </div>
+                        <div class="type-btn stud" data-type="stud">
+                            <i class="fas fa-crown"></i>
+                            Add Stud Dog
+                        </div>
+                        <div class="type-btn rehoming" data-type="rehoming">
+                            <i class="fas fa-heart"></i>
+                            Add Rehoming
+                        </div>
+                    </div>
+                    
+                    <form id="addAnimalForm">
+                        <div class="form-group" id="nameField">
+                            <label>Name:</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        
+                        <!-- Fields for Puppy/Stud -->
+                        <div id="additionalFields" style="display: none;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Breed:</label>
+                                    <input type="text" name="breed">
+                                </div>
+                                <div class="form-group">
+                                    <label>Age:</label>
+                                    <input type="text" name="age" placeholder="e.g., 8 weeks">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Price (£):</label>
+                                    <input type="number" name="price">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Description:</label>
+                                <textarea name="description" class="form-control" rows="3" style="width: 100%; padding: 0.9rem; border: 1px solid #ddd; border-radius: 6px;"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Animal Image:</label>
+                            <input type="file" id="animalImage" accept="image/*" required>
+                            <div class="image-preview-container">
+                                <img class="image-preview" id="imagePreview" alt="Image preview">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="cta-button">Add Animal</button>
+                    </form>
+                </div>
+
+                <!-- Animal Management -->
+                <h3 class="section-title">Manage Animals</h3>
+                <div class="animal-grid" id="animalGrid"></div>
+            </div>
+
+            <!-- Messages Section -->
+            <div class="messages-section" id="messagesSection">
+                <div class="dashboard-header">
+                    <h2>Contact Messages</h2>
+                    <div class="message-filters">
+                        <button class="filter-btn active" data-filter="all">All Messages</button>
+                        <button class="filter-btn" data-filter="unread">Unread</button>
+                        <button class="filter-btn" data-filter="read">Read</button>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <div class="no-messages">
+                        <i class="fas fa-envelope-open-text" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                        <h3>No messages yet</h3>
+                        <p>Contact form submissions will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Type Selection Modal -->
+    <div class="selection-modal" id="selectionModal" style="display: none;">
+        <div class="modal-content">
+            <h2>What would you like to add?</h2>
+            <p>Select the type of animal you want to add to your site</p>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn btn-puppy" id="addPuppyBtn">
+                    <i class="fas fa-dog"></i>
+                    Add a Puppy
+                </button>
+                <button class="modal-btn btn-stud" id="addStudBtn">
+                    <i class="fas fa-crown"></i>
+                    Add a Stud Dog
+                </button>
+                <button class="modal-btn btn-rehoming" id="addRehomingBtn">
+                    <i class="fas fa-heart"></i>
+                    Add Rehoming
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrmpMXUZpJ46n-eRiDjQJSJf-YK6whUEM",
+            authDomain: "prom-dog.firebaseapp.com",
+            projectId: "prom-dog",
+            storageBucket: "prom-dog.appspot.com",
+            messagingSenderId: "945953941353",
+            appId: "1:945953941353:web:e6272892f5352c004b7ff8",
+            measurementId: "G-WMGY01WT20"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const puppiesCollection = db.collection('puppies');
+        const studDogsCollection = db.collection('studDogs');
+        const rehomingCollection = db.collection('rehoming');
+        const contactsCollection = db.collection('contacts');
+
+        // DOM elements
+        const loginOverlay = document.getElementById('loginOverlay');
+        const dashboardContent = document.getElementById('dashboardContent');
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const logoutButton = document.getElementById('logoutButton');
+        const addSection = document.getElementById('addSection');
+        const animalForm = document.getElementById('addAnimalForm');
+        const animalImage = document.getElementById('animalImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const animalGrid = document.getElementById('animalGrid');
+        const puppyCount = document.getElementById('puppyCount');
+        const studCount = document.getElementById('studCount');
+        const rehomingCount = document.getElementById('rehomingCount');
+        const messageCount = document.getElementById('messageCount');
+        const typeButtons = document.querySelectorAll('.type-btn');
+        const addAnimalBtn = document.getElementById('addAnimalBtn');
+        const selectionModal = document.getElementById('selectionModal');
+        const addPuppyBtn = document.getElementById('addPuppyBtn');
+        const addStudBtn = document.getElementById('addStudBtn');
+        const addRehomingBtn = document.getElementById('addRehomingBtn');
+        const notification = document.getElementById('notification');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navList = document.getElementById('navList');
+        const adminEmailSpan = document.getElementById('adminEmail');
+        const nameField = document.getElementById('nameField');
+        const additionalFields = document.getElementById('additionalFields');
+        const dashboardOverview = document.querySelector('.dashboard-overview');
+        const messagesSection = document.getElementById('messagesSection');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const dashboardLink = document.querySelector('.dashboard-link');
+        const messagesLink = document.querySelector('.messages-link');
+
+        // Global variables
+        let currentAnimalType = 'puppy';
+        let animals = [];
+        let messages = [];
+        let currentFilter = 'all';
+        let unsubscribeAnimals = []; // To store unsubscribe functions
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    showDashboard();
+                    adminEmailSpan.textContent = user.email;
+                } else {
+                    showLogin();
+                }
+            });
+
+            // Event listeners
+            loginForm.addEventListener('submit', handleLogin);
+            logoutButton.addEventListener('click', handleLogout);
+            animalImage.addEventListener('change', handleImagePreview);
+            animalForm.addEventListener('submit', handleAnimalSubmit);
+            addAnimalBtn.addEventListener('click', showSelectionModal);
+            addPuppyBtn.addEventListener('click', () => showAddForm('puppy'));
+            addStudBtn.addEventListener('click', () => showAddForm('stud'));
+            addRehomingBtn.addEventListener('click', () => showAddForm('rehoming'));
+            mobileMenuBtn.addEventListener('click', () => {
+                navList.classList.toggle('active');
+            });
+            
+            // Type selector
+            typeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    typeButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentAnimalType = button.dataset.type;
+                    toggleFieldsBasedOnType();
+                });
+            });
+            
+            // Navigation links
+            dashboardLink.addEventListener('click', showDashboardView);
+            messagesLink.addEventListener('click', showMessagesView);
+            
+            // Filter buttons
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentFilter = button.dataset.filter;
+                    renderMessages();
+                });
+            });
+        });
+
+        // Functions
+        function showLogin() {
+            loginOverlay.style.display = 'flex';
+            dashboardContent.style.display = 'none';
+            // Clear the form on logout
+            loginForm.reset();
+        }
+
+        function showDashboard() {
+            loginOverlay.style.display = 'none';
+            dashboardContent.style.display = 'block';
+            showDashboardView();
+            showNotification('Welcome to AngelPoms Admin Dashboard', 'success');
+            loadAnimals();
+            loadMessages();
+        }
+        
+        function showDashboardView() {
+            dashboardOverview.style.display = 'block';
+            messagesSection.style.display = 'none';
+        }
+        
+        function showMessagesView() {
+            dashboardOverview.style.display = 'none';
+            messagesSection.style.display = 'block';
+            loadMessages();
+        }
+
+        function showSelectionModal() {
+            selectionModal.style.display = 'flex';
+        }
+
+        function showAddForm(type) {
+            selectionModal.style.display = 'none';
+            addSection.style.display = 'block';
+            currentAnimalType = type;
+            
+            // Update type selector
+            typeButtons.forEach(button => {
+                button.classList.remove('active');
+                if(button.dataset.type === type) {
+                    button.classList.add('active');
+                }
+            });
+            
+            // Toggle fields based on type
+            toggleFieldsBasedOnType();
+            
+            // Scroll to form
+            addSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function toggleFieldsBasedOnType() {
+            if (currentAnimalType === 'rehoming') {
+                additionalFields.style.display = 'none';
+            } else {
+                additionalFields.style.display = 'block';
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    showDashboard();
+                })
+                .catch((error) => {
+                    console.error('Login error:', error);
+                    showError('Invalid email or password');
+                    showNotification('Login failed: ' + error.message, 'error');
+                });
+        }
+
+        function handleLogout() {
+            auth.signOut().then(() => {
+                showNotification('You have been logged out', 'success');
+                showLogin();
+            });
+        }
+
+        function handleImagePreview(e) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            }
+            
+            if(this.files[0]) reader.readAsDataURL(this.files[0]);
+        }
+
+        async function handleAnimalSubmit(e) {
+            e.preventDefault();
+            const file = animalImage.files[0];
+            
+            if (!file) {
+                showError('Please select an image');
+                return;
+            }
+
+            if(file.size > 500000) {
+                showError('Image too large (max 500KB)');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                try {
+                    const animalData = {
+                        name: document.querySelector('[name="name"]').value,
+                        image: reader.result,
+                        type: currentAnimalType,
+                        createdAt: new Date()
+                    };
+
+                    // Add additional fields only for puppies and studs
+                    if (currentAnimalType !== 'rehoming') {
+                        animalData.breed = document.querySelector('[name="breed"]').value;
+                        animalData.age = document.querySelector('[name="age"]').value;
+                        animalData.price = document.querySelector('[name="price"]').value;
+                        animalData.description = document.querySelector('[name="description"]').value;
+                    }
+
+                    // Add to appropriate collection
+                    let collectionRef;
+                    if (currentAnimalType === 'puppy') {
+                        collectionRef = puppiesCollection;
+                    } else if (currentAnimalType === 'stud') {
+                        collectionRef = studDogsCollection;
+                    } else if (currentAnimalType === 'rehoming') {
+                        collectionRef = rehomingCollection;
+                    }
+
+                    // Add to Firestore
+                    await collectionRef.add(animalData);
+                    
+                    // Reset form
+                    animalForm.reset();
+                    imagePreview.style.display = 'none';
+                    
+                    // Show success message
+                    showNotification(currentAnimalType.charAt(0).toUpperCase() + 
+                                     currentAnimalType.slice(1) + ' added successfully!', 'success');
+                    
+                    // Close the add form
+                    addSection.style.display = 'none';
+                    
+                } catch (error) {
+                    console.error('Error adding animal: ', error);
+                    showNotification('Error adding animal: ' + error.message, 'error');
+                }
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        function loadAnimals() {
+            // Clear existing content
+            animalGrid.innerHTML = '<div class="loading">Loading animals...</div>';
+            
+            // Unsubscribe any existing listeners
+            unsubscribeAnimals.forEach(unsubscribe => unsubscribe());
+            unsubscribeAnimals = [];
+            
+            // Array to store all animals
+            animals = [];
+            
+            // Function to update counts
+            const updateCounts = () => {
+                puppyCount.textContent = animals.filter(a => a.type === 'puppy').length;
+                studCount.textContent = animals.filter(a => a.type === 'stud').length;
+                rehomingCount.textContent = animals.filter(a => a.type === 'rehoming').length;
+                
+                // Re-render animals
+                renderAnimals();
+            };
+            
+            // Load puppies
+            const puppiesUnsubscribe = puppiesCollection.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added' || change.type === 'modified') {
+                        const animal = { id: change.doc.id, ...change.doc.data() };
+                        // Remove existing if any
+                        const index = animals.findIndex(a => a.id === animal.id && a.type === 'puppy');
+                        if (index !== -1) {
+                            animals.splice(index, 1);
+                        }
+                        animals.push(animal);
+                    } else if (change.type === 'removed') {
+                        animals = animals.filter(a => !(a.id === change.doc.id && a.type === 'puppy'));
+                    }
+                });
+                updateCounts();
+            }, error => {
+                console.error("Error loading puppies:", error);
+                animalGrid.innerHTML = '<div class="error-message">Error loading puppies. Please try again.</div>';
+            });
+            unsubscribeAnimals.push(puppiesUnsubscribe);
+            
+            // Load stud dogs
+            const studDogsUnsubscribe = studDogsCollection.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added' || change.type === 'modified') {
+                        const animal = { id: change.doc.id, ...change.doc.data() };
+                        // Remove existing if any
+                        const index = animals.findIndex(a => a.id === animal.id && a.type === 'stud');
+                        if (index !== -1) {
+                            animals.splice(index, 1);
+                        }
+                        animals.push(animal);
+                    } else if (change.type === 'removed') {
+                        animals = animals.filter(a => !(a.id === change.doc.id && a.type === 'stud'));
+                    }
+                });
+                updateCounts();
+            }, error => {
+                console.error("Error loading stud dogs:", error);
+                animalGrid.innerHTML = '<div class="error-message">Error loading stud dogs. Please try again.</div>';
+            });
+            unsubscribeAnimals.push(studDogsUnsubscribe);
+            
+            // Load rehoming pets
+            const rehomingUnsubscribe = rehomingCollection.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added' || change.type === 'modified') {
+                        const animal = { id: change.doc.id, ...change.doc.data() };
+                        // Remove existing if any
+                        const index = animals.findIndex(a => a.id === animal.id && a.type === 'rehoming');
+                        if (index !== -1) {
+                            animals.splice(index, 1);
+                        }
+                        animals.push(animal);
+                    } else if (change.type === 'removed') {
+                        animals = animals.filter(a => !(a.id === change.doc.id && a.type === 'rehoming'));
+                    }
+                });
+                updateCounts();
+            }, error => {
+                console.error("Error loading rehoming pets:", error);
+                animalGrid.innerHTML = '<div class="error-message">Error loading rehoming pets. Please try again.</div>';
+            });
+            unsubscribeAnimals.push(rehomingUnsubscribe);
+        }
+        
+        function loadMessages() {
+            contactsCollection.orderBy("timestamp", "desc").onSnapshot(snapshot => {
+                messages = [];
+                let unreadCount = 0;
+                
+                snapshot.forEach(doc => {
+                    const message = {
+                        id: doc.id,
+                        ...doc.data(),
+                        timestamp: doc.data().timestamp.toDate()
+                    };
+                    messages.push(message);
+                    
+                    if (!message.read) unreadCount++;
+                });
+                
+                messageCount.textContent = unreadCount;
+                renderMessages();
+            }, error => {
+                console.error("Error loading messages:", error);
+                messagesContainer.innerHTML = '<div class="error-message">Error loading messages. Please try again.</div>';
+            });
+        }
+        
+        function renderMessages() {
+            if (messages.length === 0) {
+                messagesContainer.innerHTML = `
+                    <div class="no-messages">
+                        <i class="fas fa-envelope-open-text" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                        <h3>No messages yet</h3>
+                        <p>Contact form submissions will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            messagesContainer.innerHTML = '';
+            
+            const filteredMessages = messages.filter(message => {
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'unread') return !message.read;
+                if (currentFilter === 'read') return message.read;
+                return true;
+            });
+            
+            if (filteredMessages.length === 0) {
+                messagesContainer.innerHTML = `
+                    <div class="no-messages">
+                        <i class="fas fa-envelope" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                        <h3>No ${currentFilter} messages</h3>
+                        <p>Try selecting a different filter</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredMessages.forEach(message => {
+                const formattedDate = message.timestamp.toLocaleString();
+                const messageCard = document.createElement('div');
+                messageCard.className = `message-card ${message.read ? '' : 'unread'}`;
+                messageCard.innerHTML = `
+                    <div class="message-header">
+                        <div class="message-title">${message.subject}</div>
+                        <div class="message-date">${formattedDate}</div>
+                    </div>
+                    <div class="message-content">
+                        <p>${message.message}</p>
+                    </div>
+                    <div class="message-footer">
+                        <div class="message-sender">
+                            <i class="fas fa-user sender-icon"></i>
+                            <div>
+                                <strong>${message.name}</strong>
+                                <div>${message.email} | ${message.phone || 'No phone'}</div>
+                            </div>
+                        </div>
+                        <div class="message-actions">
+                            ${!message.read ? `
+                                <button class="action-btn mark-read-btn" onclick="markAsRead('${message.id}')">
+                                    <i class="fas fa-check-circle"></i> Mark Read
+                                </button>
+                            ` : ''}
+                            <a href="mailto:${message.email}?subject=Re: ${message.subject}" class="action-btn reply-btn">
+                                <i class="fas fa-reply"></i> Reply
+                            </a>
+                            <button class="action-btn delete-btn" onclick="deleteMessage('${message.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageCard);
+            });
+        }
+        
+        async function markAsRead(messageId) {
+            try {
+                await contactsCollection.doc(messageId).update({
+                    read: true,
+                    readAt: new Date()
+                });
+                showNotification('Message marked as read', 'success');
+                loadMessages();
+            } catch (error) {
+                console.error('Error marking message as read: ', error);
+                showNotification('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function deleteMessage(messageId) {
+            if (!confirm('Are you sure you want to delete this message?')) return;
+            
+            try {
+                await contactsCollection.doc(messageId).delete();
+                showNotification('Message deleted successfully', 'success');
+                loadMessages();
+            } catch (error) {
+                console.error('Error deleting message: ', error);
+                showNotification('Error: ' + error.message, 'error');
+            }
+        }
+
+        function renderAnimals() {
+            // Sort by creation date (newest first)
+            animals.sort((a, b) => b.createdAt - a.createdAt);
+            
+            // Render to grid
+            animalGrid.innerHTML = '';
+            
+            if (animals.length === 0) {
+                animalGrid.innerHTML = '<div class="error-message">No animals found. Add your first animal!</div>';
+                return;
+            }
+            
+            animals.forEach(animal => {
+                const isRehoming = animal.type === 'rehoming';
+                const card = `
+                    <div class="animal-card ${animal.type}">
+                        <img src="${animal.image}" class="animal-image" alt="${animal.name}">
+                        <div class="animal-details">
+                            <h3>${animal.name}</h3>
+                            <div class="animal-type ${animal.type === 'puppy' ? 'type-puppy' : 
+                                                     animal.type === 'stud' ? 'type-stud' : 'type-rehoming'}">
+                                ${animal.type === 'puppy' ? 'Puppy' : 
+                                  animal.type === 'stud' ? 'Stud Dog' : 'Rehoming'}
+                            </div>
+                            ${!isRehoming ? `
+                                <p class="animal-info"><span>Breed:</span> ${animal.breed}</p>
+                                <p class="animal-info"><span>Age:</span> ${animal.age}</p>
+                                <p class="animal-description">${animal.description || 'No description available'}</p>
+                                <div class="animal-price">£${animal.price}</div>
+                            ` : `
+                                <p class="animal-description">Looking for a new loving home</p>
+                            `}
+                            <button class="delete-button" onclick="deleteAnimal('${animal.id}', '${animal.type}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                animalGrid.innerHTML += card;
+            });
+        }
+
+        async function deleteAnimal(id, type) {
+            if(!confirm(`Are you sure you want to delete this ${type === 'puppy' ? 'puppy' : type === 'stud' ? 'stud dog' : 'rehoming pet'}?`)) return;
+            
+            try {
+                if (type === 'puppy') {
+                    await puppiesCollection.doc(id).delete();
+                    showNotification('Puppy deleted successfully', 'success');
+                } else if (type === 'stud') {
+                    await studDogsCollection.doc(id).delete();
+                    showNotification('Stud dog deleted successfully', 'success');
+                } else if (type === 'rehoming') {
+                    await rehomingCollection.doc(id).delete();
+                    showNotification('Rehoming pet deleted successfully', 'success');
+                }
+                // The snapshot listener will handle removing it from the UI
+            } catch (error) {
+                console.error('Error deleting animal: ', error);
+                showNotification('Error deleting animal: ' + error.message, 'error');
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => errorMessage.style.display = 'none', 3000);
+        }
+        
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Make functions available globally
+        window.deleteAnimal = deleteAnimal;
+        window.markAsRead = markAsRead;
+        window.deleteMessage = deleteMessage;
+    </script>
+</body>
+</html>
