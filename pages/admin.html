@@ -121,6 +121,9 @@
             font-weight: 600;
             transition: var(--transition);
             margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .cta-button:hover {
@@ -581,6 +584,9 @@
             transform: translateX(150%);
             transition: transform 0.3s ease;
             max-width: 90%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .notification.show {
@@ -593,6 +599,11 @@
         
         .notification.error {
             background: #dc3545;
+        }
+        
+        .notification.warning {
+            background: #ffc107;
+            color: #333;
         }
 
         /* Admin Info */
@@ -773,6 +784,26 @@
             padding: 3rem;
             color: #6c757d;
         }
+        
+        /* Processing spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .processing .spinner {
+            display: inline-block;
+        }
 
         /* Responsive Design */
         @media (max-width: 1024px) {
@@ -937,7 +968,7 @@
             <ul class="nav-list" id="navList">
                 <li><a href="#" class="nav-link dashboard-link"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="#" class="nav-link messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
-                <li><a href="/pages/book a puppy.html" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
+                <li><a href="#" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
                 <li><button class="cta-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
                 <li>
                     <div class="admin-info">
@@ -1055,7 +1086,7 @@
                             </div>
                         </div>
                         
-                        <button type="submit" class="cta-button">Add Animal</button>
+                        <button type="submit" class="cta-button" id="submitButton">Add Animal</button>
                     </form>
                 </div>
 
@@ -1166,6 +1197,7 @@
         const filterButtons = document.querySelectorAll('.filter-btn');
         const dashboardLink = document.querySelector('.dashboard-link');
         const messagesLink = document.querySelector('.messages-link');
+        const submitButton = document.getElementById('submitButton');
 
         // Global variables
         let currentAnimalType = 'puppy';
@@ -1326,61 +1358,117 @@
                 showError('Please select an image');
                 return;
             }
-
-            if(file.size > 500000) {
-                showError('Image too large (max 500KB)');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onloadend = async () => {
-                try {
-                    const animalData = {
-                        name: document.querySelector('[name="name"]').value,
-                        image: reader.result,
-                        type: currentAnimalType,
-                        createdAt: new Date()
-                    };
-
-                    // Add additional fields only for puppies and studs
-                    if (currentAnimalType !== 'rehoming') {
-                        animalData.breed = document.querySelector('[name="breed"]').value;
-                        animalData.age = document.querySelector('[name="age"]').value;
-                        animalData.price = document.querySelector('[name="price"]').value;
-                        animalData.description = document.querySelector('[name="description"]').value;
-                    }
-
-                    // Add to appropriate collection
-                    let collectionRef;
-                    if (currentAnimalType === 'puppy') {
-                        collectionRef = puppiesCollection;
-                    } else if (currentAnimalType === 'stud') {
-                        collectionRef = studDogsCollection;
-                    } else if (currentAnimalType === 'rehoming') {
-                        collectionRef = rehomingCollection;
-                    }
-
-                    // Add to Firestore
-                    await collectionRef.add(animalData);
-                    
-                    // Reset form
-                    animalForm.reset();
-                    imagePreview.style.display = 'none';
-                    
-                    // Show success message
-                    showNotification(currentAnimalType.charAt(0).toUpperCase() + 
-                                     currentAnimalType.slice(1) + ' added successfully!', 'success');
-                    
-                    // Close the add form
-                    addSection.style.display = 'none';
-                    
-                } catch (error) {
-                    console.error('Error adding animal: ', error);
-                    showNotification('Error adding animal: ' + error.message, 'error');
-                }
-            };
             
-            reader.readAsDataURL(file);
+            // Disable submit button during processing
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<div class="processing"><div class="spinner"></div> Adding...</div>';
+            
+            try {
+                // Compress the image for mobile devices
+                const compressedImage = await compressImageForMobile(file);
+                
+                const animalData = {
+                    name: document.querySelector('[name="name"]').value,
+                    image: compressedImage,
+                    type: currentAnimalType,
+                    createdAt: new Date()
+                };
+
+                // Add additional fields only for puppies and studs
+                if (currentAnimalType !== 'rehoming') {
+                    animalData.breed = document.querySelector('[name="breed"]').value;
+                    animalData.age = document.querySelector('[name="age"]').value;
+                    animalData.price = document.querySelector('[name="price"]').value;
+                    animalData.description = document.querySelector('[name="description"]').value;
+                }
+
+                // Add to appropriate collection
+                let collectionRef;
+                if (currentAnimalType === 'puppy') {
+                    collectionRef = puppiesCollection;
+                } else if (currentAnimalType === 'stud') {
+                    collectionRef = studDogsCollection;
+                } else if (currentAnimalType === 'rehoming') {
+                    collectionRef = rehomingCollection;
+                }
+
+                // Add to Firestore
+                await collectionRef.add(animalData);
+                
+                // Reset form
+                animalForm.reset();
+                imagePreview.style.display = 'none';
+                
+                // Show success message
+                showNotification(currentAnimalType.charAt(0).toUpperCase() + 
+                                 currentAnimalType.slice(1) + ' added successfully!', 'success');
+                
+                // Close the add form
+                addSection.style.display = 'none';
+                
+            } catch (error) {
+                console.error('Error adding animal: ', error);
+                showNotification('Error adding animal: ' + error.message, 'error');
+            } finally {
+                // Re-enable the submit button
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Add Animal';
+            }
+        }
+        
+        function compressImageForMobile(file) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Set maximum dimensions for mobile
+                        const MAX_WIDTH = 800;
+                        const MAX_HEIGHT = 800;
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        // Calculate new dimensions while maintaining aspect ratio
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        // Draw the compressed image
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Convert to data URL with reduced quality
+                        try {
+                            const compressedData = canvas.toDataURL('image/jpeg', 0.7);
+                            resolve(compressedData);
+                        } catch (error) {
+                            reject(new Error('Image compression failed: ' + error.message));
+                        }
+                    };
+                    img.onerror = function() {
+                        reject(new Error('Failed to load image for compression'));
+                    };
+                };
+                reader.onerror = function() {
+                    reject(new Error('Failed to read image file'));
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
         function loadAnimals() {
