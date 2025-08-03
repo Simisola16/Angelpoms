@@ -465,6 +465,34 @@
             color: var(--accent-gold);
         }
 
+        /* Animal Actions */
+        .animal-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .edit-button {
+            background: #ffc107;
+            color: #333;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .edit-button:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
         .delete-button {
             background: #dc3545;
             color: white;
@@ -475,11 +503,50 @@
             transition: var(--transition);
             width: 100%;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .delete-button:hover {
             background: #bd2130;
             transform: translateY(-2px);
+        }
+
+        /* Edit Form Section */
+        .edit-form-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2.5rem;
+            display: none;
+        }
+        
+        .edit-form-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .edit-form-title h3 {
+            font-size: 1.4rem;
+            color: var(--primary-blue);
+        }
+        
+        .close-edit-form {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+            transition: var(--transition);
+        }
+        
+        .close-edit-form:hover {
+            color: var(--accent-red);
         }
 
         /* Selection Modal */
@@ -895,6 +962,10 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            
+            .animal-actions {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1090,6 +1161,76 @@
                     </form>
                 </div>
 
+                <!-- Edit Animal Form -->
+                <div class="edit-form-container" id="editFormContainer">
+                    <div class="edit-form-title">
+                        <h3>Edit Animal</h3>
+                        <button class="close-edit-form" id="closeEditForm">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="type-selector">
+                        <div class="type-btn puppy" id="editTypePuppy" data-type="puppy">
+                            <i class="fas fa-dog"></i>
+                            Puppy
+                        </div>
+                        <div class="type-btn stud" id="editTypeStud" data-type="stud">
+                            <i class="fas fa-crown"></i>
+                            Stud Dog
+                        </div>
+                        <div class="type-btn rehoming" id="editTypeRehoming" data-type="rehoming">
+                            <i class="fas fa-heart"></i>
+                            Rehoming
+                        </div>
+                    </div>
+                    
+                    <form id="editAnimalForm">
+                        <input type="hidden" id="editAnimalId">
+                        <input type="hidden" id="editAnimalType">
+                        
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" id="editName" required>
+                        </div>
+                        
+                        <div id="editAdditionalFields">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Breed:</label>
+                                    <input type="text" id="editBreed">
+                                </div>
+                                <div class="form-group">
+                                    <label>Age:</label>
+                                    <input type="text" id="editAge" placeholder="e.g., 8 weeks">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Price (£):</label>
+                                    <input type="number" id="editPrice">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Description:</label>
+                                <textarea id="editDescription" class="form-control" rows="3" style="width: 100%; padding: 0.9rem; border: 1px solid #ddd; border-radius: 6px;"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Animal Image:</label>
+                            <input type="file" id="editAnimalImage" accept="image/*">
+                            <div class="image-preview-container">
+                                <img class="image-preview" id="editImagePreview" alt="Image preview">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="cta-button" id="updateButton">Update Animal</button>
+                    </form>
+                </div>
+
                 <!-- Animal Management -->
                 <h3 class="section-title">Manage Animals</h3>
                 <div class="animal-grid" id="animalGrid"></div>
@@ -1198,6 +1339,24 @@
         const dashboardLink = document.querySelector('.dashboard-link');
         const messagesLink = document.querySelector('.messages-link');
         const submitButton = document.getElementById('submitButton');
+        
+        // Edit form elements
+        const editFormContainer = document.getElementById('editFormContainer');
+        const editAnimalForm = document.getElementById('editAnimalForm');
+        const editAnimalId = document.getElementById('editAnimalId');
+        const editAnimalType = document.getElementById('editAnimalType');
+        const editName = document.getElementById('editName');
+        const editBreed = document.getElementById('editBreed');
+        const editAge = document.getElementById('editAge');
+        const editPrice = document.getElementById('editPrice');
+        const editDescription = document.getElementById('editDescription');
+        const editAnimalImage = document.getElementById('editAnimalImage');
+        const editImagePreview = document.getElementById('editImagePreview');
+        const updateButton = document.getElementById('updateButton');
+        const closeEditForm = document.getElementById('closeEditForm');
+        const editTypePuppy = document.getElementById('editTypePuppy');
+        const editTypeStud = document.getElementById('editTypeStud');
+        const editTypeRehoming = document.getElementById('editTypeRehoming');
 
         // Global variables
         let currentAnimalType = 'puppy';
@@ -1205,6 +1364,7 @@
         let messages = [];
         let currentFilter = 'all';
         let unsubscribeAnimals = []; // To store unsubscribe functions
+        let currentEditImage = null; // To store current image for edit form
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
@@ -1254,6 +1414,16 @@
                     renderMessages();
                 });
             });
+            
+            // Edit form event listeners
+            editAnimalForm.addEventListener('submit', handleAnimalUpdate);
+            closeEditForm.addEventListener('click', closeEditFormHandler);
+            editAnimalImage.addEventListener('change', handleEditImagePreview);
+            
+            // Edit type selector
+            editTypePuppy.addEventListener('click', () => setEditType('puppy'));
+            editTypeStud.addEventListener('click', () => setEditType('stud'));
+            editTypeRehoming.addEventListener('click', () => setEditType('rehoming'));
         });
 
         // Functions
@@ -1276,11 +1446,13 @@
         function showDashboardView() {
             dashboardOverview.style.display = 'block';
             messagesSection.style.display = 'none';
+            editFormContainer.style.display = 'none';
         }
         
         function showMessagesView() {
             dashboardOverview.style.display = 'none';
             messagesSection.style.display = 'block';
+            editFormContainer.style.display = 'none';
             loadMessages();
         }
 
@@ -1291,6 +1463,7 @@
         function showAddForm(type) {
             selectionModal.style.display = 'none';
             addSection.style.display = 'block';
+            editFormContainer.style.display = 'none';
             currentAnimalType = type;
             
             // Update type selector
@@ -1713,9 +1886,14 @@
                             ` : `
                                 <p class="animal-description">Looking for a new loving home</p>
                             `}
-                            <button class="delete-button" onclick="deleteAnimal('${animal.id}', '${animal.type}')">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
+                            <div class="animal-actions">
+                                <button class="edit-button" onclick="editAnimal('${animal.id}', '${animal.type}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="delete-button" onclick="deleteAnimal('${animal.id}', '${animal.type}')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1743,6 +1921,156 @@
                 showNotification('Error deleting animal: ' + error.message, 'error');
             }
         }
+        
+        // Edit animal functionality
+        function editAnimal(id, type) {
+            // Find animal in our global animals array
+            const animal = animals.find(a => a.id === id && a.type === type);
+            if (!animal) return;
+            
+            // Hide other sections
+            addSection.style.display = 'none';
+            dashboardOverview.style.display = 'block';
+            messagesSection.style.display = 'none';
+            
+            // Set form values
+            editAnimalId.value = id;
+            editAnimalType.value = type;
+            editName.value = animal.name || '';
+            
+            // Set type selector
+            setEditType(type);
+            
+            // Set additional fields for non-rehoming animals
+            if (type !== 'rehoming') {
+                editBreed.value = animal.breed || '';
+                editAge.value = animal.age || '';
+                editPrice.value = animal.price || '';
+                editDescription.value = animal.description || '';
+            }
+            
+            // Set image preview
+            if (animal.image) {
+                editImagePreview.src = animal.image;
+                editImagePreview.style.display = 'block';
+                currentEditImage = animal.image; // Save current image
+            } else {
+                editImagePreview.style.display = 'none';
+                currentEditImage = null;
+            }
+            
+            // Show edit form
+            editFormContainer.style.display = 'block';
+            
+            // Scroll to edit form
+            editFormContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Set type in edit form
+        function setEditType(type) {
+            // Update active button
+            [editTypePuppy, editTypeStud, editTypeRehoming].forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (type === 'puppy') {
+                editTypePuppy.classList.add('active');
+            } else if (type === 'stud') {
+                editTypeStud.classList.add('active');
+            } else {
+                editTypeRehoming.classList.add('active');
+            }
+            
+            // Toggle additional fields
+            if (type === 'rehoming') {
+                document.getElementById('editAdditionalFields').style.display = 'none';
+            } else {
+                document.getElementById('editAdditionalFields').style.display = 'block';
+            }
+        }
+        
+        // Handle edit image preview
+        function handleEditImagePreview(e) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                editImagePreview.src = e.target.result;
+                editImagePreview.style.display = 'block';
+            }
+            
+            if(this.files[0]) reader.readAsDataURL(this.files[0]);
+        }
+        
+        // Handle animal update
+        async function handleAnimalUpdate(e) {
+            e.preventDefault();
+            
+            // Disable submit button during processing
+            updateButton.disabled = true;
+            updateButton.innerHTML = '<div class="processing"><div class="spinner"></div> Updating...</div>';
+            
+            try {
+                const id = editAnimalId.value;
+                const type = editAnimalType.value;
+                
+                // Get updated data
+                const animalData = {
+                    name: editName.value,
+                    updatedAt: new Date(),
+                    image: currentEditImage // Default to existing image
+                };
+                
+                // Check if new image was selected
+                const file = editAnimalImage.files[0];
+                if (file) {
+                    // Compress and set new image
+                    animalData.image = await compressImageForMobile(file);
+                }
+                
+                // Add additional fields for non-rehoming animals
+                if (type !== 'rehoming') {
+                    animalData.breed = editBreed.value;
+                    animalData.age = editAge.value;
+                    animalData.price = editPrice.value;
+                    animalData.description = editDescription.value;
+                }
+                
+                // Determine collection reference
+                let collectionRef;
+                if (type === 'puppy') {
+                    collectionRef = puppiesCollection;
+                } else if (type === 'stud') {
+                    collectionRef = studDogsCollection;
+                } else if (type === 'rehoming') {
+                    collectionRef = rehomingCollection;
+                }
+                
+                // Update in Firestore
+                await collectionRef.doc(id).update(animalData);
+                
+                // Close edit form
+                closeEditFormHandler();
+                
+                // Show success notification
+                showNotification(`${type === 'puppy' ? 'Puppy' : type === 'stud' ? 'Stud Dog' : 'Rehoming Pet'} updated successfully!`, 'success');
+                
+            } catch (error) {
+                console.error('Error updating animal: ', error);
+                showNotification('Error updating animal: ' + error.message, 'error');
+            } finally {
+                // Re-enable the submit button
+                updateButton.disabled = false;
+                updateButton.innerHTML = 'Update Animal';
+            }
+        }
+        
+        // Close edit form
+        function closeEditFormHandler() {
+            editFormContainer.style.display = 'none';
+            editAnimalForm.reset();
+            editImagePreview.style.display = 'none';
+            currentEditImage = null;
+        }
 
         function showError(message) {
             errorMessage.textContent = message;
@@ -1762,6 +2090,7 @@
         window.deleteAnimal = deleteAnimal;
         window.markAsRead = markAsRead;
         window.deleteMessage = deleteMessage;
+        window.editAnimal = editAnimal;
     </script>
 </body>
 </html>
