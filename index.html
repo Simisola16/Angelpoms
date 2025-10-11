@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="shortcut icon" href="./media/image/Angel poms.png" type="image/x-icon">
 
-
-
     <style>
         :root {
             --primary-blue: #003366;
@@ -542,6 +540,162 @@
             object-fit: cover;
         }
         
+        /* Add Review Button */
+        .add-review-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .add-review-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .add-review-btn:hover {
+            background: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Review Modal */
+        .review-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .review-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+        
+        .modal-title {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: var(--primary-blue);
+        }
+        
+        .review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--primary-blue);
+        }
+        
+        .form-input, .form-textarea {
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .rating-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .rating-star {
+            font-size: 1.5rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .rating-star.active {
+            color: var(--gold);
+        }
+        
+        .form-submit {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .form-submit:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
         /* Health Guarantee */
         .health-guarantee {
             padding: 4rem 5%;
@@ -763,6 +917,12 @@
             .carousel-dots {
                 margin-top: 20px;
             }
+            
+            /* Modal adjustments */
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -798,6 +958,11 @@
             
             .cta-title {
                 font-size: 1.8rem;
+            }
+            
+            .add-review-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -922,7 +1087,7 @@
             <p class="section-subtitle">What our customers say about their Angelpoms experience</p>
             <div class="reviews-container">
                 <div class="reviews-carousel">
-                    <div class="reviews-track">
+                    <div class="reviews-track" id="reviewsTrack">
                         <div class="review-item active">
                             <div class="review-header">
                                 <div class="review-name">
@@ -942,7 +1107,6 @@
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                             </div>
-                            <!-- <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Injoo J." class="review-image"> -->
                         </div>
                         
                         <div class="review-item">
@@ -964,7 +1128,6 @@
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                             </div>
-                            <!-- <img src="https://randomuser.me/api/portraits/women/67.jpg" alt="Zoe A." class="review-image"> -->
                         </div>
                         
                         <div class="review-item">
@@ -986,7 +1149,6 @@
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                             </div>
-                            <!-- <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Cameron M." class="review-image"> -->
                         </div>
                         
                         <div class="review-item">
@@ -1007,7 +1169,6 @@
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                             </div>
-                            <!-- <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Amanda K." class="review-image"> -->
                         </div>
                     </div>
                     
@@ -1020,15 +1181,58 @@
                         </button>
                     </div>
                     
-                    <div class="carousel-dots">
+                    <div class="carousel-dots" id="carouselDots">
                         <span class="dot active" data-index="0"></span>
                         <span class="dot" data-index="1"></span>
                         <span class="dot" data-index="2"></span>
                         <span class="dot" data-index="3"></span>
                     </div>
                 </div>
+                
+                <!-- Add Review Button -->
+                <div class="add-review-container">
+                    <button class="add-review-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        Add Your Review
+                    </button>
+                </div>
             </div>
         </section>
+
+        <!-- Review Modal -->
+        <div class="review-modal" id="reviewModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Share Your Experience</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form class="review-form" id="reviewForm">
+                    <div class="form-group">
+                        <label class="form-label" for="reviewerName">Your Name</label>
+                        <input type="text" id="reviewerName" class="form-input" placeholder="Enter your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Your Rating</label>
+                        <div class="rating-input">
+                            <span class="rating-star" data-rating="1">★</span>
+                            <span class="rating-star" data-rating="2">★</span>
+                            <span class="rating-star" data-rating="3">★</span>
+                            <span class="rating-star" data-rating="4">★</span>
+                            <span class="rating-star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="ratingValue" value="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="reviewText">Your Review</label>
+                        <textarea id="reviewText" class="form-textarea" placeholder="Tell us about your experience with Angelpoms..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="form-submit">Submit Review</button>
+                </form>
+            </div>
+        </div>
 
         <!-- CTA Section -->
         <section class="cta-section">
@@ -1113,81 +1317,146 @@
             document.querySelector('.hero-content').classList.add('visible');
         });
         
-        // Customer Reviews Carousel
-        document.addEventListener('DOMContentLoaded', function() {
+        // Customer Reviews Carousel - Global variables
+        let currentIndex = 0;
+        let autoSlideInterval;
+        let reviewItems = document.querySelectorAll('.review-item');
+        let dots = document.querySelectorAll('.dot');
+        
+        // Update carousel position and active indicators
+        function updateCarousel() {
             const track = document.querySelector('.reviews-track');
-            const items = document.querySelectorAll('.review-item');
-            const dots = document.querySelectorAll('.dot');
+            // Update track position
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            
+            // Update active item
+            reviewItems.forEach((item, index) => {
+                item.classList.toggle('active', index === currentIndex);
+            });
+            
+            // Update active dot
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+            
+            // Update button states
+            const prevBtn = document.querySelector('.carousel-button.prev');
+            const nextBtn = document.querySelector('.carousel-button.next');
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === reviewItems.length - 1;
+        }
+        
+        // Navigate to a specific slide
+        function goToSlide(index) {
+            currentIndex = index;
+            updateCarousel();
+            resetAutoSlide();
+        }
+        
+        // Next slide
+        function nextSlide() {
+            if (currentIndex < reviewItems.length - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+            resetAutoSlide();
+        }
+        
+        // Previous slide
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+            resetAutoSlide();
+        }
+        
+        // Auto slide functionality
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                if (currentIndex === reviewItems.length - 1) {
+                    currentIndex = 0;
+                } else {
+                    currentIndex++;
+                }
+                updateCarousel();
+            }, 5000);
+        }
+        
+        // Reset auto slide timer
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
+        
+        // Add a new review to the carousel
+        function addNewReview(name, rating, text) {
+            const reviewsTrack = document.getElementById('reviewsTrack');
+            const carouselDots = document.getElementById('carouselDots');
+            
+            // Create new review item
+            const newReview = document.createElement('div');
+            newReview.className = 'review-item';
+            
+            // Format the current date as "X days/weeks/months ago"
+            const timeAgo = "Just now";
+            
+            // Create stars HTML based on rating
+            let starsHtml = '';
+            for (let i = 0; i < 5; i++) {
+                if (i < rating) {
+                    starsHtml += '<i class="fas fa-star"></i>';
+                } else {
+                    starsHtml += '<i class="far fa-star"></i>';
+                }
+            }
+            
+            newReview.innerHTML = `
+                <div class="review-header">
+                    <div class="review-name">
+                        <i class="fas fa-user"></i>
+                        ${name}
+                    </div>
+                    <span class="review-time">${timeAgo}</span>
+                </div>
+                <p class="review-text">${text}</p>
+                <div class="review-rating">
+                    ${starsHtml}
+                </div>
+            `;
+            
+            // Add the new review to the track
+            reviewsTrack.appendChild(newReview);
+            
+            // Update the dots
+            const newDot = document.createElement('span');
+            newDot.className = 'dot';
+            newDot.setAttribute('data-index', reviewItems.length);
+            carouselDots.appendChild(newDot);
+            
+            // Update global variables
+            reviewItems = document.querySelectorAll('.review-item');
+            dots = document.querySelectorAll('.dot');
+            
+            // Add event listeners to new dot
+            newDot.addEventListener('click', () => {
+                goToSlide(parseInt(newDot.getAttribute('data-index')));
+            });
+            
+            // Go to the new review
+            currentIndex = reviewItems.length - 1;
+            updateCarousel();
+            
+            // Show success message
+            alert('Thank you for your review! It has been added to the carousel.');
+        }
+        
+        // Initialize carousel
+        document.addEventListener('DOMContentLoaded', function() {
             const prevBtn = document.querySelector('.carousel-button.prev');
             const nextBtn = document.querySelector('.carousel-button.next');
             
-            let currentIndex = 0;
-            let autoSlideInterval;
-            
-            // Update carousel position and active indicators
-            function updateCarousel() {
-                // Update track position
-                track.style.transform = `translateX(-${currentIndex * 100}%)`;
-                
-                // Update active item
-                items.forEach((item, index) => {
-                    item.classList.toggle('active', index === currentIndex);
-                });
-                
-                // Update active dot
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentIndex);
-                });
-                
-                // Update button states
-                prevBtn.disabled = currentIndex === 0;
-                nextBtn.disabled = currentIndex === items.length - 1;
-            }
-            
-            // Navigate to a specific slide
-            function goToSlide(index) {
-                currentIndex = index;
-                updateCarousel();
-                resetAutoSlide();
-            }
-            
-            // Next slide
-            function nextSlide() {
-                if (currentIndex < items.length - 1) {
-                    currentIndex++;
-                    updateCarousel();
-                }
-                resetAutoSlide();
-            }
-            
-            // Previous slide
-            function prevSlide() {
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    updateCarousel();
-                }
-                resetAutoSlide();
-            }
-            
-            // Auto slide functionality
-            function startAutoSlide() {
-                autoSlideInterval = setInterval(() => {
-                    if (currentIndex === items.length - 1) {
-                        currentIndex = 0;
-                    } else {
-                        currentIndex++;
-                    }
-                    updateCarousel();
-                }, 5000);
-            }
-            
-            // Reset auto slide timer
-            function resetAutoSlide() {
-                clearInterval(autoSlideInterval);
-                startAutoSlide();
-            }
-            
-            // Event listeners
+            // Event listeners for navigation
             prevBtn.addEventListener('click', prevSlide);
             nextBtn.addEventListener('click', nextSlide);
             
@@ -1209,6 +1478,85 @@
             
             carousel.addEventListener('mouseleave', () => {
                 startAutoSlide();
+            });
+        });
+        
+        // Review Modal Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('reviewModal');
+            const addReviewBtn = document.querySelector('.add-review-btn');
+            const closeModalBtn = document.querySelector('.close-modal');
+            const reviewForm = document.getElementById('reviewForm');
+            const ratingStars = document.querySelectorAll('.rating-star');
+            const ratingValue = document.getElementById('ratingValue');
+            
+            // Open modal
+            addReviewBtn.addEventListener('click', () => {
+                modal.classList.add('active');
+            });
+            
+            // Close modal
+            closeModalBtn.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+            
+            // Star rating functionality
+            ratingStars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const rating = parseInt(star.getAttribute('data-rating'));
+                    ratingValue.value = rating;
+                    
+                    // Update star appearance
+                    ratingStars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+            });
+            
+            // Initialize with 5 stars
+            ratingStars.forEach((star, index) => {
+                if (index < 5) {
+                    star.classList.add('active');
+                }
+            });
+            
+            // Form submission
+            reviewForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('reviewerName').value;
+                const rating = parseInt(ratingValue.value);
+                const text = document.getElementById('reviewText').value;
+                
+                // Add the new review to the carousel
+                addNewReview(name, rating, text);
+                
+                // Reset form
+                reviewForm.reset();
+                
+                // Reset stars to 5
+                ratingStars.forEach((star, index) => {
+                    if (index < 5) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+                ratingValue.value = 5;
+                
+                // Close modal
+                modal.classList.remove('active');
             });
         });
     </script>
