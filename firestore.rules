@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Contact form submissions - public write, admin read
+    match /contacts/{contact} {
+      allow read: if isAdmin();
+      allow create: if true;  // Public can submit forms
+      allow update, delete: if isAdmin();  // Only admins can update and delete
+    }
+
+    // Existing collections...
+    match /puppies/{puppy} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /studDogs/{stud} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /rehoming/{animal} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Customer reviews - public read and create, admin update/delete
+    match /reviews/{review} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // Admin authentication function
+    function isAdmin() {
+      return request.auth != null && 
+             request.auth.token.email in [
+               "admin@angelpoms.com",
+               "ira.chizh2204@gmail.com",
+               "olamilekanmuhayad@yahoo.com"
+             ];
+    }
+  }
+}

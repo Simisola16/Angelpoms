@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="shortcut icon" href="./media/image/Angel poms.png" type="image/x-icon">
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --primary-blue: #003366;
@@ -695,6 +699,13 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary-blue);
+        }
         
         /* Health Guarantee */
         .health-guarantee {
@@ -1088,87 +1099,10 @@
             <div class="reviews-container">
                 <div class="reviews-carousel">
                     <div class="reviews-track" id="reviewsTrack">
-                        <div class="review-item active">
-                            <div class="review-header">
-                                <div class="review-name">
-                                    <i class="fas fa-user"></i>
-                                    Injoo J.
-                                </div>
-                                <span class="review-time">1 week ago</span>
-                            </div>
-                            <p class="review-text">
-                                Exceptional breeder! Our puppy settled in immediately and has been a joy. 
-                                The thorough health checks and ongoing support made us feel completely confident in our adoption.
-                            </p>
-                            <div class="review-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="review-name">
-                                    <i class="fas fa-user"></i>
-                                    Zoe A.
-                                </div>
-                                <span class="review-time">9 months ago</span>
-                            </div>
-                            <p class="review-text">
-                                From the first contact to bringing our puppy home, the experience was flawless. 
-                                The attention to detail in documentation and care instructions was truly impressive.
-                            </p>
-                            <div class="review-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="review-name">
-                                    <i class="fas fa-user"></i>
-                                    CAMERON M.
-                                </div>
-                                <span class="review-time">9 months ago</span>
-                            </div>
-                            <p class="review-text">
-                                Angel's expertise in Pomeranians is unmatched. Our pup arrived happy, healthy, and perfectly socialized. 
-                                The lifetime support guarantee gives us peace of mind.
-                            </p>
-                            <div class="review-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="review-name">
-                                    <i class="fas fa-user"></i>
-                                    Amanda K.
-                                </div>
-                                <span class="review-time">11 months ago</span>
-                            </div>
-                            <p class="review-text">
-                                The most professional breeding service we've encountered. Genetic testing transparency and the beautiful facility tour made all the difference in our decision.
-                            </p>
-                            <div class="review-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
+                        <!-- Reviews will be loaded dynamically from Firestore -->
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading reviews...</p>
                         </div>
                     </div>
                     
@@ -1182,10 +1116,7 @@
                     </div>
                     
                     <div class="carousel-dots" id="carouselDots">
-                        <span class="dot active" data-index="0"></span>
-                        <span class="dot" data-index="1"></span>
-                        <span class="dot" data-index="2"></span>
-                        <span class="dot" data-index="3"></span>
+                        <!-- Dots will be generated dynamically -->
                     </div>
                 </div>
                 
@@ -1257,6 +1188,21 @@
     </main>
 
     <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrmpMXUZpJ46n-eRiDjQJSJf-YK6whUEM",
+            authDomain: "prom-dog.firebaseapp.com",
+            projectId: "prom-dog",
+            storageBucket: "prom-dog.appspot.com",
+            messagingSenderId: "945953941353",
+            appId: "1:945953941353:web:e6272892f5352c004b7ff8",
+            measurementId: "G-WMGY01WT20"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         // Mobile Menu Toggle
         document.querySelector('.menu-toggle').addEventListener('click', () => {
             document.querySelector('.nav-links').classList.toggle('active');
@@ -1320,8 +1266,124 @@
         // Customer Reviews Carousel - Global variables
         let currentIndex = 0;
         let autoSlideInterval;
-        let reviewItems = document.querySelectorAll('.review-item');
-        let dots = document.querySelectorAll('.dot');
+        let reviewItems = [];
+        
+        // Format date to relative time
+        function formatTimeAgo(timestamp) {
+            const now = new Date();
+            const reviewDate = timestamp.toDate();
+            const diffInSeconds = Math.floor((now - reviewDate) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+            if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+            if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 604800)} weeks ago`;
+            return `${Math.floor(diffInSeconds / 2592000)} months ago`;
+        }
+        
+        // Load reviews from Firestore
+        function loadReviews() {
+            const reviewsTrack = document.getElementById('reviewsTrack');
+            reviewsTrack.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Loading reviews...</p></div>';
+            
+            db.collection('reviews')
+                .orderBy('timestamp', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    reviewsTrack.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        reviewsTrack.innerHTML = '<div class="loading"><p>No reviews yet. Be the first to share your experience!</p></div>';
+                        return;
+                    }
+                    
+                    querySnapshot.forEach((doc) => {
+                        const review = doc.data();
+                        addReviewToCarousel(review.name, review.rating, review.text, review.timestamp, false);
+                    });
+                    
+                    // Initialize carousel after loading reviews
+                    initializeCarousel();
+                })
+                .catch((error) => {
+                    console.error('Error loading reviews:', error);
+                    reviewsTrack.innerHTML = '<div class="loading"><p>Error loading reviews. Please try again later.</p></div>';
+                });
+        }
+        
+        // Add review to carousel
+        function addReviewToCarousel(name, rating, text, timestamp, isNew = false) {
+            const reviewsTrack = document.getElementById('reviewsTrack');
+            const carouselDots = document.getElementById('carouselDots');
+            
+            // Create new review item
+            const newReview = document.createElement('div');
+            newReview.className = 'review-item';
+            
+            // Format the time
+            const timeAgo = timestamp ? formatTimeAgo(timestamp) : 'Just now';
+            
+            // Create stars HTML based on rating
+            let starsHtml = '';
+            for (let i = 0; i < 5; i++) {
+                if (i < rating) {
+                    starsHtml += '<i class="fas fa-star"></i>';
+                } else {
+                    starsHtml += '<i class="far fa-star"></i>';
+                }
+            }
+            
+            newReview.innerHTML = `
+                <div class="review-header">
+                    <div class="review-name">
+                        <i class="fas fa-user"></i>
+                        ${name}
+                    </div>
+                    <span class="review-time">${timeAgo}</span>
+                </div>
+                <p class="review-text">${text}</p>
+                <div class="review-rating">
+                    ${starsHtml}
+                </div>
+            `;
+            
+            // Add the new review to the track
+            if (isNew) {
+                reviewsTrack.appendChild(newReview);
+            } else {
+                reviewsTrack.insertBefore(newReview, reviewsTrack.firstChild);
+            }
+            
+            // Update the dots
+            updateCarouselDots();
+            
+            // Update global variables
+            reviewItems = document.querySelectorAll('.review-item');
+            
+            if (isNew) {
+                // Go to the new review
+                currentIndex = reviewItems.length - 1;
+                updateCarousel();
+            }
+        }
+        
+        // Update carousel dots
+        function updateCarouselDots() {
+            const carouselDots = document.getElementById('carouselDots');
+            carouselDots.innerHTML = '';
+            
+            reviewItems.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                if (index === currentIndex) dot.classList.add('active');
+                dot.setAttribute('data-index', index);
+                dot.addEventListener('click', () => {
+                    goToSlide(parseInt(dot.getAttribute('data-index')));
+                });
+                carouselDots.appendChild(dot);
+            });
+        }
         
         // Update carousel position and active indicators
         function updateCarousel() {
@@ -1335,15 +1397,15 @@
             });
             
             // Update active dot
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
+            updateCarouselDots();
             
             // Update button states
             const prevBtn = document.querySelector('.carousel-button.prev');
             const nextBtn = document.querySelector('.carousel-button.next');
-            prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = currentIndex === reviewItems.length - 1;
+            if (prevBtn && nextBtn) {
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === reviewItems.length - 1;
+            }
         }
         
         // Navigate to a specific slide
@@ -1373,14 +1435,16 @@
         
         // Auto slide functionality
         function startAutoSlide() {
-            autoSlideInterval = setInterval(() => {
-                if (currentIndex === reviewItems.length - 1) {
-                    currentIndex = 0;
-                } else {
-                    currentIndex++;
-                }
-                updateCarousel();
-            }, 5000);
+            if (reviewItems.length > 1) {
+                autoSlideInterval = setInterval(() => {
+                    if (currentIndex === reviewItems.length - 1) {
+                        currentIndex = 0;
+                    } else {
+                        currentIndex++;
+                    }
+                    updateCarousel();
+                }, 5000);
+            }
         }
         
         // Reset auto slide timer
@@ -1389,100 +1453,34 @@
             startAutoSlide();
         }
         
-        // Add a new review to the carousel
-        function addNewReview(name, rating, text) {
-            const reviewsTrack = document.getElementById('reviewsTrack');
-            const carouselDots = document.getElementById('carouselDots');
-            
-            // Create new review item
-            const newReview = document.createElement('div');
-            newReview.className = 'review-item';
-            
-            // Format the current date as "X days/weeks/months ago"
-            const timeAgo = "Just now";
-            
-            // Create stars HTML based on rating
-            let starsHtml = '';
-            for (let i = 0; i < 5; i++) {
-                if (i < rating) {
-                    starsHtml += '<i class="fas fa-star"></i>';
-                } else {
-                    starsHtml += '<i class="far fa-star"></i>';
-                }
-            }
-            
-            newReview.innerHTML = `
-                <div class="review-header">
-                    <div class="review-name">
-                        <i class="fas fa-user"></i>
-                        ${name}
-                    </div>
-                    <span class="review-time">${timeAgo}</span>
-                </div>
-                <p class="review-text">${text}</p>
-                <div class="review-rating">
-                    ${starsHtml}
-                </div>
-            `;
-            
-            // Add the new review to the track
-            reviewsTrack.appendChild(newReview);
-            
-            // Update the dots
-            const newDot = document.createElement('span');
-            newDot.className = 'dot';
-            newDot.setAttribute('data-index', reviewItems.length);
-            carouselDots.appendChild(newDot);
-            
-            // Update global variables
-            reviewItems = document.querySelectorAll('.review-item');
-            dots = document.querySelectorAll('.dot');
-            
-            // Add event listeners to new dot
-            newDot.addEventListener('click', () => {
-                goToSlide(parseInt(newDot.getAttribute('data-index')));
-            });
-            
-            // Go to the new review
-            currentIndex = reviewItems.length - 1;
-            updateCarousel();
-            
-            // Show success message
-            alert('Thank you for your review! It has been added to the carousel.');
-        }
-        
         // Initialize carousel
-        document.addEventListener('DOMContentLoaded', function() {
+        function initializeCarousel() {
             const prevBtn = document.querySelector('.carousel-button.prev');
             const nextBtn = document.querySelector('.carousel-button.next');
             
-            // Event listeners for navigation
-            prevBtn.addEventListener('click', prevSlide);
-            nextBtn.addEventListener('click', nextSlide);
-            
-            dots.forEach(dot => {
-                dot.addEventListener('click', () => {
-                    goToSlide(parseInt(dot.getAttribute('data-index')));
-                });
-            });
-            
-            // Initialize carousel
-            updateCarousel();
-            startAutoSlide();
-            
-            // Pause auto slide on hover
-            const carousel = document.querySelector('.reviews-carousel');
-            carousel.addEventListener('mouseenter', () => {
-                clearInterval(autoSlideInterval);
-            });
-            
-            carousel.addEventListener('mouseleave', () => {
+            if (prevBtn && nextBtn) {
+                // Event listeners for navigation
+                prevBtn.addEventListener('click', prevSlide);
+                nextBtn.addEventListener('click', nextSlide);
+                
+                // Initialize carousel
+                updateCarousel();
                 startAutoSlide();
-            });
-        });
+                
+                // Pause auto slide on hover
+                const carousel = document.querySelector('.reviews-carousel');
+                carousel.addEventListener('mouseenter', () => {
+                    clearInterval(autoSlideInterval);
+                });
+                
+                carousel.addEventListener('mouseleave', () => {
+                    startAutoSlide();
+                });
+            }
+        }
         
         // Review Modal Functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        function initializeReviewModal() {
             const modal = document.getElementById('reviewModal');
             const addReviewBtn = document.querySelector('.add-review-btn');
             const closeModalBtn = document.querySelector('.close-modal');
@@ -1539,25 +1537,52 @@
                 const rating = parseInt(ratingValue.value);
                 const text = document.getElementById('reviewText').value;
                 
-                // Add the new review to the carousel
-                addNewReview(name, rating, text);
-                
-                // Reset form
-                reviewForm.reset();
-                
-                // Reset stars to 5
-                ratingStars.forEach((star, index) => {
-                    if (index < 5) {
-                        star.classList.add('active');
-                    } else {
-                        star.classList.remove('active');
-                    }
+                // Save review to Firestore
+                db.collection('reviews').add({
+                    name: name,
+                    rating: rating,
+                    text: text,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then((docRef) => {
+                    console.log('Review saved with ID: ', docRef.id);
+                    
+                    // Add the new review to the carousel
+                    addReviewToCarousel(name, rating, text, null, true);
+                    
+                    // Show success message
+                    alert('Thank you for your review! It has been added to the carousel.');
+                    
+                    // Reset form
+                    reviewForm.reset();
+                    
+                    // Reset stars to 5
+                    ratingStars.forEach((star, index) => {
+                        if (index < 5) {
+                            star.classList.add('active');
+                        } else {
+                            star.classList.remove('active');
+                        }
+                    });
+                    ratingValue.value = 5;
+                    
+                    // Close modal
+                    modal.classList.remove('active');
+                })
+                .catch((error) => {
+                    console.error('Error saving review: ', error);
+                    alert('There was an error submitting your review. Please try again.');
                 });
-                ratingValue.value = 5;
-                
-                // Close modal
-                modal.classList.remove('active');
             });
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load reviews from Firestore
+            loadReviews();
+            
+            // Initialize review modal
+            initializeReviewModal();
         });
     </script>
 </body>
