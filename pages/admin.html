@@ -852,6 +852,104 @@
             padding: 3rem;
             color: #6c757d;
         }
+
+        /* Reviews Section */
+        .reviews-section {
+            display: none;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2.5rem;
+        }
+
+        .reviews-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .review-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-gold);
+            transition: var(--transition);
+        }
+
+        .review-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .review-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .review-date {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .review-stars {
+            display: flex;
+            gap: 0.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .star {
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+        }
+
+        .review-content {
+            margin-bottom: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .author-icon {
+            color: var(--accent-gold);
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .no-reviews {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
         
         /* Processing spinner */
         .spinner {
@@ -1040,6 +1138,7 @@
             <ul class="nav-list" id="navList">
                 <li><a href="#" class="nav-link dashboard-link"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="#" class="nav-link messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="#" class="nav-link reviews-link"><i class="fas fa-star"></i> Reviews</a></li>
                 <li><a href="/pages/book a puppy.html" class="nav-link"><i class="fas fa-globe"></i> View Site</a></li>
                 <li><button class="cta-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
                 <li>
@@ -1247,12 +1346,27 @@
                         <button class="filter-btn" data-filter="read">Read</button>
                     </div>
                 </div>
-                
+
                 <div class="messages-container" id="messagesContainer">
                     <div class="no-messages">
                         <i class="fas fa-envelope-open-text" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
                         <h3>No messages yet</h3>
                         <p>Contact form submissions will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section" id="reviewsSection" style="display: none;">
+                <div class="dashboard-header">
+                    <h2>Customer Reviews</h2>
+                </div>
+
+                <div class="reviews-container" id="reviewsContainer">
+                    <div class="no-reviews">
+                        <i class="fas fa-star-half-alt" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                        <h3>No reviews yet</h3>
+                        <p>Customer reviews will appear here</p>
                     </div>
                 </div>
             </div>
@@ -1305,6 +1419,7 @@
         const studDogsCollection = db.collection('studDogs');
         const rehomingCollection = db.collection('rehoming');
         const contactsCollection = db.collection('contacts');
+        const reviewsCollection = db.collection('reviews');
 
         // DOM elements
         const loginOverlay = document.getElementById('loginOverlay');
@@ -1336,9 +1451,12 @@
         const dashboardOverview = document.querySelector('.dashboard-overview');
         const messagesSection = document.getElementById('messagesSection');
         const messagesContainer = document.getElementById('messagesContainer');
+        const reviewsSection = document.getElementById('reviewsSection');
+        const reviewsContainer = document.getElementById('reviewsContainer');
         const filterButtons = document.querySelectorAll('.filter-btn');
         const dashboardLink = document.querySelector('.dashboard-link');
         const messagesLink = document.querySelector('.messages-link');
+        const reviewsLink = document.querySelector('.reviews-link');
         const submitButton = document.getElementById('submitButton');
         
         // Edit form elements
@@ -1405,6 +1523,7 @@
             // Navigation links
             dashboardLink.addEventListener('click', showDashboardView);
             messagesLink.addEventListener('click', showMessagesView);
+            reviewsLink.addEventListener('click', showReviewsView);
             
             // Filter buttons
             filterButtons.forEach(button => {
@@ -1455,6 +1574,14 @@
             messagesSection.style.display = 'block';
             editFormContainer.style.display = 'none';
             loadMessages();
+        }
+
+        function showReviewsView() {
+            dashboardOverview.style.display = 'none';
+            messagesSection.style.display = 'none';
+            reviewsSection.style.display = 'block';
+            editFormContainer.style.display = 'none';
+            loadReviews();
         }
 
         function showSelectionModal() {
@@ -1737,7 +1864,7 @@
             contactsCollection.orderBy("timestamp", "desc").onSnapshot(snapshot => {
                 messages = [];
                 let unreadCount = 0;
-                
+
                 snapshot.forEach(doc => {
                     const message = {
                         id: doc.id,
@@ -1745,15 +1872,35 @@
                         timestamp: doc.data().timestamp.toDate()
                     };
                     messages.push(message);
-                    
+
                     if (!message.read) unreadCount++;
                 });
-                
+
                 messageCount.textContent = unreadCount;
                 renderMessages();
             }, error => {
                 console.error("Error loading messages:", error);
                 messagesContainer.innerHTML = '<div class="error-message">Error loading messages. Please try again.</div>';
+            });
+        }
+
+        function loadReviews() {
+            reviewsCollection.orderBy("timestamp", "desc").onSnapshot(snapshot => {
+                reviews = [];
+
+                snapshot.forEach(doc => {
+                    const review = {
+                        id: doc.id,
+                        ...doc.data(),
+                        timestamp: doc.data().timestamp.toDate()
+                    };
+                    reviews.push(review);
+                });
+
+                renderReviews();
+            }, error => {
+                console.error("Error loading reviews:", error);
+                reviewsContainer.innerHTML = '<div class="error-message">Error loading reviews. Please try again.</div>';
             });
         }
         
@@ -1768,16 +1915,16 @@
                 `;
                 return;
             }
-            
+
             messagesContainer.innerHTML = '';
-            
+
             const filteredMessages = messages.filter(message => {
                 if (currentFilter === 'all') return true;
                 if (currentFilter === 'unread') return !message.read;
                 if (currentFilter === 'read') return message.read;
                 return true;
             });
-            
+
             if (filteredMessages.length === 0) {
                 messagesContainer.innerHTML = `
                     <div class="no-messages">
@@ -1788,7 +1935,7 @@
                 `;
                 return;
             }
-            
+
             filteredMessages.forEach(message => {
                 const formattedDate = message.timestamp.toLocaleString();
                 const messageCard = document.createElement('div');
@@ -1827,6 +1974,56 @@
                 messagesContainer.appendChild(messageCard);
             });
         }
+
+        function renderReviews() {
+            if (reviews.length === 0) {
+                reviewsContainer.innerHTML = `
+                    <div class="no-reviews">
+                        <i class="fas fa-star-half-alt" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                        <h3>No reviews yet</h3>
+                        <p>Customer reviews will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            reviewsContainer.innerHTML = '';
+
+            reviews.forEach(review => {
+                const formattedDate = review.timestamp.toLocaleString();
+                const reviewCard = document.createElement('div');
+                reviewCard.className = 'review-card';
+                reviewCard.innerHTML = `
+                    <div class="review-header">
+                        <div class="review-title">${review.title || 'Review'}</div>
+                        <div class="review-date">${formattedDate}</div>
+                    </div>
+                    <div class="review-stars">
+                        ${Array.from({ length: 5 }, (_, i) =>
+                            `<i class="fas fa-star star ${i < (review.rating || 5) ? 'filled' : ''}"></i>`
+                        ).join('')}
+                    </div>
+                    <div class="review-content">
+                        <p>${review.comment || review.message}</p>
+                    </div>
+                    <div class="review-footer">
+                        <div class="review-author">
+                            <i class="fas fa-user author-icon"></i>
+                            <div>
+                                <strong>${review.name}</strong>
+                                <div>${review.email || 'Anonymous'}</div>
+                            </div>
+                        </div>
+                        <div class="review-actions">
+                            <button class="action-btn delete-btn" onclick="deleteReview('${review.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                reviewsContainer.appendChild(reviewCard);
+            });
+        }
         
         async function markAsRead(messageId) {
             try {
@@ -1844,13 +2041,26 @@
         
         async function deleteMessage(messageId) {
             if (!confirm('Are you sure you want to delete this message?')) return;
-            
+
             try {
                 await contactsCollection.doc(messageId).delete();
                 showNotification('Message deleted successfully', 'success');
                 loadMessages();
             } catch (error) {
                 console.error('Error deleting message: ', error);
+                showNotification('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteReview(reviewId) {
+            if (!confirm('Are you sure you want to delete this review?')) return;
+
+            try {
+                await reviewsCollection.doc(reviewId).delete();
+                showNotification('Review deleted successfully', 'success');
+                loadReviews();
+            } catch (error) {
+                console.error('Error deleting review: ', error);
                 showNotification('Error: ' + error.message, 'error');
             }
         }
