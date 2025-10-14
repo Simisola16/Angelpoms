@@ -646,7 +646,7 @@
             color: var(--primary-blue);
         }
         
-        .form-input, .form-textarea {
+        .form-input, .form-textarea, .form-date {
             padding: 0.75rem 1rem;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -655,7 +655,7 @@
             transition: border-color 0.3s ease;
         }
         
-        .form-input:focus, .form-textarea:focus {
+        .form-input:focus, .form-textarea:focus, .form-date:focus {
             outline: none;
             border-color: var(--accent-blue);
         }
@@ -1144,6 +1144,11 @@
                     </div>
                     
                     <div class="form-group">
+                        <label class="form-label" for="visitDate">Date of Visit/Experience</label>
+                        <input type="date" id="visitDate" class="form-date" required>
+                    </div>
+                    
+                    <div class="form-group">
                         <label class="form-label">Your Rating</label>
                         <div class="rating-input">
                             <span class="rating-star" data-rating="1">★</span>
@@ -1491,6 +1496,9 @@
             // Open modal
             addReviewBtn.addEventListener('click', () => {
                 modal.classList.add('active');
+                // Set today's date as default for the date field
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('visitDate').value = today;
             });
             
             // Close modal
@@ -1534,12 +1542,14 @@
                 e.preventDefault();
                 
                 const name = document.getElementById('reviewerName').value;
+                const visitDate = document.getElementById('visitDate').value;
                 const rating = parseInt(ratingValue.value);
                 const text = document.getElementById('reviewText').value;
                 
                 // Save review to Firestore
                 db.collection('reviews').add({
                     name: name,
+                    visitDate: visitDate,
                     rating: rating,
                     text: text,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -1565,6 +1575,10 @@
                         }
                     });
                     ratingValue.value = 5;
+                    
+                    // Set default date to today
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('visitDate').value = today;
                     
                     // Close modal
                     modal.classList.remove('active');
