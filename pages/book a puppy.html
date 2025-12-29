@@ -83,6 +83,11 @@
             display: flex;
             align-items: center;
             gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links li {
+            position: relative;
         }
 
         .nav-item {
@@ -109,10 +114,6 @@
             width: 100%;
         }
 
-        .dropdown {
-            position: relative;
-        }
-
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -124,6 +125,7 @@
             min-width: 200px;
             padding: 0.5rem 0;
             z-index: 1000;
+            list-style: none;
         }
 
         .dropdown:hover .dropdown-menu {
@@ -258,6 +260,7 @@
             width: 100%;
             height: 250px;
             object-fit: cover;
+            background-color: #f0f0f0;
         }
 
         .puppy .animal-image {
@@ -371,6 +374,10 @@
             font-size: 1.3rem;
             color: var(--primary-blue);
             grid-column: 1 / -1;
+        }
+
+        .loading i {
+            margin-right: 10px;
         }
 
         .error-message {
@@ -517,7 +524,8 @@
     <header id="mainHeader">
         <nav class="nav-container">
             <a href="/" class="logo">
-                <img src="/media/image/Angelpomslogo.jpg" alt="Angelpoms Logo">
+                <!-- Use placeholder image until you upload your logo -->
+                <img src="https://via.placeholder.com/60x60/003366/ffffff?text=AP" alt="Angelpoms Logo">
                 AngelPoms
             </a>
             <button class="menu-toggle">☰</button>
@@ -532,7 +540,7 @@
                     </ul>
                 </li>
                 <li><a href="/pages/book a puppy.html" class="nav-item active">Book A Puppy</a></li>
-                <li><a href="/pages/book a puppy.html" class="nav-item">Stud Dogs</a></li>
+                <li><a href="/pages/stud-dogs.html" class="nav-item">Stud Dogs</a></li>
                 <li><a href="#" class="nav-item">Rehoming</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Services ▾</a>
@@ -557,7 +565,7 @@
             </div>
         </section>
 
-        <section class="hero-section" id="studHero" style="display: none; background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1560807707-8cc77767d783') center/cover;">
+        <section class="hero-section" id="studHero" style="display: none;">
             <div class="hero-content">
                 <h1 class="hero-title">Premium Stud Dogs</h1>
                 <p class="hero-subtitle">Our champion bloodline stud dogs with excellent pedigrees</p>
@@ -621,11 +629,15 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const puppiesCollection = db.collection('puppies');
-        const studDogsCollection = db.collection('studDogs');
-        const rehomingCollection = db.collection('rehoming');
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
 
         // DOM elements
         const puppyTab = document.getElementById('puppyTab');
@@ -636,7 +648,7 @@
         const rehomingSection = document.getElementById('rehomingSection');
         const puppyHero = document.getElementById('puppyHero');
         const studHero = document.getElementById('studHero');
-        const rehomingHero = document.getExlementById('rehomingHero');
+        const rehomingHero = document.getElementById('rehomingHero');
         const puppyContainer = document.getElementById('puppyContainer');
         const studContainer = document.getElementById('studContainer');
         const rehomingContainer = document.getElementById('rehomingContainer');
@@ -644,27 +656,93 @@
         const navLinks = document.querySelector('.nav-links');
         const dropdowns = document.querySelectorAll('.dropdown');
 
+        // Sample data for testing (remove when Firebase is working)
+        const samplePuppies = [
+            {
+                id: 1,
+                name: "Bella",
+                breed: "Pomeranian",
+                age: "8 weeks",
+                price: "1200",
+                image: "https://images.unsplash.com/photo-1612774412771-005ed8e861d2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                name: "Max",
+                breed: "Toy Poodle",
+                age: "10 weeks",
+                price: "1500",
+                image: "https://images.unsplash.com/photo-1591946614720-90a587da4a36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 3,
+                name: "Coco",
+                breed: "Pomeranian",
+                age: "12 weeks",
+                price: "1100",
+                image: "https://images.unsplash.com/photo-1589941027007-82b3b1a90164?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w-800&q=80"
+            }
+        ];
+
+        const sampleStudDogs = [
+            {
+                id: 1,
+                name: "Champion Zeus",
+                breed: "Pomeranian",
+                age: "3 years",
+                price: "800",
+                image: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                name: "Apollo",
+                breed: "Toy Poodle",
+                age: "4 years",
+                price: "750",
+                image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        const sampleRehoming = [
+            {
+                id: 1,
+                name: "Buddy",
+                image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                name: "Luna",
+                image: "https://images.unsplash.com/photo-1554456854-55a089fd4cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing app...');
+            
             // Load initial content
             loadPuppies();
             
             // Mobile menu toggle
-            menuToggle.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-                menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
-            });
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+                });
+            }
             
             // Dropdown functionality for mobile
             dropdowns.forEach(dropdown => {
                 const trigger = dropdown.querySelector('.nav-item');
                 
-                trigger.addEventListener('click', (e) => {
-                    if (window.innerWidth <= 768) {
-                        e.preventDefault();
-                        dropdown.classList.toggle('active');
-                    }
-                });
+                if (trigger) {
+                    trigger.addEventListener('click', (e) => {
+                        if (window.innerWidth <= 768) {
+                            e.preventDefault();
+                            dropdown.classList.toggle('active');
+                        }
+                    });
+                }
             });
             
             // Tab switching
@@ -682,10 +760,20 @@
                 setActiveTab('rehoming');
                 loadRehomingPets();
             });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.nav-container') && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    menuToggle.textContent = '☰';
+                }
+            });
         });
 
         // Set active tab
         function setActiveTab(activeTab) {
+            console.log('Setting active tab:', activeTab);
+            
             // Update tab buttons
             puppyTab.classList.remove('active');
             studTab.classList.remove('active');
@@ -712,99 +800,180 @@
 
         // Functions
         function loadPuppies() {
+            console.log('Loading puppies...');
+            
+            // Clear and show loading
             puppyContainer.innerHTML = '<div class="loading"><i class="fas fa-paw fa-spin"></i> Loading puppies...</div>';
             
-            puppiesCollection.onSnapshot((snapshot) => {
-                puppyContainer.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    puppyContainer.innerHTML = '<div class="error-message">No puppies available at the moment</div>';
-                    return;
+            // Try Firebase first, fall back to sample data
+            if (db) {
+                try {
+                    const puppiesCollection = db.collection('puppies');
+                    puppiesCollection.onSnapshot((snapshot) => {
+                        puppyContainer.innerHTML = '';
+                        
+                        if (snapshot.empty) {
+                            console.log('No puppies in Firebase, using sample data');
+                            displaySamplePuppies();
+                            return;
+                        }
+                        
+                        snapshot.forEach(doc => {
+                            const puppy = doc.data();
+                            displayPuppy(puppy);
+                        });
+                    }, error => {
+                        console.error('Firebase error loading puppies:', error);
+                        displaySamplePuppies();
+                    });
+                } catch (error) {
+                    console.error('Error accessing Firebase:', error);
+                    displaySamplePuppies();
                 }
-                
-                snapshot.forEach(doc => {
-                    const puppy = doc.data();
-                    puppyContainer.innerHTML += `
-                        <div class="animal-card puppy">
-                            <img src="${puppy.image}" class="animal-image" alt="${puppy.name}">
-                            <div class="animal-details">
-                                <h3 class="animal-name">${puppy.name}</h3>
-                                <div class="animal-type type-puppy">Puppy</div>
-                                <p class="animal-info"><span>Breed:</span> ${puppy.breed}</p>
-                                <p class="animal-info"><span>Age:</span> ${puppy.age}</p>
-                                <div class="animal-price">£${puppy.price}</div>
-                                <a href="/pages/contact.html" class="cta-button">Reserve Now</a>
-                            </div>
-                        </div>
-                    `;
-                });
-            }, error => {
-                console.error('Error loading puppies: ', error);
-                puppyContainer.innerHTML = '<div class="error-message">Error loading puppies. Please try again later.</div>';
+            } else {
+                console.log('Firebase not initialized, using sample data');
+                displaySamplePuppies();
+            }
+        }
+
+        function displayPuppy(puppy) {
+            const puppyCard = document.createElement('div');
+            puppyCard.className = 'animal-card puppy';
+            puppyCard.innerHTML = `
+                <img src="${puppy.image || 'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb'}" 
+                     class="animal-image" 
+                     alt="${puppy.name}"
+                     onerror="this.src='https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb'">
+                <div class="animal-details">
+                    <h3 class="animal-name">${puppy.name || 'Available Puppy'}</h3>
+                    <div class="animal-type type-puppy">Puppy</div>
+                    <p class="animal-info"><span>Breed:</span> ${puppy.breed || 'Pedigree'}</p>
+                    <p class="animal-info"><span>Age:</span> ${puppy.age || '8-12 weeks'}</p>
+                    <div class="animal-price">£${puppy.price || '1200'}</div>
+                    <a href="/pages/contact.html" class="cta-button">Reserve Now</a>
+                </div>
+            `;
+            puppyContainer.appendChild(puppyCard);
+        }
+
+        function displaySamplePuppies() {
+            puppyContainer.innerHTML = '';
+            samplePuppies.forEach(puppy => {
+                displayPuppy(puppy);
             });
         }
 
         function loadStudDogs() {
+            console.log('Loading stud dogs...');
             studContainer.innerHTML = '<div class="loading"><i class="fas fa-crown fa-spin"></i> Loading stud dogs...</div>';
             
-            studDogsCollection.onSnapshot((snapshot) => {
-                studContainer.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    studContainer.innerHTML = '<div class="error-message">No stud dogs available at the moment</div>';
-                    return;
+            if (db) {
+                try {
+                    const studDogsCollection = db.collection('studDogs');
+                    studDogsCollection.onSnapshot((snapshot) => {
+                        studContainer.innerHTML = '';
+                        
+                        if (snapshot.empty) {
+                            displaySampleStudDogs();
+                            return;
+                        }
+                        
+                        snapshot.forEach(doc => {
+                            const stud = doc.data();
+                            displayStudDog(stud);
+                        });
+                    }, error => {
+                        console.error('Error loading stud dogs:', error);
+                        displaySampleStudDogs();
+                    });
+                } catch (error) {
+                    displaySampleStudDogs();
                 }
-                
-                snapshot.forEach(doc => {
-                    const stud = doc.data();
-                    studContainer.innerHTML += `
-                        <div class="animal-card stud">
-                            <img src="${stud.image}" class="animal-image" alt="${stud.name}">
-                            <div class="animal-details">
-                                <h3 class="animal-name">${stud.name}</h3>
-                                <div class="animal-type type-stud">Stud Dog</div>
-                                <p class="animal-info"><span>Breed:</span> ${stud.breed}</p>
-                                <p class="animal-info"><span>Age:</span> ${stud.age}</p>
-                                <div class="animal-price">£${stud.price}</div>
-                                <a href="/pages/contact.html" class="cta-button">Book This Stud</a>
-                            </div>
-                        </div>
-                    `;
-                });
-            }, error => {
-                console.error('Error loading stud dogs: ', error);
-                studContainer.innerHTML = '<div class="error-message">Error loading stud dogs. Please try again later.</div>';
+            } else {
+                displaySampleStudDogs();
+            }
+        }
+
+        function displayStudDog(stud) {
+            const studCard = document.createElement('div');
+            studCard.className = 'animal-card stud';
+            studCard.innerHTML = `
+                <img src="${stud.image || 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2'}" 
+                     class="animal-image" 
+                     alt="${stud.name}"
+                     onerror="this.src='https://images.unsplash.com/photo-1537151625747-768eb6cf92b2'">
+                <div class="animal-details">
+                    <h3 class="animal-name">${stud.name || 'Champion Stud'}</h3>
+                    <div class="animal-type type-stud">Stud Dog</div>
+                    <p class="animal-info"><span>Breed:</span> ${stud.breed || 'Pedigree'}</p>
+                    <p class="animal-info"><span>Age:</span> ${stud.age || '2-5 years'}</p>
+                    <div class="animal-price">£${stud.price || '800'}</div>
+                    <a href="/pages/contact.html" class="cta-button">Book This Stud</a>
+                </div>
+            `;
+            studContainer.appendChild(studCard);
+        }
+
+        function displaySampleStudDogs() {
+            studContainer.innerHTML = '';
+            sampleStudDogs.forEach(stud => {
+                displayStudDog(stud);
             });
         }
 
         function loadRehomingPets() {
+            console.log('Loading rehoming pets...');
             rehomingContainer.innerHTML = '<div class="loading"><i class="fas fa-heart fa-spin"></i> Loading rehoming pets...</div>';
             
-            rehomingCollection.onSnapshot((snapshot) => {
-                rehomingContainer.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    rehomingContainer.innerHTML = '<div class="error-message">No pets available for rehoming at the moment</div>';
-                    return;
+            if (db) {
+                try {
+                    const rehomingCollection = db.collection('rehoming');
+                    rehomingCollection.onSnapshot((snapshot) => {
+                        rehomingContainer.innerHTML = '';
+                        
+                        if (snapshot.empty) {
+                            displaySampleRehoming();
+                            return;
+                        }
+                        
+                        snapshot.forEach(doc => {
+                            const pet = doc.data();
+                            displayRehomingPet(pet);
+                        });
+                    }, error => {
+                        console.error('Error loading rehoming pets:', error);
+                        displaySampleRehoming();
+                    });
+                } catch (error) {
+                    displaySampleRehoming();
                 }
-                
-                snapshot.forEach(doc => {
-                    const pet = doc.data();
-                    rehomingContainer.innerHTML += `
-                        <div class="animal-card rehoming">
-                            <img src="${pet.image}" class="animal-image" alt="${pet.name}">
-                            <div class="animal-details">
-                                <h3 class="animal-name">${pet.name}</h3>
-                                <div class="animal-type type-rehoming">Rehoming</div>
-                                <p class="animal-info">Looking for a new loving home</p>
-                                <a href="/pages/contact.html" class="cta-button">Adopt Me</a>
-                            </div>
-                        </div>
-                    `;
-                });
-            }, error => {
-                console.error('Error loading rehoming pets: ', error);
-                rehomingContainer.innerHTML = '<div class="error-message">Error loading rehoming pets. Please try again later.</div>';
+            } else {
+                displaySampleRehoming();
+            }
+        }
+
+        function displayRehomingPet(pet) {
+            const petCard = document.createElement('div');
+            petCard.className = 'animal-card rehoming';
+            petCard.innerHTML = `
+                <img src="${pet.image || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1'}" 
+                     class="animal-image" 
+                     alt="${pet.name}"
+                     onerror="this.src='https://images.unsplash.com/photo-1543466835-00a7907e9de1'">
+                <div class="animal-details">
+                    <h3 class="animal-name">${pet.name || 'Sweet Pet'}</h3>
+                    <div class="animal-type type-rehoming">Rehoming</div>
+                    <p class="animal-info">Looking for a new loving home</p>
+                    <a href="/pages/contact.html" class="cta-button">Adopt Me</a>
+                </div>
+            `;
+            rehomingContainer.appendChild(petCard);
+        }
+
+        function displaySampleRehoming() {
+            rehomingContainer.innerHTML = '';
+            sampleRehoming.forEach(pet => {
+                displayRehomingPet(pet);
             });
         }
     </script>
