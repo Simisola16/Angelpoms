@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AngelPoms - Premium Pedigree Puppies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <style>
+        :root {
+            --primary-blue: #003366;
+            --accent-blue: #0066cc;
+            --accent-gold: #D4AF37;
+            --accent-green: #28a745;
+            --dark-bg: #080808;
+            --light-text: #ffffff;
+            --section-bg: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--section-bg);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--dark-bg);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgb(0, 0, 0);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--accent-blue);
+            transform: scale(1.02);
+        }
+
+        .logo:hover img {
+            transform: rotate(-10deg);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-item {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            min-width: 200px;
+            padding: 0.5rem 0;
+            z-index: 1000;
+            list-style: none;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            color: var(--dark-bg);
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Scrolled Navbar Style */
+        .scrolled-nav {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 0.5rem 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .scrolled-nav .logo img {
+            height: 40px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0, 51, 102, 0.9), rgba(0, 51, 102, 0.9)),
+                        url('https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb') center/cover;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
+            margin-top: 76px;
+            text-align: center;
+        }
+
+        .rehoming-hero {
+            background: linear-gradient(rgba(40, 167, 69, 0.8), rgba(40, 167, 69, 0.8)),
+                        url('https://images.unsplash.com/photo-1543466835-00a7907e9de1') center/cover;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        .rehoming-title::after {
+            background: var(--accent-green);
+        }
+
+        /* Animal Grid */
+        .animal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .animal-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .animal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .animal-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background-color: #f0f0f0;
+        }
+
+        .puppy .animal-image {
+            border-bottom: 4px solid var(--accent-blue);
+        }
+
+        .stud .animal-image {
+            border-bottom: 4px solid var(--accent-gold);
+        }
+
+        .rehoming .animal-image {
+            border-bottom: 4px solid var(--accent-green);
+        }
+
+        .animal-details {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .animal-name {
+            color: var(--primary-blue);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .animal-type {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+        }
+
+        .type-puppy {
+            background: rgba(0, 102, 204, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .type-stud {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .type-rehoming {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--accent-green);
+        }
+
+        .animal-info {
+            margin-bottom: 0.8rem;
+            color: #555;
+        }
+
+        .animal-info span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .animal-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .stud .animal-price {
+            color: var(--accent-gold);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+
+        .stud .cta-button {
+            background: var(--accent-gold);
+        }
+
+        .rehoming .cta-button {
+            background: var(--accent-green);
+        }
+
+        .cta-button:hover {
+            background: var(--primary-blue);
+            transform: translateY(-3px);
+        }
+
+        .stud .cta-button:hover {
+            background: #b08c1d;
+        }
+
+        .rehoming .cta-button:hover {
+            background: #218838;
+        }
+
+        .details-button {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: white;
+            padding: 0.6rem 1.4rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .details-button:hover {
+            background: #b08c1d;
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            grid-column: 1 / -1;
+        }
+
+        .loading i {
+            margin-right: 10px;
+        }
+
+        .error-message {
+            text-align: center;
+            color: #dc3545;
+            padding: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        /* Tab Navigation */
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            background: #eaeaea;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 30px;
+            margin: 0 0.5rem;
+        }
+
+        .tab-button.active {
+            color: white;
+        }
+
+        .tab-button.puppy.active {
+            background: var(--accent-blue);
+        }
+
+        .tab-button.stud.active {
+            background: var(--accent-gold);
+        }
+
+        .tab-button.rehoming.active {
+            background: var(--accent-green);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: rgba(0,0,0,0.95);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                z-index: 999;
+                transform: translateY(-100%);
+                transition: transform 0.4s ease;
+            }
+            
+            .nav-links.active {
+                display: flex;
+                transform: translateY(0);
+            }
+            
+            .nav-item {
+                padding: 1.2rem 0;
+                font-size: 1.5rem;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                width: 100%;
+                text-align: center;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                background: transparent;
+                box-shadow: none;
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .dropdown-item {
+                color: rgba(255,255,255,0.9);
+                padding: 0.8rem 0;
+                font-size: 1.2rem;
+            }
+            
+            .dropdown:hover .dropdown-menu {
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .tab-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                margin: 0.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .tab-button {
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--accent-gold), #b08c1d);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .close:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .modal-description {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .modal-description h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .modal-price {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .modal-button {
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .modal-book {
+            background: var(--accent-gold);
+            color: white;
+        }
+
+        .modal-book:hover {
+            background: #b08c1d;
+            transform: translateY(-2px);
+        }
+
+        .modal-close-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .modal-close-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header id="mainHeader">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/media/image/Angelpomslogo.jpg" alt="Angelpoms Logo">
+                AngelPoms
+            </a>
+            <button class="menu-toggle">☰</button>
+            <ul class="nav-links">
+                <li><a href="/index.html" class="nav-item">Home</a></li>
+                <li><a href="/pages/about.html" class="nav-item">About Us</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-item">Breeds ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/pages/Pomeranian.html" class="dropdown-item">Pomeranian</a></li>
+                        <li><a href="/pages/Toy Poodle.html" class="dropdown-item">Toy Poodle</a></li>
+                    </ul>
+                </li>
+                <li><a href="/pages/book a puppy.html" class="nav-item active">Book A Puppy</a></li>
+                <li><a href="/pages/book a puppy.html" class="nav-item">Stud Dogs</a></li>
+                <li><a href="/pages/book a puppy.html" class="nav-item">Rehoming</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-item">Services ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/pages/microchipping.html" class="dropdown-item"> Microchipping</a></li>
+                        <li><a href="/pages/pregnancy-scan.html" class="dropdown-item">Pregnancy scans</a></li>
+                        <li><a href="/pages/cytology-testing.html" class="dropdown-item">Cytology testing</a></li>
+                    </ul>
+                </li>
+                <li><a href="/pages/contact.html" class="nav-item">Contact Us</a></li>
+                <li><a href="/pages/admin.html" class="nav-item">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Sections -->
+        <section class="hero-section" id="puppyHero">
+            <div class="hero-content">
+                <h1 class="hero-title">Find Your Perfect Companion</h1>
+                <p class="hero-subtitle">Browse our available pedigree puppies</p>
+            </div>
+        </section>
+
+        <section class="hero-section" id="studHero" style="display: none;">
+            <div class="hero-content">
+                <h1 class="hero-title">Premium Stud Dogs</h1>
+                <p class="hero-subtitle">Our champion bloodline stud dogs with excellent pedigrees</p>
+            </div>
+        </section>
+
+        <section class="hero-section rehoming-hero" id="rehomingHero" style="display: none;">
+            <div class="hero-content">
+                <h1 class="hero-title">Pets Needing New Homes</h1>
+                <p class="hero-subtitle">Give a loving home to pets in need of rehoming</p>
+            </div>
+        </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="tab-container">
+                <button class="tab-button puppy active" id="puppyTab">Puppies</button>
+                <button class="tab-button stud" id="studTab">Stud Dogs</button>
+                <button class="tab-button rehoming" id="rehomingTab">Rehoming</button>
+            </div>
+            
+            <div id="puppySection">
+                <h2 class="section-title">Available Puppies</h2>
+                <div class="animal-grid" id="puppyContainer">
+                    <div class="loading">
+                        <i class="fas fa-paw fa-spin"></i> Loading puppies...
+                    </div>
+                </div>
+            </div>
+            
+            <div id="studSection" style="display: none;">
+                <h2 class="section-title">Available Stud Dogs</h2>
+                <div class="animal-grid" id="studContainer">
+                    <div class="loading">
+                        <i class="fas fa-crown fa-spin"></i> Loading stud dogs...
+                    </div>
+                </div>
+            </div>
+            
+            <div id="rehomingSection" style="display: none;">
+                <h2 class="section-title rehoming-title">Pets for Rehoming</h2>
+                <div class="animal-grid" id="rehomingContainer">
+                    <div class="loading">
+                        <i class="fas fa-heart fa-spin"></i> Loading rehoming pets...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="studModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2 id="modalTitle">Stud Dog Details</h2>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Stud Dog" class="modal-image">
+                <div class="modal-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Breed</div>
+                        <div class="detail-value" id="modalBreed">Pomeranian</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Age</div>
+                        <div class="detail-value" id="modalAge">3 years</div>
+                    </div>
+                </div>
+                <div class="modal-description">
+                    <h3>About This Stud Dog</h3>
+                    <p id="modalDescription">Premium stud dog with excellent pedigree and temperament.</p>
+                </div>
+                <div class="modal-price" id="modalPrice">£800</div>
+                <div class="modal-actions">
+                    <button class="modal-button modal-book" onclick="bookStud()">Book This Stud</button>
+                    <button class="modal-button modal-close-btn" onclick="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrmpMXUZpJ46n-eRiDjQJSJf-YK6whUEM",
+            authDomain: "prom-dog.firebaseapp.com",
+            projectId: "prom-dog",
+            storageBucket: "prom-dog.appspot.com",
+            messagingSenderId: "945953941353",
+            appId: "1:945953941353:web:e6272892f5352c004b7ff8",
+            measurementId: "G-WMGY01WT20"
+        };
+
+        // Initialize Firebase
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
+
+        // DOM elements
+        const puppyTab = document.getElementById('puppyTab');
+        const studTab = document.getElementById('studTab');
+        const rehomingTab = document.getElementById('rehomingTab');
+        const puppySection = document.getElementById('puppySection');
+        const studSection = document.getElementById('studSection');
+        const rehomingSection = document.getElementById('rehomingSection');
+        const puppyHero = document.getElementById('puppyHero');
+        const studHero = document.getElementById('studHero');
+        const rehomingHero = document.getElementById('rehomingHero');
+        const puppyContainer = document.getElementById('puppyContainer');
+        const studContainer = document.getElementById('studContainer');
+        const rehomingContainer = document.getElementById('rehomingContainer');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        const dropdowns = document.querySelectorAll('.dropdown');
+
+        // Sample data for testing (remove when Firebase is working)
+        const samplePuppies = [
+            {
+                id: 1,
+                name: "Bella",
+                breed: "Pomeranian",
+                age: "8 weeks",
+                price: "1200",
+                image: "https://images.unsplash.com/photo-1612774412771-005ed8e861d2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                name: "Max",
+                breed: "Toy Poodle",
+                age: "10 weeks",
+                price: "1500",
+                image: "https://images.unsplash.com/photo-1591946614720-90a587da4a36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 3,
+                name: "Coco",
+                breed: "Pomeranian",
+                age: "12 weeks",
+                price: "1100",
+                image: "https://images.unsplash.com/photo-1589941027007-82b3b1a90164?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w-800&q=80"
+            }
+        ];
+
+        const sampleStudDogs = [
+            {
+                id: 1,
+                name: "Champion Zeus",
+                breed: "Pomeranian",
+                age: "3 years",
+                price: "800",
+                description: "Champion bloodline Pomeranian with multiple show wins. Excellent temperament and pedigree.",
+                image: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                name: "Apollo",
+                breed: "Toy Poodle",
+                age: "4 years",
+                price: "750",
+                description: "Premium Toy Poodle with champion lineage. Known for intelligence and gentle nature.",
+                image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        const sampleRehoming = [
+            {
+                id: 1,
+                name: "Buddy",
+                image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                name: "Luna",
+                image: "https://images.unsplash.com/photo-1554456854-55a089fd4cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        // Helper function to escape strings for HTML attributes
+        function escapeString(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing app...');
+            
+            // Load initial content
+            loadPuppies();
+            
+            // Mobile menu toggle
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+                });
+            }
+            
+            // Dropdown functionality for mobile
+            dropdowns.forEach(dropdown => {
+                const trigger = dropdown.querySelector('.nav-item');
+                
+                if (trigger) {
+                    trigger.addEventListener('click', (e) => {
+                        if (window.innerWidth <= 768) {
+                            e.preventDefault();
+                            dropdown.classList.toggle('active');
+                        }
+                    });
+                }
+            });
+            
+            // Tab switching
+            puppyTab.addEventListener('click', () => {
+                setActiveTab('puppy');
+                loadPuppies();
+            });
+            
+            studTab.addEventListener('click', () => {
+                setActiveTab('stud');
+                loadStudDogs();
+            });
+            
+            rehomingTab.addEventListener('click', () => {
+                setActiveTab('rehoming');
+                loadRehomingPets();
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.nav-container') && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    menuToggle.textContent = '☰';
+                }
+            });
+        });
+
+        // Set active tab
+        function setActiveTab(activeTab) {
+            console.log('Setting active tab:', activeTab);
+            
+            // Update tab buttons
+            puppyTab.classList.remove('active');
+            studTab.classList.remove('active');
+            rehomingTab.classList.remove('active');
+            
+            if (activeTab === 'puppy') {
+                puppyTab.classList.add('active');
+            } else if (activeTab === 'stud') {
+                studTab.classList.add('active');
+            } else if (activeTab === 'rehoming') {
+                rehomingTab.classList.add('active');
+            }
+            
+            // Show/hide sections
+            puppySection.style.display = activeTab === 'puppy' ? 'block' : 'none';
+            studSection.style.display = activeTab === 'stud' ? 'block' : 'none';
+            rehomingSection.style.display = activeTab === 'rehoming' ? 'block' : 'none';
+            
+            // Show/hide hero sections
+            puppyHero.style.display = activeTab === 'puppy' ? 'flex' : 'none';
+            studHero.style.display = activeTab === 'stud' ? 'flex' : 'none';
+            rehomingHero.style.display = activeTab === 'rehoming' ? 'flex' : 'none';
+        }
+
+        // Functions
+        function loadPuppies() {
+            console.log('Loading puppies...');
+            
+            // Clear and show loading
+            puppyContainer.innerHTML = '<div class="loading"><i class="fas fa-paw fa-spin"></i> Loading puppies...</div>';
+            
+            // Try Firebase first, fall back to sample data
+            if (db) {
+                try {
+                    const puppiesCollection = db.collection('puppies');
+                    puppiesCollection.onSnapshot((snapshot) => {
+                        puppyContainer.innerHTML = '';
+                        
+                        if (snapshot.empty) {
+                            console.log('No puppies in Firebase, using sample data');
+                            displaySamplePuppies();
+                            return;
+                        }
+                        
+                        snapshot.forEach(doc => {
+                            const puppy = doc.data();
+                            displayPuppy(puppy);
+                        });
+                    }, error => {
+                        console.error('Firebase error loading puppies:', error);
+                        displaySamplePuppies();
+                    });
+                } catch (error) {
+                    console.error('Error accessing Firebase:', error);
+                    displaySamplePuppies();
+                }
+            } else {
+                console.log('Firebase not initialized, using sample data');
+                displaySamplePuppies();
+            }
+        }
+
+        function displayPuppy(puppy) {
+            const puppyCard = document.createElement('div');
+            puppyCard.className = 'animal-card puppy';
+            puppyCard.innerHTML = `
+                <img src="${puppy.image || 'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb'}" 
+                     class="animal-image" 
+                     alt="${puppy.name}"
+                     onerror="this.src='https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb'">
+                <div class="animal-details">
+                    <h3 class="animal-name">${puppy.name || 'Available Puppy'}</h3>
+                    <div class="animal-type type-puppy">Puppy</div>
+                    <p class="animal-info"><span>Breed:</span> ${puppy.breed || 'Pedigree'}</p>
+                    <p class="animal-info"><span>Age:</span> ${puppy.age || '8-12 weeks'}</p>
+                    <div class="animal-price">£${puppy.price || '1200'}</div>
+                    <a href="/pages/contact.html" class="cta-button">Reserve Now</a>
+                </div>
+            `;
+            puppyContainer.appendChild(puppyCard);
+        }
+
+        function displaySamplePuppies() {
+            puppyContainer.innerHTML = '';
+            samplePuppies.forEach(puppy => {
+                displayPuppy(puppy);
+            });
+        }
+
+        function loadStudDogs() {
+            console.log('Loading stud dogs...');
+            studContainer.innerHTML = '<div class="loading"><i class="fas fa-crown fa-spin"></i> Loading stud dogs...</div>';
+            
+            if (db) {
+                try {
+                    const studDogsCollection = db.collection('studDogs');
+                    studDogsCollection.onSnapshot((snapshot) => {
+                        studContainer.innerHTML = '';
+                        
+                        if (snapshot.empty) {
+                            displaySampleStudDogs();
+                            return;
+                        }
+                        
+                        snapshot.forEach(doc => {
+                            const stud = doc.data();
+                            displayStudDog(stud);
+                        });
+                    }, error => {
+                        console.error('Error loading stud dogs:', error);
+                        displaySampleStudDogs();
+                    });
+                } catch (error) {
+                    displaySampleStudDogs();
+                }
+            } else {
+                displaySampleStudDogs();
+            }
+        }
+
+        function displayStudDog(stud) {
+            const studCard = document.createElement('div');
+            studCard.className = 'animal-card stud';
+            
+            const studData = {
+                name: stud.name || 'Champion Stud',
+                breed: stud.breed || 'Pedigree',
+                age: stud.age || '2-5 years',
+                description: stud.description || 'Premium stud dog with excellent pedigree and temperament.',
+                price: stud.price || '800',
+                image: stud.image || 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2'
+            };
+            
+            studCard.innerHTML = `
+                <img src="${studData.image}"
+                     class="animal-image"
+                     alt="${studData.name}"
+                     onerror="this.src='https://images.unsplash.com/photo-1537151625747-768eb6cf92b2'">
+                <div class="animal-details">
+                    <h3 class="animal-name">${studData.name}</h3>
+                    <div class="animal-type type-stud">Stud Dog</div>
+                    <p class="animal-info"><span>Breed:</span> ${studData.breed}</p>
+                    <p class="animal-info"><span>Age:</span> ${studData.age}</p>
+                    <div class="animal-price">£${studData.price}</div>
+                    <button class="details-button" 
+                            data-name="${escapeString(studData.name)}"
+                            data-breed="${escapeString(studData.breed)}"
+                            data-age="${escapeString(studData.age)}"
+                            data-description="${escapeString(studData.description)}"
+                            data-price="${escapeString(studData.price)}"
+                            data-image="${escapeString(studData.image)}">View Details</button>
+                    <a href="/pages/contact.html" class="cta-button">Book This Stud</a>
+                </div>
+            `;
+            
+            // Add event listener to the button
+            const viewDetailsBtn = studCard.querySelector('.details-button');
+            viewDetailsBtn.addEventListener('click', function() {
+                openStudModal(
+                    this.dataset.name,
+                    this.dataset.breed,
+                    this.dataset.age,
+                    this.dataset.description,
+                    this.dataset.price,
+                    this.dataset.image
+                );
+            });
+            
+            studContainer.appendChild(studCard);
+        }
+
+        function displaySampleStudDogs() {
+            studContainer.innerHTML = '';
+            sampleStudDogs.forEach(stud => {
+                displayStudDog(stud);
+            });
+        }
+
+        function loadRehomingPets() {
+            console.log('Loading rehoming pets...');
+            rehomingContainer.innerHTML = '<div class="loading"><i class="fas fa-heart fa-spin"></i> Loading rehoming pets...</div>';
+            
+            if (db) {
+                try {
+                    const rehomingCollection = db.collection('rehoming');
+                    rehomingCollection.onSnapshot((snapshot) => {
+                        rehomingContainer.innerHTML = '';
+                        
+                        if (snapshot.empty) {
+                            displaySampleRehoming();
+                            return;
+                        }
+                        
+                        snapshot.forEach(doc => {
+                            const pet = doc.data();
+                            displayRehomingPet(pet);
+                        });
+                    }, error => {
+                        console.error('Error loading rehoming pets:', error);
+                        displaySampleRehoming();
+                    });
+                } catch (error) {
+                    displaySampleRehoming();
+                }
+            } else {
+                displaySampleRehoming();
+            }
+        }
+
+        function displayRehomingPet(pet) {
+            const petCard = document.createElement('div');
+            petCard.className = 'animal-card rehoming';
+            petCard.innerHTML = `
+                <img src="${pet.image || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1'}" 
+                     class="animal-image" 
+                     alt="${pet.name}"
+                     onerror="this.src='https://images.unsplash.com/photo-1543466835-00a7907e9de1'">
+                <div class="animal-details">
+                    <h3 class="animal-name">${pet.name || 'Sweet Pet'}</h3>
+                    <div class="animal-type type-rehoming">Rehoming</div>
+                    <p class="animal-info">Looking for a new loving home</p>
+                    <a href="/pages/contact.html" class="cta-button">Adopt Me</a>
+                </div>
+            `;
+            rehomingContainer.appendChild(petCard);
+        }
+
+        function displaySampleRehoming() {
+            rehomingContainer.innerHTML = '';
+            sampleRehoming.forEach(pet => {
+                displayRehomingPet(pet);
+            });
+        }
+
+        // Modal functions
+        function openStudModal(name, breed, age, description, price, image) {
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('modalBreed').textContent = breed;
+            document.getElementById('modalAge').textContent = age;
+            document.getElementById('modalDescription').textContent = description;
+            document.getElementById('modalPrice').textContent = '£' + price;
+            document.getElementById('modalImage').src = image;
+            document.getElementById('modalImage').alt = name;
+            document.getElementById('studModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('studModal').style.display = 'none';
+        }
+
+        function bookStud() {
+            // Redirect to contact page for booking
+            window.location.href = '/pages/contact.html';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('studModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
