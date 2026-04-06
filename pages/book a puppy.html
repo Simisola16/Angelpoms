@@ -1264,7 +1264,6 @@
             // Clear and show loading
             puppyContainer.innerHTML = '<div class="loading"><i class="fas fa-paw fa-spin"></i> Loading puppies...</div>';
             
-            // Try Firebase first, fall back to sample data
             if (db) {
                 try {
                     const puppiesCollection = db.collection('puppies');
@@ -1272,8 +1271,8 @@
                         puppyContainer.innerHTML = '';
                         
                         if (snapshot.empty) {
-                            console.log('No puppies in Firebase, using sample data');
-                            displaySamplePuppies();
+                            console.log('No puppies in Firebase');
+                            puppyContainer.innerHTML = '<div class="loading">No puppies available at the moment.</div>';
                             return;
                         }
                         
@@ -1283,15 +1282,15 @@
                         });
                     }, error => {
                         console.error('Firebase error loading puppies:', error);
-                        displaySamplePuppies();
+                        puppyContainer.innerHTML = '<div class="error-message">Error loading puppies. Please try again later.</div>';
                     });
                 } catch (error) {
                     console.error('Error accessing Firebase:', error);
-                    displaySamplePuppies();
+                    puppyContainer.innerHTML = '<div class="error-message">Error loading puppies. Please try again later.</div>';
                 }
             } else {
-                console.log('Firebase not initialized, using sample data');
-                displaySamplePuppies();
+                console.log('Firebase not initialized');
+                puppyContainer.innerHTML = '<div class="error-message">Database connection error. Please try again later.</div>';
             }
         }
 
@@ -1333,7 +1332,7 @@
                         studContainer.innerHTML = '';
                         
                         if (snapshot.empty) {
-                            displaySampleStudDogs();
+                            studContainer.innerHTML = '<div class="loading">No stud dogs available at the moment.</div>';
                             return;
                         }
                         
@@ -1343,13 +1342,13 @@
                         });
                     }, error => {
                         console.error('Error loading stud dogs:', error);
-                        displaySampleStudDogs();
+                        studContainer.innerHTML = '<div class="error-message">Error loading stud dogs. Please try again later.</div>';
                     });
                 } catch (error) {
-                    displaySampleStudDogs();
+                    studContainer.innerHTML = '<div class="error-message">Error loading stud dogs. Please try again later.</div>';
                 }
             } else {
-                displaySampleStudDogs();
+                studContainer.innerHTML = '<div class="error-message">Database connection error. Please try again later.</div>';
             }
         }
 
@@ -1432,7 +1431,7 @@
                         rehomingContainer.innerHTML = '';
                         
                         if (snapshot.empty) {
-                            displaySampleRehoming();
+                            rehomingContainer.innerHTML = '<div class="loading">No pets available for rehoming at the moment.</div>';
                             return;
                         }
                         
@@ -1442,13 +1441,13 @@
                         });
                     }, error => {
                         console.error('Error loading rehoming pets:', error);
-                        displaySampleRehoming();
+                        rehomingContainer.innerHTML = '<div class="error-message">Error loading rehoming pets. Please try again later.</div>';
                     });
                 } catch (error) {
-                    displaySampleRehoming();
+                    rehomingContainer.innerHTML = '<div class="error-message">Error loading rehoming pets. Please try again later.</div>';
                 }
             } else {
-                displaySampleRehoming();
+                rehomingContainer.innerHTML = '<div class="error-message">Database connection error. Please try again later.</div>';
             }
         }
 
@@ -1456,10 +1455,10 @@
             const petCard = document.createElement('div');
             petCard.className = 'animal-card rehoming';
             petCard.innerHTML = `
-                <img src="${pet.image || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1'}" 
+                <img src="${pet.image || ''}" 
                      class="animal-image" 
                      alt="${pet.name}"
-                     onerror="this.src='https://images.unsplash.com/photo-1543466835-00a7907e9de1'">
+                     onerror="this.src=''">
                 <div class="animal-details">
                     <h3 class="animal-name">${pet.name || 'Sweet Pet'}</h3>
                     <div class="animal-type type-rehoming">Rehoming</div>
