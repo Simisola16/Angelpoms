@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | AngelPoms</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="shortcut icon" href="./media/image/Angel poms.png" type="image/x-icon">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -27,9 +29,10 @@
 
         body {
             background-color: var(--section-bg);
-            padding-top: 80px; /* For fixed header */
+            padding-top: 80px;
+            /* For fixed header */
         }
-        
+
         /* Header Styles */
         header {
             background-color: var(--dark-bg);
@@ -116,7 +119,7 @@
             top: 100%;
             left: 0;
             background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             border-radius: 6px;
             min-width: 200px;
             padding: 0.5rem 0;
@@ -164,6 +167,7 @@
             .menu-toggle {
                 display: block;
             }
+
             .nav-links {
                 display: none;
                 position: absolute;
@@ -173,23 +177,27 @@
                 background: var(--dark-bg);
                 flex-direction: column;
                 padding: 1rem 2rem;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
+
             .nav-links.active {
                 display: flex;
             }
+
             .nav-item {
                 padding: 0.75rem 0;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
+
             .dropdown-menu {
                 position: static;
-                background: rgba(0,0,0,0.1);
+                background: rgba(0, 0, 0, 0.1);
                 box-shadow: none;
                 margin-left: 1rem;
             }
+
             .dropdown-item {
-                color: rgba(255,255,255,0.9);
+                color: rgba(255, 255, 255, 0.9);
                 padding: 0.5rem 0;
             }
         }
@@ -219,7 +227,7 @@
             background: var(--light-text);
             padding: 2rem;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
@@ -265,7 +273,7 @@
             background: var(--light-text);
             padding: 2rem;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .info-item {
@@ -311,7 +319,7 @@
             border-radius: 5px;
             display: none;
             animation: slideIn 0.3s ease-out;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
             z-index: 2000;
         }
 
@@ -320,24 +328,30 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
         }
 
         @media (max-width: 768px) {
             .contact-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .contact-header {
                 padding: 3rem 1rem;
             }
         }
     </style>
 </head>
+
 <body>
-     <header id="mainHeader">
-       <nav class="nav-container">
+    <header id="mainHeader">
+        <nav class="nav-container">
             <a href="/" class="logo">
                 <img src="/media/image/Angelpomslogo.jpg" alt="Angelpoms Logo">
                 AngelPoms
@@ -354,7 +368,7 @@
                     </ul>
                 </li>
                 <li><a href="/pages/book a puppy.html" class="nav-item">Book A Puppy</a></li>
-                 <li><a href="/pages/book a puppy.html" class="nav-item">Stud Dogs</a></li>
+                <li><a href="/pages/book a puppy.html" class="nav-item">Stud Dogs</a></li>
                 <li><a href="/pages/book a puppy.html" class="nav-item">Rehoming</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Services ▾</a>
@@ -384,7 +398,7 @@
                     <label class="form-label" for="name">Full Name</label>
                     <input type="text" class="form-input" id="name" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label" for="email">Email Address</label>
                     <input type="email" class="form-input" id="email" required>
@@ -422,8 +436,9 @@
             <div class="info-item">
                 <h3 class="info-title">Contact Information</h3>
                 <div class="info-content">
-                    <p><i class="fas fa-phone"></i> <a href="tel:+447904849556">+44 79048 49556</a></p>
-                    <p><i class="fas fa-envelope"></i> <a href="mailto:ira.chizh2204@gmail.com">ira.chizh2204@gmail.com</a></p>
+                    <p><i class="fas fa-phone"></i> <a href="tel:+447904849556">+44 7594 609274</a></p>
+                    <p><i class="fas fa-envelope"></i> <a
+                            href="mailto:ira.chizh2204@gmail.com">ira.chizh2204@gmail.com</a></p>
                 </div>
             </div>
 
@@ -431,9 +446,7 @@
                 <h3 class="info-title">Map Location</h3>
                 <iframe class="contact-map"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2443.032959424373!2d-0.953146723443145!3d52.263649351919454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48770e7196305cd9%3A0xfd8129cd436942c6!2s31%20Manfield%20Place%2C%20Northampton%20NN5%207FN%2C%20UK!5e0!3m2!1sen!2suk!4v1700000000000!5m2!1sen!2suk"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
+                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
             </div>
         </section>
@@ -457,25 +470,25 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
-            
+
             if (!name || !email || !subject || !message) {
                 showNotification('Please fill in all required fields', true);
                 return;
             }
-            
+
             // Show loading state
             const submitBtn = document.querySelector('.submit-btn');
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             submitBtn.disabled = true;
-            
+
             // Add to Firestore
             db.collection("contacts").add({
                 name: name,
@@ -487,18 +500,18 @@
                 location: "Manfield Place, Northampton, NN5 7FN",
                 read: false
             })
-            .then(() => {
-                showNotification('Thank you! Your enquiry has been submitted.', false);
-                document.getElementById('contactForm').reset();
-            })
-            .catch((error) => {
-                console.error("Error adding document: ", error);
-                showNotification('Error submitting form. Please try again.', true);
-            })
-            .finally(() => {
-                submitBtn.innerHTML = 'Send Message';
-                submitBtn.disabled = false;
-            });
+                .then(() => {
+                    showNotification('Thank you! Your enquiry has been submitted.', false);
+                    document.getElementById('contactForm').reset();
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
+                    showNotification('Error submitting form. Please try again.', true);
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = 'Send Message';
+                    submitBtn.disabled = false;
+                });
         });
 
         function showNotification(message, isError) {
@@ -510,14 +523,14 @@
                 notification.style.display = 'none';
             }, 5000);
         }
-        
+
         // Mobile Menu Toggle
-        document.querySelector('.menu-toggle').addEventListener('click', function() {
+        document.querySelector('.menu-toggle').addEventListener('click', function () {
             document.querySelector('.nav-links').classList.toggle('active');
         });
 
         // Scroll Effects
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             // Navbar Scroll Effect
             const header = document.getElementById('mainHeader');
             if (window.scrollY > 100) {
@@ -528,4 +541,5 @@
         });
     </script>
 </body>
+
 </html>

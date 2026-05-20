@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Angelpoms - Premium Dog Breeders</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-       <link rel="shortcut icon" href="./media/image/Angel poms.png" type="image/x-icon">
+    <link rel="shortcut icon" href="./media/image/Angel poms.png" type="image/x-icon">
     <style>
         :root {
             --primary-blue: #003366;
@@ -109,7 +111,7 @@
             top: 100%;
             left: 0;
             background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             border-radius: 6px;
             min-width: 200px;
             padding: 0.5rem 0;
@@ -167,7 +169,7 @@
                 background: var(--dark-bg);
                 flex-direction: column;
                 padding: 1rem 2rem;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 z-index: 1000;
             }
 
@@ -177,12 +179,12 @@
 
             .nav-item {
                 padding: 0.75rem 0;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
 
             .dropdown-menu {
                 position: static;
-                background: rgba(0,0,0,0.1);
+                background: rgba(0, 0, 0, 0.1);
                 box-shadow: none;
                 margin-left: 1rem;
                 display: none !important;
@@ -199,8 +201,8 @@
 
         /* About Page Styles */
         .about-hero {
-            background: linear-gradient(rgba(0,51,102,0.9), rgba(0,51,102,0.9)),
-                        url('hero-bg.jpg') center/cover;
+            background: linear-gradient(rgba(0, 51, 102, 0.9), rgba(0, 51, 102, 0.9)),
+                url('hero-bg.jpg') center/cover;
             height: 60vh;
             display: flex;
             align-items: center;
@@ -226,7 +228,7 @@
         .history-image {
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .history-image img {
@@ -321,7 +323,7 @@
             padding: 2rem;
             border-radius: 8px;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .gallery-grid {
@@ -460,9 +462,10 @@
         }
     </style>
 </head>
+
 <body>
-     <header id="mainHeader">
-       <!-- <nav class="nav-container">
+    <header id="mainHeader">
+        <!-- <nav class="nav-container">
             <a href="/" class="logo">
                 <img src="/media/image/Angelpomslogo.jpg" alt="Angelpoms Logo">
                 AngelPoms
@@ -492,7 +495,7 @@
                 <li><a href="/pages/admin.html" class="nav-item">Admin</a></li>
             </ul>
         </nav>-->
-        <nav class="nav-container"> 
+        <nav class="nav-container">
             <a href="/" class="logo">
                 <img src="/media/image/Angelpomslogo.jpg" alt="Angelpoms Logo">
                 AngelPoms
@@ -509,7 +512,7 @@
                     </ul>
                 </li>
                 <li><a href="/pages/book a puppy.html" class="nav-item">Book A Puppy</a></li>
-                 <li><a href="/pages/book a puppy.html" class="nav-item">Stud Dogs</a></li>
+                <li><a href="/pages/book a puppy.html" class="nav-item">Stud Dogs</a></li>
                 <li><a href="/pages/book a puppy.html" class="nav-item">Rehoming</a></li>
                 <li class="dropdown">
                     <a href="#" class="nav-item">Services ▾</a>
@@ -528,7 +531,9 @@
         <section class="about-hero">
             <div class="content-section">
                 <h1>About AngelPoms</h1>
-                <p>We offer professional services by providing support to new breeders with no experience, offering professional advice starting with cytology services, pregnancy scans, and microchipping for litters of puppies</p>
+                <p>We offer professional services by providing support to new breeders with no experience, offering
+                    professional advice starting with cytology services, pregnancy scans, and microchipping for litters
+                    of puppies</p>
             </div>
         </section>
 
@@ -544,11 +549,11 @@
             </div>
         </section>
 
-       <footer>
+        <footer>
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Contact Us</h3>
-                    <p>+44 79048 49556</p>
+                    <p>+44 7594 609274</p>
                     <p>ira.chizh2204@gmail.com</p>
                     <p>Manfield Place, Northampton, NN5 7FN</p>
                 </div>
@@ -558,20 +563,20 @@
 
     <script>
         // Mobile Menu Functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const menuToggle = document.querySelector('.menu-toggle');
             const navLinks = document.querySelector('.nav-links');
             const dropdowns = document.querySelectorAll('.dropdown');
 
             // Toggle mobile menu
-            menuToggle.addEventListener('click', function(e) {
+            menuToggle.addEventListener('click', function (e) {
                 e.stopPropagation();
                 navLinks.classList.toggle('active');
                 this.classList.toggle('active');
             });
 
             // Close menu when clicking outside
-            document.addEventListener('click', function(e) {
+            document.addEventListener('click', function (e) {
                 if (!e.target.closest('.nav-container')) {
                     navLinks.classList.remove('active');
                     menuToggle.classList.remove('active');
@@ -582,7 +587,7 @@
             // Handle dropdown menus on mobile
             dropdowns.forEach(dropdown => {
                 const link = dropdown.querySelector('.nav-item');
-                link.addEventListener('click', function(e) {
+                link.addEventListener('click', function (e) {
                     if (window.innerWidth <= 1024) {
                         e.preventDefault();
                         dropdown.classList.toggle('active');
@@ -591,7 +596,7 @@
             });
 
             // Close menu on resize
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
                 if (window.innerWidth > 1024) {
                     navLinks.classList.remove('active');
                     menuToggle.classList.remove('active');
@@ -610,4 +615,5 @@
         });
     </script>
 </body>
+
 </html>
