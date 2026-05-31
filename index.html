@@ -718,6 +718,367 @@
             text-align: center;
         }
 
+        /* ===== Facility Video Section ===== */
+        .facility-section {
+            padding: 6rem 5%;
+            background: linear-gradient(160deg, #020c1b 0%, #001f4d 50%, #020c1b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .facility-section::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 102, 204, 0.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .facility-section::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 51, 102, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .facility-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .facility-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 102, 204, 0.15);
+            border: 1px solid rgba(0, 102, 204, 0.4);
+            color: #66aaff;
+            padding: 0.4rem 1.1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+            animation: badgePulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(0, 102, 204, 0); }
+        }
+
+        .facility-badge .badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #0066cc;
+            animation: dotBlink 1.4s ease-in-out infinite;
+        }
+
+        @keyframes dotBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .facility-heading {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .facility-heading span {
+            background: linear-gradient(90deg, #4da6ff, #0066cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .facility-subtext {
+            color: rgba(200, 220, 255, 0.75);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+        }
+
+        .facility-video-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow:
+                0 0 0 1px rgba(0, 102, 204, 0.3),
+                0 30px 70px rgba(0, 0, 0, 0.7),
+                0 0 100px rgba(0, 102, 204, 0.15);
+            background: #000;
+        }
+
+        /* Full natural size — no cropping */
+        .facility-video-wrapper video {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: contain;
+            background: #000;
+            border-radius: 20px 20px 0 0;
+        }
+
+        /* Big centred play overlay */
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            bottom: 56px; /* sit above controls bar */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 6, 20, 0.55);
+            backdrop-filter: blur(2px);
+            transition: opacity 0.35s ease;
+            z-index: 3;
+            cursor: pointer;
+        }
+
+        .video-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .play-btn {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: rgba(0, 102, 204, 0.25);
+            border: 2.5px solid rgba(255, 255, 255, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .play-btn i {
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin-left: 6px;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            background: rgba(0, 102, 204, 0.6);
+            border-color: #4da6ff;
+            box-shadow: 0 0 40px rgba(0, 102, 204, 0.6);
+        }
+
+        .play-label {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* ── Custom Controls Bar ── */
+        .video-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 16px;
+            height: 56px;
+            background: linear-gradient(to top, rgba(0,5,20,0.97), rgba(0,10,35,0.92));
+            border-radius: 0 0 20px 20px;
+            user-select: none;
+            position: relative;
+            z-index: 5;
+        }
+
+        .vc-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.85);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vc-btn:hover {
+            color: #fff;
+            background: rgba(0,102,204,0.3);
+        }
+
+        /* Progress scrubber */
+        .vc-progress {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.18);
+            outline: none;
+            cursor: pointer;
+            transition: height 0.15s ease;
+            accent-color: #0066cc;
+        }
+
+        .vc-progress:hover {
+            height: 7px;
+        }
+
+        /* Volume slider */
+        .vc-volume {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 80px;
+            height: 4px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.18);
+            outline: none;
+            cursor: pointer;
+            accent-color: #0066cc;
+            flex-shrink: 0;
+        }
+
+        .vc-time {
+            color: rgba(200,220,255,0.75);
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .vc-title {
+            color: rgba(200,220,255,0.6);
+            font-size: 0.78rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 160px;
+        }
+
+        .vc-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.15);
+            flex-shrink: 0;
+        }
+
+        /* Fullscreen: video fills the screen completely */
+        .facility-video-wrapper:fullscreen,
+        .facility-video-wrapper:-webkit-full-screen,
+        .facility-video-wrapper:-moz-full-screen,
+        .facility-video-wrapper:-ms-fullscreen {
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+            background: #000;
+        }
+
+        .facility-video-wrapper:fullscreen video,
+        .facility-video-wrapper:-webkit-full-screen video {
+            flex: 1;
+            border-radius: 0;
+            height: calc(100% - 56px);
+            object-fit: contain;
+        }
+
+        .facility-video-wrapper:fullscreen .video-controls,
+        .facility-video-wrapper:-webkit-full-screen .video-controls {
+            border-radius: 0;
+        }
+
+        @media (max-width: 640px) {
+            .vc-title { display: none; }
+            .vc-volume { width: 55px; }
+            .vc-divider { display: none; }
+        }
+
+        /* Facility highlights row */
+        .facility-highlights {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .highlight-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(0, 102, 204, 0.2);
+            border-radius: 14px;
+            padding: 1.6rem 1.4rem;
+            text-align: center;
+            backdrop-filter: blur(6px);
+            transition: all 0.35s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .highlight-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .highlight-card:hover {
+            background: rgba(0, 102, 204, 0.1);
+            border-color: rgba(0, 102, 204, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 102, 204, 0.15);
+        }
+
+        .highlight-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(0, 102, 204, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .highlight-icon i {
+            font-size: 1.4rem;
+            color: #4da6ff;
+        }
+
+        .highlight-title {
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .highlight-desc {
+            color: rgba(180, 210, 255, 0.65);
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .facility-heading { font-size: 2rem; }
+            .facility-highlights { grid-template-columns: 1fr; }
+            .video-caption-bar { flex-direction: column; align-items: flex-start; gap: 4px; }
+        }
+
         .guarantee-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1104,6 +1465,88 @@
             </div>
         </section>
 
+        <!-- Facility Video Section -->
+        <section class="facility-section" id="facility">
+            <div class="facility-inner" style="text-align:center;">
+                <div class="facility-badge">
+                    <span class="badge-dot"></span>
+                    Virtual Tour
+                </div>
+                <h2 class="facility-heading">Step Inside Our <span>World-Class</span> Facility</h2>
+                <p class="facility-subtext">Experience the warm, loving environment where our Pomeranian puppies are raised — clean, spacious, and designed with their wellbeing at heart.</p>
+
+                <div class="facility-video-wrapper" id="facilityVideoWrapper">
+                    <video
+                        id="facilityVideo"
+                        src="./media/facility.mp4"
+                        playsinline
+                        preload="metadata"
+                    ></video>
+
+                    <!-- Big centred play overlay (click to play) -->
+                    <div class="video-overlay" id="videoOverlay">
+                        <div class="play-btn" id="overlayPlayBtn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <span class="play-label">Watch Facility Tour</span>
+                    </div>
+
+                    <!-- Custom Controls Bar -->
+                    <div class="video-controls" id="videoControls">
+                        <!-- Play / Pause -->
+                        <button class="vc-btn" id="vcPlayPause" title="Play / Pause">
+                            <i class="fas fa-play" id="vcPlayIcon"></i>
+                        </button>
+
+                        <!-- Time display -->
+                        <span class="vc-time" id="vcTime">0:00 / 0:00</span>
+
+                        <!-- Progress scrubber -->
+                        <input type="range" class="vc-progress" id="vcProgress" min="0" max="100" value="0" step="0.1">
+
+                        <div class="vc-divider"></div>
+
+                        <!-- Volume -->
+                        <button class="vc-btn" id="vcMute" title="Mute / Unmute">
+                            <i class="fas fa-volume-up" id="vcVolIcon"></i>
+                        </button>
+                        <input type="range" class="vc-volume" id="vcVolume" min="0" max="1" value="1" step="0.05">
+
+                        <div class="vc-divider"></div>
+
+                        <!-- Title -->
+                        <span class="vc-title"><i class="fas fa-map-marker-alt" style="margin-right:4px;color:#4da6ff;"></i>Northampton, UK</span>
+
+                        <div class="vc-divider"></div>
+
+                        <!-- Fullscreen -->
+                        <button class="vc-btn" id="vcFullscreen" title="Fullscreen">
+                            <i class="fas fa-expand" id="vcFsIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Highlights Row -->
+                <div class="facility-highlights">
+                    <div class="highlight-card">
+                        <div class="highlight-icon"><i class="fas fa-home"></i></div>
+                        <div class="highlight-title">Home-Raised</div>
+                        <div class="highlight-desc">Every puppy is raised indoors in a warm family environment from day one.</div>
+                    </div>
+                    <div class="highlight-card">
+                        <div class="highlight-icon"><i class="fas fa-broom"></i></div>
+                        <div class="highlight-title">Spotless &amp; Safe</div>
+                        <div class="highlight-desc">Rigorous hygiene standards maintained throughout all areas of our facility.</div>
+                    </div>
+                    <div class="highlight-card">
+                        <div class="highlight-icon"><i class="fas fa-leaf"></i></div>
+                        <div class="highlight-title">Open Spaces</div>
+                        <div class="highlight-desc">Puppies enjoy supervised outdoor playtime for healthy socialisation.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Customer Reviews -->
         <section class="reviews-section" id="reviews">
             <h2 class="section-title">Customer Feedback</h2>
@@ -1247,6 +1690,7 @@
             animateOnScroll(document.querySelectorAll('.puppy-card'), 'visible');
             animateOnScroll(document.querySelectorAll('.guarantee-item'), 'visible');
             animateOnScroll(document.querySelectorAll('.review-item'), 'visible');
+            animateOnScroll(document.querySelectorAll('.highlight-card'), 'visible');
         });
 
         // Image Lightbox
@@ -1602,6 +2046,116 @@
                     });
             });
         }
+
+        // ── Professional Custom Video Player ──
+        (function () {
+            const wrapper   = document.getElementById('facilityVideoWrapper');
+            const video     = document.getElementById('facilityVideo');
+            const overlay   = document.getElementById('videoOverlay');
+            const overlayBtn= document.getElementById('overlayPlayBtn');
+            const btnPP     = document.getElementById('vcPlayPause');
+            const iconPP    = document.getElementById('vcPlayIcon');
+            const progress  = document.getElementById('vcProgress');
+            const timeEl    = document.getElementById('vcTime');
+            const btnMute   = document.getElementById('vcMute');
+            const volIcon   = document.getElementById('vcVolIcon');
+            const volSlider = document.getElementById('vcVolume');
+            const btnFs     = document.getElementById('vcFullscreen');
+            const fsIcon    = document.getElementById('vcFsIcon');
+            if (!wrapper || !video) return;
+
+            /* ── Helpers ── */
+            function fmtTime(s) {
+                if (isNaN(s)) return '0:00';
+                const m = Math.floor(s / 60);
+                const sec = Math.floor(s % 60).toString().padStart(2, '0');
+                return m + ':' + sec;
+            }
+
+            function setPlaying(playing) {
+                iconPP.className = playing ? 'fas fa-pause' : 'fas fa-play';
+                if (playing) {
+                    overlay.classList.add('hidden');
+                } else {
+                    overlay.classList.remove('hidden');
+                }
+            }
+
+            function setVolIcon(vol, muted) {
+                if (muted || vol === 0)  volIcon.className = 'fas fa-volume-mute';
+                else if (vol < 0.5)      volIcon.className = 'fas fa-volume-down';
+                else                     volIcon.className = 'fas fa-volume-up';
+            }
+
+            /* ── Play / Pause ── */
+            function togglePlay() {
+                if (video.paused) { video.play(); }
+                else              { video.pause(); }
+            }
+
+            overlay.addEventListener('click', togglePlay);
+            btnPP.addEventListener('click',   togglePlay);
+
+            video.addEventListener('play',  () => setPlaying(true));
+            video.addEventListener('pause', () => setPlaying(false));
+            video.addEventListener('ended', () => { setPlaying(false); progress.value = 0; timeEl.textContent = fmtTime(0) + ' / ' + fmtTime(video.duration); });
+
+            /* ── Progress ── */
+            video.addEventListener('timeupdate', () => {
+                if (video.duration) {
+                    progress.value = (video.currentTime / video.duration) * 100;
+                    timeEl.textContent = fmtTime(video.currentTime) + ' / ' + fmtTime(video.duration);
+                }
+            });
+
+            video.addEventListener('loadedmetadata', () => {
+                timeEl.textContent = '0:00 / ' + fmtTime(video.duration);
+            });
+
+            progress.addEventListener('input', () => {
+                video.currentTime = (progress.value / 100) * video.duration;
+            });
+
+            /* ── Volume ── */
+            volSlider.addEventListener('input', () => {
+                video.volume = volSlider.value;
+                video.muted  = false;
+                setVolIcon(video.volume, false);
+            });
+
+            btnMute.addEventListener('click', () => {
+                video.muted = !video.muted;
+                setVolIcon(video.volume, video.muted);
+                volSlider.value = video.muted ? 0 : video.volume;
+            });
+
+            /* ── Fullscreen ── */
+            btnFs.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    (wrapper.requestFullscreen || wrapper.webkitRequestFullscreen || wrapper.mozRequestFullScreen || wrapper.msRequestFullscreen).call(wrapper);
+                } else {
+                    (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen).call(document);
+                }
+            });
+
+            document.addEventListener('fullscreenchange', () => {
+                const inFs = !!document.fullscreenElement;
+                fsIcon.className = inFs ? 'fas fa-compress' : 'fas fa-expand';
+                // In fullscreen the overlay sits above controls, reset bottom
+                overlay.style.bottom = inFs ? '56px' : '56px';
+            });
+
+            /* Keyboard shortcuts while focused */
+            wrapper.setAttribute('tabindex', '0');
+            wrapper.addEventListener('keydown', (e) => {
+                if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+                if (e.code === 'KeyF')  { btnFs.click(); }
+                if (e.code === 'ArrowRight') { video.currentTime = Math.min(video.duration, video.currentTime + 5); }
+                if (e.code === 'ArrowLeft')  { video.currentTime = Math.max(0, video.currentTime - 5); }
+                if (e.code === 'ArrowUp')    { video.volume = Math.min(1, video.volume + 0.1); volSlider.value = video.volume; setVolIcon(video.volume, false); }
+                if (e.code === 'ArrowDown')  { video.volume = Math.max(0, video.volume - 0.1); volSlider.value = video.volume; setVolIcon(video.volume, false); }
+            });
+        })();
 
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function () {
